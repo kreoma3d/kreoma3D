@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Kreoma3D | Impresión y Personalización 3D</title>
+  <link rel="icon" href="logo_kreoma.png">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+    body{
+      background:#0a0a0a url('logo_kreoma.png') center center no-repeat fixed;
+      background-size:40%;
+      color:#fff;
+      height:100vh;
+      overflow:hidden;
+    }
+    header{
+      position:fixed;top:0;width:100%;
+      display:flex;justify-content:space-between;align-items:center;
+      padding:20px 60px;
+      background:rgba(0,0,0,.5);backdrop-filter:blur(8px);
+      z-index:10;
+    }
+    header h1{font-size:1.8rem;letter-spacing:1px;color:#f33;}
+    nav a{
+      color:#fff;text-decoration:none;margin:0 15px;font-weight:500;transition:.3s;
+    }
+    nav a:hover{color:#f33;}
+    main{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      height:100vh;text-align:center;padding:0 20px;
+      position:relative;z-index:2;
+    }
+    .titulo{font-size:3.5rem;color:#fff;margin-bottom:15px;text-shadow:0 0 15px #000;}
+    .subtitulo{font-size:1.3rem;color:#ccc;margin-bottom:30px;}
+    .boton{
+      display:inline-block;
+      background:#f33;color:#fff;text-decoration:none;
+      padding:15px 35px;
+      border-radius:40px;font-size:1rem;font-weight:600;cursor:pointer;
+      box-shadow:0 0 15px rgba(255,0,0,.4);transition:.3s;
+    }
+    .boton:hover{background:#fff;color:#f33;box-shadow:0 0 25px rgba(255,0,0,.6);}
+    footer{
+      position:absolute;bottom:15px;width:100%;text-align:center;
+      font-size:.9rem;color:#777;
+    }
+    .bg-overlay{
+      position:absolute;inset:0;
+      background:radial-gradient(circle at center,rgba(255,255,255,0.03) 0%,rgba(0,0,0,0.9) 100%);
+      z-index:0;
+      pointer-events:none;
+    }
+    .hero-anim{
+      position:absolute;width:100%;height:100%;overflow:hidden;z-index:1;
+      pointer-events:none;
+    }
+    .circulo{
+      position:absolute;border-radius:50%;background:rgba(255,0,0,.08);
+      animation:flotar 12s infinite ease-in-out;
+    }
+    .circulo:nth-child(1){width:120px;height:120px;top:20%;left:15%;animation-delay:0s;}
+    .circulo:nth-child(2){width:200px;height:200px;bottom:10%;right:20%;animation-delay:3s;}
+    .circulo:nth-child(3){width:80px;height:80px;top:60%;left:40%;animation-delay:6s;}
+    @keyframes flotar{
+      0%,100%{transform:translateY(0) scale(1);}
+      50%{transform:translateY(-30px) scale(1.1);}
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-overlay"></div>
+  <div class="hero-anim">
+    <div class="circulo"></div>
+    <div class="circulo"></div>
+    <div class="circulo"></div>
+  </div>
+
+  <header>
+    <h1>Kreoma3D</h1>
+    <nav>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#productos">Productos</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2 class="titulo">Imagina. Crea. Personaliza.</h2>
+    <p class="subtitulo">Diseñamos y fabricamos piezas únicas con tecnología 3D.<br>
+    Personaliza soportes, accesorios y prototipos con tu estilo.</p>
+
+    <a class="boton" href="productos/index.html">Ver Productos</a>
+  </main>
+
+  <footer>
+    © 2025 Kreoma3D · Hecho en Colombia
+  </footer>
+</body>
+</html>

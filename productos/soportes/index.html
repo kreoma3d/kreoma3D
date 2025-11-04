@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Soportes | Kreoma3D</title>
+  <link rel="icon" href="../../logo_kreoma.png">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+    body{
+      background:#0a0a0a url('../../logo_kreoma.png') center center no-repeat fixed;
+      background-size:40%;
+      color:#fff;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
+    header{
+      width:100%;display:flex;justify-content:space-between;align-items:center;
+      padding:20px 60px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
+      position:fixed;top:0;z-index:10;
+    }
+    header h1{color:#f33;}
+    nav a{color:#fff;text-decoration:none;margin:0 15px;font-weight:500;transition:.3s;}
+    nav a:hover{color:#f33;}
+    main{
+      margin-top:120px;
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:40px;padding:0 40px;max-width:1200px;width:100%;
+    }
+    .card{
+      background:#111;border-radius:20px;box-shadow:0 0 20px rgba(0,0,0,.4);
+      overflow:hidden;transition:.3s;cursor:pointer;text-align:center;
+    }
+    .card:hover{transform:translateY(-5px);box-shadow:0 0 25px rgba(255,0,0,.3);}
+    .card img{width:100%;height:180px;object-fit:cover;}
+    .card h3{margin:15px 0;color:#fff;}
+    .card p{color:#bbb;font-size:.9rem;padding:0 10px 15px;}
+    footer{text-align:center;color:#777;padding:30px 0;margin-top:40px;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Kreoma3D</h1>
+    <nav>
+      <a href="../../index.html">Inicio</a>
+      <a href="../index.html">Productos</a>
+      <a href="../../contacto.html">Contacto</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card" onclick="location.href='soporte-3en1-multicolor.html'">
+      <img src="../../imagenes/soporte3en1.png" alt="Soporte 3 en 1 Multicolor">
+      <h3>Soporte 3 en 1 Multicolor</h3>
+      <p>Ideal para casco, llaves y chaquetas. Personalízalo con tus colores.</p>
+    </div>
+
+    <!-- futuras tarjetas -->
+    <!--
+    <div class="card" onclick="location.href='otro-soporte.html'">
+      <img src="../../imagenes/otro-soporte.jpg" alt="Otro Soporte">
+      <h3>Otro modelo</h3>
+      <p>Descripción corta del producto.</p>
+    </div>
+    -->
+  </main>
+
+  <footer>
+    © 2025 Kreoma3D · Innovación en Impresión 3D
+  </footer>
+</body>
+</html>
