@@ -2,96 +2,92 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Kreoma3D | Personalizador</title>
+  <title>Kreoma3D | Impresión y Personalización 3D</title>
   <link rel="icon" href="logo_kreoma.png">
   <style>
-    *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
     body{
-      background:#111 url('logo_kreoma.png') center center no-repeat fixed;
-      background-size:contain;
+      background:#0a0a0a url('logo_kreoma.png') center center no-repeat fixed;
+      background-size:40%;
       color:#fff;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
       height:100vh;
+      overflow:hidden;
     }
     header{
-      position:absolute;top:0;width:100%;display:flex;justify-content:space-between;
-      align-items:center;padding:15px 40px;background:rgba(0,0,0,.4);backdrop-filter:blur(10px);
+      position:fixed;top:0;width:100%;
+      display:flex;justify-content:space-between;align-items:center;
+      padding:20px 60px;
+      background:rgba(0,0,0,.5);backdrop-filter:blur(8px);
+      z-index:10;
     }
+    header h1{font-size:1.8rem;letter-spacing:1px;color:#f33;}
     nav a{
-      color:#fff;text-decoration:none;margin:0 12px;font-weight:500;transition:.3s;
+      color:#fff;text-decoration:none;margin:0 15px;font-weight:500;transition:.3s;
     }
     nav a:hover{color:#f33;}
-    h1{font-size:2rem;margin-bottom:20px;text-shadow:0 0 10px #000;}
-    #editor{background:#222;border-radius:20px;box-shadow:0 0 25px rgba(0,0,0,.6);
-      padding:20px;margin:20px;display:flex;flex-direction:column;align-items:center;
+    main{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      height:100vh;text-align:center;padding:0 20px;
     }
-    #lienzo{border:1px solid #555;border-radius:10px;}
-    .controles{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
-    .controles input,.controles button{
-      background:#333;border:none;color:#fff;padding:10px 15px;border-radius:8px;
+    .titulo{font-size:3.5rem;color:#fff;margin-bottom:15px;text-shadow:0 0 15px #000;}
+    .subtitulo{font-size:1.3rem;color:#ccc;margin-bottom:30px;}
+    .boton{
+      background:#f33;color:#fff;border:none;padding:15px 35px;
+      border-radius:40px;font-size:1rem;font-weight:600;cursor:pointer;
+      box-shadow:0 0 15px rgba(255,0,0,.4);transition:.3s;
     }
-    .controles button{cursor:pointer;background:#f33;}
-    .controles button:hover{background:#f55;}
+    .boton:hover{background:#fff;color:#f33;box-shadow:0 0 25px rgba(255,0,0,.6);}
+    footer{
+      position:absolute;bottom:15px;width:100%;text-align:center;
+      font-size:.9rem;color:#777;
+    }
+    .bg-overlay{
+      position:absolute;inset:0;
+      background:radial-gradient(circle at center,rgba(255,255,255,0.03) 0%,rgba(0,0,0,0.9) 100%);
+      z-index:0;
+    }
+    .hero-anim{
+      position:absolute;width:100%;height:100%;overflow:hidden;z-index:1;
+    }
+    .circulo{
+      position:absolute;border-radius:50%;background:rgba(255,0,0,.08);
+      animation:flotar 12s infinite ease-in-out;
+    }
+    .circulo:nth-child(1){width:120px;height:120px;top:20%;left:15%;animation-delay:0s;}
+    .circulo:nth-child(2){width:200px;height:200px;bottom:10%;right:20%;animation-delay:3s;}
+    .circulo:nth-child(3){width:80px;height:80px;top:60%;left:40%;animation-delay:6s;}
+    @keyframes flotar{
+      0%,100%{transform:translateY(0) scale(1);}
+      50%{transform:translateY(-30px) scale(1.1);}
+    }
   </style>
 </head>
 <body>
+  <div class="bg-overlay"></div>
+  <div class="hero-anim">
+    <div class="circulo"></div>
+    <div class="circulo"></div>
+    <div class="circulo"></div>
+  </div>
+
   <header>
-    <h2>Kreoma3D</h2>
+    <h1>Kreoma3D</h1>
     <nav>
-      <a href="productos/soportes/visor.html">Soportes</a>
-      <a href="productos/cascos/index.html">Cascos</a>
-      <a href="productos/accesorios/index.html">Accesorios</a>
-      <a href="contacto.html">Contacto</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#productos">Productos</a>
+      <a href="#contacto">Contacto</a>
     </nav>
   </header>
 
   <main>
-    <h1>Personaliza tu producto</h1>
-    <div id="editor">
-      <canvas id="lienzo" width="400" height="400"></canvas>
-      <div class="controles">
-        <label>Color: <input type="color" id="colorPicker" value="#ff0000"></label>
-        <label>Texto: <input type="text" id="texto" placeholder="Tu nombre"></label>
-        <button id="guardar">Guardar imagen</button>
-      </div>
-    </div>
+    <h2 class="titulo">Imagina. Crea. Personaliza.</h2>
+    <p class="subtitulo">Diseñamos y fabricamos piezas únicas con tecnología 3D.  
+    Personaliza soportes, accesorios y prototipos con tu estilo.</p>
+    <button class="boton" onclick="location.href='productos/index.html'">Ver Productos</button>
   </main>
 
-  <script>
-    const lienzo=document.getElementById('lienzo');
-    const ctx=lienzo.getContext('2d');
-    const colorPicker=document.getElementById('colorPicker');
-    const texto=document.getElementById('texto');
-    const guardar=document.getElementById('guardar');
-
-    ctx.fillStyle=colorPicker.value;
-    ctx.fillRect(50,50,300,300);
-
-    colorPicker.addEventListener('input',()=>{
-      ctx.fillStyle=colorPicker.value;
-      ctx.fillRect(50,50,300,300);
-      ctx.fillStyle='#fff';
-      ctx.font='20px Poppins';
-      ctx.fillText(texto.value,150,220);
-    });
-
-    texto.addEventListener('input',()=>{
-      ctx.fillStyle=colorPicker.value;
-      ctx.fillRect(50,50,300,300);
-      ctx.fillStyle='#fff';
-      ctx.font='20px Poppins';
-      ctx.fillText(texto.value,150,220);
-    });
-
-    guardar.addEventListener('click',()=>{
-      const link=document.createElement('a');
-      link.download='personalizacion.png';
-      link.href=lienzo.toDataURL();
-      link.click();
-    });
-  </script>
+  <footer>
+    © 2025 Kreoma3D · Hecho en Colombia
+  </footer>
 </body>
 </html>
