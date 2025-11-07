@@ -105,7 +105,8 @@
       base: { file:'Helm-Wandhalter.stl', mesh:null },
       superior: { file:'Helm-Halter.stl', mesh:null },
       inserts: ['Insert1.stl','Insert2.stl','Insert3.stl','Insert4.stl','Insert5.stl'],
-      insertMeshes:[]
+      insertMeshes:[],
+      logoYamaha: { file:'logoYamaha.stl', mesh:null }
     };
 
     function cargar(){
@@ -119,6 +120,26 @@
         m.rotation.x=Math.PI; m.rotation.z=Math.PI; worldGroup.add(m);
         piezas.superior.mesh=m;
       });
+      loader.load('logoYamaha.stl', g=>{
+        const m = new THREE.Mesh(
+          g,
+          new THREE.MeshStandardMaterial({color:'#ff8000', metalness:0.4, roughness:0.35})
+        );
+
+        // mismas rotaciones que las demás piezas
+        m.rotation.x = Math.PI;
+        m.rotation.z = Math.PI;
+
+        // mueve el logo hasta que quede visualmente pegado a la base
+        m.position.set(11, -15, -5); // ← ajusta estos tres valores
+        // por ejemplo prueba:
+        // m.position.set(0, -15, 35);
+
+        worldGroup.add(m);
+        piezas.logoYamaha = m;
+
+      });
+
       piezas.inserts.forEach(f=>{
         loader.load(f,g=>{
           const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:'#ff8000',metalness:0.4,roughness:0.35}));
