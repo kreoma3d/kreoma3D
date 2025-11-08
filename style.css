@@ -58,7 +58,7 @@ section{
 .producto:hover{transform:translateY(-8px);box-shadow:0 0 20px rgba(255,0,0,.3);}
 .producto img{width:100%;border-radius:15px;margin-bottom:15px;transition:transform .3s;display:block;}
 .producto:hover img{transform:scale(1.05);}
-.producto::after{content:"Ver más";position:absolute;inset:0;background:rgba(255,0,0,.6);color:#fff;display:flex;align-items:center;justify-content:center;opacity:0;transition:.3s;font-weight:600;letter-spacing:1px;}
+.producto::after{content:"Ver más";position:absolute;inset:0;background:rgba(255,0,0,.6);color:#fff;display:flex;align-items:center;justify-content:center;opacity:0;transition:.3s;font-weight:600;letter-spacing:1px;pointer-events:none;}
 .producto:hover::after{opacity:1;}
 .producto h3{color:#fff;margin-bottom:8px;}
 .producto p{color:#bbb;font-size:.9rem;}
@@ -98,3 +98,4 @@ footer{text-align:center;padding:30px 0;color:#777;font-size:.9rem;}
   body::before{background-size:90%;opacity:.04;}
   .redes a{width:42px;height:42px;font-size:1.1rem;}
 }
+
