@@ -13,8 +13,6 @@
   <meta property="og:url" content="https://kreoma3d.github.io/personalizacion/">
   <title>Kreoma3D | Impresión y Personalización 3D</title>
   <link rel="icon" type="image/png" sizes="512x512" href="logo_kreoma.png">
-
-  <!-- Fuentes y CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
@@ -39,32 +37,33 @@
     <a class="boton" href="productos/index.html">Ver Productos</a>
   </section>
 
-  <!-- SLIDER AUTOMÁTICO -->
+  <!-- SLIDER -->
   <section id="slider">
     <div class="slider-container">
-      <div class="slide"><video src="imagenes/Black Friday Soporte casco 3D.mp4" alt="Producto destacado 1" loading="lazy" muted loop autoplay></video></div>
+      <div class="slide"><video src="imagenes/Black Friday Soporte casco 3D.mp4" muted loop autoplay playsinline></video></div>
       <div class="slide"><img src="imagenes/slide2.jpg" alt="Producto destacado 2" loading="lazy"></div>
       <div class="slide"><img src="imagenes/slide3.jpg" alt="Producto destacado 3" loading="lazy"></div>
+      <div class="slide"><img src="imagenes/slide4.jpg" alt="Producto destacado 4" loading="lazy"></div>
     </div>
     <div class="puntos">
       <span class="punto active"></span>
+      <span class="punto"></span>
       <span class="punto"></span>
       <span class="punto"></span>
     </div>
   </section>
 
   <!-- SOBRE NOSOTROS -->
-  <section id="nosotros" aria-label="Sobre Kreoma3D">
+  <section id="nosotros">
     <h2 class="titulo">Sobre Nosotros</h2>
     <p class="subtitulo">
       En <strong>Kreoma3D</strong> transformamos ideas en objetos reales. Nos especializamos en la impresión 3D de piezas funcionales y personalizadas, creando productos para hogares, oficinas y proyectos creativos.
       Nuestro enfoque se centra en el desarrollo, fabricación y mejora continua de nuestros propios diseños, garantizando acabados de alta calidad y resultados confiables.
-      También contamos con la capacidad de adaptar y ajustar modelos existentes para necesidades específicas, manteniendo un equilibrio entre creatividad, tecnología y precisión.
     </p>
   </section>
 
   <!-- PRODUCTOS -->
-  <section id="productos" aria-label="Catálogo de productos 3D">
+  <section id="productos">
     <h2 class="titulo">Nuestros Productos</h2>
     <p class="subtitulo">
       En <strong>Kreoma3D</strong> desarrollamos y fabricamos piezas impresas en 3D con alto nivel de detalle y resistencia.
@@ -102,11 +101,10 @@
   <section id="contacto">
     <h2 class="titulo">Contáctanos</h2>
     <p class="subtitulo">Estamos en Medellín, Colombia. Escríbenos o envíanos un mensaje directo.</p>
-    <p><a class="boton" href="https://wa.me/573332395481" target="_blank" aria-label="Abrir WhatsApp">Hablemos por WhatsApp</a></p>
-    <br>
-    <form action="https://formspree.io/f/mzzbgvwn" method="POST" aria-label="Formulario de contacto">
+    <p><a class="boton" href="https://wa.me/573332395481" target="_blank">Hablemos por WhatsApp</a></p>
+    <form action="https://formspree.io/f/mzzbgvwn" method="POST">
       <input type="text" name="nombre" placeholder="Tu nombre" required>
-      <input type="tel" name="telefono" placeholder="Tu teléfono" pattern="[0-9]{10}" minlength="10" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" required>
+      <input type="tel" name="telefono" placeholder="Tu teléfono" pattern="[0-9]{10}" required>
       <input type="email" name="email" placeholder="Tu correo" required>
       <textarea name="mensaje" rows="5" placeholder="Escribe tu mensaje..." required></textarea>
       <button type="submit">Enviar Mensaje</button>
@@ -115,17 +113,14 @@
 
   <footer></footer>
 
-  <!-- ÍCONOS SOCIALES -->
   <div class="redes">
-    <a href="https://www.instagram.com/kreoma3d" target="_blank" class="instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-    <a href="https://www.facebook.com/kreoma3d" target="_blank" class="facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-    <a href="https://wa.me/573332395481" target="_blank" class="whatsapp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-    <a href="https://www.facebook.com/marketplace/profile/kreoma3d" target="_blank" class="marketplace" aria-label="Marketplace"><i class="fa-solid fa-store"></i></a>
+    <a href="https://www.instagram.com/kreoma3d" target="_blank" class="instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://www.facebook.com/kreoma3d" target="_blank" class="facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://wa.me/573332395481" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://www.facebook.com/marketplace/profile/kreoma3d" target="_blank" class="marketplace"><i class="fa-solid fa-store"></i></a>
   </div>
 
-  <!-- BOTÓN VOLVER ARRIBA -->
-  <button id="volverArriba" aria-label="Volver arriba"><i class="fa-solid fa-arrow-up"></i></button>
-
+  <button id="volverArriba"><i class="fa-solid fa-arrow-up"></i></button>
   <script src="script.js"></script>
 </body>
 </html>

@@ -1,18 +1,17 @@
-// --- EFECTO INICIAL Y FOOTER DINÁMICO ---
-window.addEventListener('load', () => {
-  document.body.classList.add('loaded');
-  const footer = document.querySelector('footer');
-  if (footer)
-    footer.innerHTML = `© ${new Date().getFullYear()} Kreoma3D · Medellín, Colombia · kreoma3d@gmail.com`;
+// --- EFECTO INICIAL Y FOOTER ---
+window.addEventListener("load", () => {
+  document.body.classList.add("loaded");
+  const footer = document.querySelector("footer");
+  if (footer) footer.innerHTML = `© ${new Date().getFullYear()} Kreoma3D · Medellín, Colombia · kreoma3d@gmail.com`;
 });
 
 // --- SCROLL SUAVE ---
 document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const target = document.querySelector(a.getAttribute('href'));
+  a.addEventListener("click", e => {
+    const target = document.querySelector(a.getAttribute("href"));
     if (target) {
       e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth' });
+      target.scrollIntoView({ behavior: "smooth" });
     }
   });
 });
@@ -48,23 +47,22 @@ if (volverArriba) {
 // --- SLIDER AUTOMÁTICO ---
 const slides = document.querySelectorAll("#slider .slide");
 const puntos = document.querySelectorAll("#slider .punto");
+const sliderContainer = document.querySelector(".slider-container");
 let index = 0;
 
 function cambiarSlide() {
+  if (!sliderContainer) return;
   index = (index + 1) % slides.length;
-  document.querySelector(".slider-container").style.transform = `translateX(-${index * 100}%)`;
+  sliderContainer.style.transform = `translateX(-${index * 100}%)`;
   puntos.forEach(p => p.classList.remove("active"));
   puntos[index].classList.add("active");
 }
 
 if (slides.length > 0) {
-  
-  setInterval(cambiarSlide, 5000);
-
-
+  setInterval(cambiarSlide, 4000);
   puntos.forEach((p, i) => p.addEventListener("click", () => {
     index = i;
-    document.querySelector(".slider-container").style.transform = `translateX(-${i * 100}%)`;
+    sliderContainer.style.transform = `translateX(-${i * 100}%)`;
     puntos.forEach(pt => pt.classList.remove("active"));
     p.classList.add("active");
   }));
