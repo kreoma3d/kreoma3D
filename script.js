@@ -1,35 +1,68 @@
-const canvas = document.getElementById("lienzo");
-const ctx = canvas.getContext("2d");
-const colorInput = document.getElementById("colorPicker");
-const textoInput = document.getElementById("texto");
-const botonGuardar = document.getElementById("guardar");
+// --- EFECTO INICIAL Y FOOTER DINÁMICO ---
+window.addEventListener('load', () => {
+  document.body.classList.add('loaded');
+  const footer = document.querySelector('footer');
+  if (footer)
+    footer.innerHTML = `© ${new Date().getFullYear()} Kreoma3D · Medellín, Colombia · kreoma3d@gmail.com`;
+});
 
-const base = new Image();
-base.src = "producto_base.png"; // Imagen base de tu producto
+// --- SCROLL SUAVE ---
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
 
-base.onload = () => {
-  dibujar();
-};
+// --- HEADER Y NAV ACTIVO ---
+const navLinks = document.querySelectorAll("nav a");
+window.addEventListener("scroll", () => {
+  const fromTop = window.scrollY + 150;
+  const header = document.querySelector("header");
+  if (header) header.classList.toggle("scrolled", window.scrollY > 50);
 
-function dibujar() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(base, 0, 0, canvas.width, canvas.height);
+  navLinks.forEach(link => {
+    const section = document.querySelector(link.hash);
+    if (!section) return;
+    if (section.offsetTop <= fromTop && section.offsetTop + section.offsetHeight > fromTop) {
+      navLinks.forEach(l => l.classList.remove("active"));
+      link.classList.add("active");
+    }
+  });
+});
 
-  ctx.fillStyle = colorInput.value + "55"; // semitransparente
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.fillStyle = "#fff";
-  ctx.font = "bold 24px Arial";
-  ctx.textAlign = "center";
-  ctx.fillText(textoInput.value, canvas.width / 2, canvas.height - 20);
+// --- BOTÓN VOLVER ARRIBA ---
+const volverArriba = document.getElementById("volverArriba");
+if (volverArriba) {
+  window.addEventListener("scroll", () => {
+    volverArriba.style.display = window.scrollY > 400 ? "flex" : "none";
+  });
+  volverArriba.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 }
 
-colorInput.addEventListener("input", dibujar);
-textoInput.addEventListener("input", dibujar);
+// --- SLIDER AUTOMÁTICO ---
+const slides = document.querySelectorAll("#slider .slide");
+const puntos = document.querySelectorAll("#slider .punto");
+let index = 0;
 
-botonGuardar.onclick = () => {
-  const link = document.createElement("a");
-  link.download = "personalizacion.png";
-  link.href = canvas.toDataURL("image/png");
-  link.click();
-};
+function cambiarSlide() {
+  index = (index + 1) % slides.length;
+  document.querySelector(".slider-container").style.transform = `translateX(-${index * 100}%)`;
+  puntos.forEach(p => p.classList.remove("active"));
+  puntos[index].classList.add("active");
+}
+
+if (slides.length > 0) {
+  setInterval(cambiarSlide, 4000);
+  puntos.forEach((p, i) => p.addEventListener("click", () => {
+    index = i;
+    document.querySelector(".slider-container").style.transform = `translateX(-${i * 100}%)`;
+    puntos.forEach(pt => pt.classList.remove("active"));
+    p.classList.add("active");
+  }));
+}
