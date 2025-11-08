@@ -2,14 +2,32 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kreoma3D - Impresión 3D personalizada en Medellín. Soportes, accesorios y prototipos únicos.">
+  <meta name="keywords" content="impresión 3D, personalización, soportes, prototipos, Medellín, Kreoma3D">
+  <meta name="author" content="Kreoma3D">
   <title>Kreoma3D | Impresión y Personalización 3D</title>
   <link rel="icon" href="logo_kreoma.png">
+
+  <!-- Font Awesome para íconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;scroll-behavior:smooth;}
     body{
-      background:#0a0a0a url('logo_kreoma.png') center center no-repeat fixed;
-      background-size:40%;
+      background:#0a0a0a;
       color:#fff;
+      opacity:0;
+      transition:opacity .8s ease;
+    }
+    body.loaded{opacity:1;}
+    body::before{
+      content:"";
+      position:fixed;inset:0;
+      background:url('logo_kreoma.png') center center no-repeat;
+      background-size:40%;
+      opacity:.08;
+      z-index:-1;
     }
     header{
       position:fixed;top:0;width:100%;
@@ -18,11 +36,11 @@
       background:rgba(0,0,0,.5);backdrop-filter:blur(8px);
       z-index:10;
     }
-    header h1{font-size:1.8rem;letter-spacing:1px;color:#f33;}
+    header h1 a{color:#f33;text-decoration:none;letter-spacing:1px;font-size:1.8rem;}
     nav a{
       color:#fff;text-decoration:none;margin:0 15px;font-weight:500;transition:.3s;
     }
-    nav a:hover{color:#f33;}
+    nav a:hover, nav a.active{color:#f33;text-shadow:0 0 10px #f33;}
     section{
       min-height:100vh;
       display:flex;flex-direction:column;
@@ -74,14 +92,53 @@
     }
     button:hover{background:#fff;color:#f33;}
     footer{text-align:center;padding:30px 0;color:#777;font-size:.9rem;}
+
+    /* Íconos flotantes */
+    .redes{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      z-index:20;
+    }
+    .redes a{
+      width:48px;height:48px;
+      display:flex;align-items:center;justify-content:center;
+      border-radius:50%;
+      background:#222;
+      color:#fff;
+      font-size:1.3rem;
+      transition:.3s;
+      box-shadow:0 0 10px rgba(0,0,0,.5);
+    }
+    .redes a:hover{
+      transform:scale(1.1);
+    }
+    .redes a.instagram:hover{background:#E1306C;}
+    .redes a.facebook:hover{background:#1877F2;}
+    .redes a.whatsapp:hover{background:#25D366;}
+    .redes a.marketplace:hover{background:#4267B2;}
+
+    @media(max-width:768px){
+      header{flex-direction:column;gap:10px;padding:15px 25px;}
+      .titulo{font-size:2.2rem;}
+      .subtitulo{font-size:1rem;}
+      .productos-grid{gap:15px;}
+      body::before{background-size:70%;opacity:.05;}
+    }
+    @media(max-width:480px){
+      body::before{background-size:90%;opacity:.04;}
+      .redes a{width:42px;height:42px;font-size:1.1rem;}
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1><a href="#inicio" style="color:#f33;text-decoration:none;">Kreoma3D</a></h1>
-
+    <h1><a href="#inicio">Kreoma3D</a></h1>
     <nav>
-      <a href="#inicio">Inicio</a>
+      <a href="#inicio" class="active">Inicio</a>
       <a href="#nosotros">Nosotros</a>
       <a href="#productos">Productos</a>
       <a href="#contacto">Contacto</a>
@@ -99,37 +156,36 @@
     <h2 class="titulo">Sobre Nosotros</h2>
     <p class="subtitulo">
       En <strong>Kreoma3D</strong> transformamos ideas en objetos reales. Nos especializamos en la impresión 3D de piezas funcionales y personalizadas, creando productos para hogares, oficinas y proyectos creativos.
-Nuestro enfoque se centra en el desarrollo, fabricación y mejora continua de nuestros propios diseños, garantizando acabados de alta calidad y resultados confiables.
-También contamos con la capacidad de adaptar y ajustar modelos existentes para necesidades específicas, manteniendo un equilibrio entre creatividad, tecnología y precisión.
+      Nuestro enfoque se centra en el desarrollo, fabricación y mejora continua de nuestros propios diseños, garantizando acabados de alta calidad y resultados confiables.
+      También contamos con la capacidad de adaptar y ajustar modelos existentes para necesidades específicas, manteniendo un equilibrio entre creatividad, tecnología y precisión.
     </p>
   </section>
 
   <section id="productos">
     <h2 class="titulo">Nuestros Productos</h2>
-    <p class="subtitulo">En <strong>Kreoma3D</strong> desarrollamos y fabricamos piezas impresas en 3D con alto nivel de detalle y resistencia.
-Nuestra línea de productos se destaca por su diseño funcional, estética moderna y fabricación cuidadosa.
+    <p class="subtitulo">
+      En <strong>Kreoma3D</strong> desarrollamos y fabricamos piezas impresas en 3D con alto nivel de detalle y resistencia.
+      Nuestra línea de productos se destaca por su diseño funcional, estética moderna y fabricación cuidadosa.
+      Actualmente ofrecemos:
+      Soportes y accesorios para cascos y equipos personales.
+      Organizadores y elementos prácticos para el hogar y la oficina.
+      Artículos decorativos y personalizados bajo pedido.
+      Cada pieza es producida con materiales de calidad, optimizando durabilidad, acabado y precisión en cada impresión.
+    </p>
 
-Actualmente ofrecemos:
-
-Soportes y accesorios para cascos y equipos personales.
-
-Organizadores y elementos prácticos para el hogar y la oficina.
-
-Artículos decorativos y personalizados bajo pedido.
-
-Cada pieza es producida con materiales de calidad, optimizando durabilidad, acabado y precisión en cada impresión.
+    <div class="productos-grid">
       <div class="producto">
-        <img src="productos/soporte1.jpg" alt="Soporte de casco 3D">
+        <img src="imagenes/soporte1.jpg" alt="Soporte de casco 3D">
         <h3>Soporte de Casco Multicolor</h3>
         <p>Diseño ergonómico y moderno, fabricado con PLA de alta calidad.</p>
       </div>
       <div class="producto">
-        <img src="productos/soporte2.jpg" alt="Base organizadora 3D">
+        <img src="imagenes/soporte2.jpg" alt="Base organizadora 3D">
         <h3>Base Organizadora</h3>
         <p>Ideal para mantener orden en tu escritorio o área de trabajo.</p>
       </div>
       <div class="producto">
-        <img src="productos/soporte3.jpg" alt="Prototipo personalizado">
+        <img src="imagenes/soporte3.jpg" alt="Prototipo personalizado">
         <h3>Prototipos Personalizados</h3>
         <p>Transforma tus ideas en modelos físicos precisos para presentación o prueba.</p>
       </div>
@@ -139,10 +195,11 @@ Cada pieza es producida con materiales de calidad, optimizando durabilidad, acab
   <section id="contacto">
     <h2 class="titulo">Contáctanos</h2>
     <p class="subtitulo">Estamos en Medellín, Colombia. Escríbenos o envíanos un mensaje directo.</p>
-    <p><a class="boton" href="https://wa.me/573332395481" target="_blank">Hablar por WhatsApp</a></p>
+    <p><a class="boton" href="https://wa.me/573332395481" target="_blank">Hablemos por WhatsApp</a></p>
     <br>
     <form action="https://formspree.io/f/mzzbgvwn" method="POST">
       <input type="text" name="nombre" placeholder="Tu nombre" required>
+      <input type="tel" name="telefono" placeholder="Tu teléfono" pattern="[0-9]{10}" minlength="10" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" required>
       <input type="email" name="email" placeholder="Tu correo" required>
       <textarea name="mensaje" rows="5" placeholder="Escribe tu mensaje..." required></textarea>
       <button type="submit">Enviar Mensaje</button>
@@ -152,5 +209,36 @@ Cada pieza es producida con materiales de calidad, optimizando durabilidad, acab
   <footer>
     © 2025 Kreoma3D · Medellín, Colombia · kreoma3d@gmail.com
   </footer>
+
+  <!-- Íconos flotantes -->
+  <div class="redes">
+    <a href="https://www.instagram.com/kreoma3d" target="_blank" class="instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://www.facebook.com/kreoma3d" target="_blank" class="facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://wa.me/573332395481" target="_blank" class="whatsapp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://www.facebook.com/marketplace/profile/kreoma3d" target="_blank" class="marketplace" aria-label="Marketplace"><i class="fa-solid fa-store"></i></a>
+  </div>
+
+  <script>
+    window.addEventListener('load',()=>document.body.classList.add('loaded'));
+
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click',e=>{
+        e.preventDefault();
+        document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'});
+      });
+    });
+
+    const links=document.querySelectorAll("nav a");
+    window.addEventListener("scroll",()=>{
+      let fromTop=window.scrollY+150;
+      links.forEach(link=>{
+        let section=document.querySelector(link.hash);
+        if(section.offsetTop<=fromTop && section.offsetTop+section.offsetHeight>fromTop){
+          links.forEach(l=>l.classList.remove("active"));
+          link.classList.add("active");
+        }
+      });
+    });
+  </script>
 </body>
 </html>
