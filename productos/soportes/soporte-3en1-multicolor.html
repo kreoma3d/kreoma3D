@@ -53,7 +53,7 @@
     nav a:hover{color:#f33;}
 
     main{
-      margin-top:120px;
+      margin-top:130px;
       display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
       padding:40px;gap:50px;
       animation:fadeIn 1s ease-out;
@@ -120,12 +120,42 @@
       margin-top:60px;
     }
 
-    @media(max-width:700px){
-      header{padding:15px 25px;flex-direction:column;gap:10px;}
-      main{padding:20px;}
-      .img-box img{width:90%;max-width:300px;}
-      .info{text-align:center;}
-      .video-box iframe{height:240px;}
+    /* ---- Responsive mejorado ---- */
+    @media(max-width:1024px){
+      header{
+        flex-direction:column;
+        padding:15px 20px;
+        gap:8px;
+      }
+      main{
+        flex-direction:column;
+        margin-top:160px;
+        padding:25px 15px;
+        gap:30px;
+      }
+      .img-box img{
+        width:100%;
+        max-width:260px;
+        height:auto;
+      }
+      .info{
+        max-width:95%;
+        text-align:center;
+      }
+      .info h2{font-size:1.6rem;}
+      .info p{font-size:.95rem;}
+      .video-box iframe{
+        width:100%;
+        height:220px;
+      }
+      .galeria-grid{
+        grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+        gap:15px;
+      }
+      footer{
+        font-size:.85rem;
+        padding:20px 0 30px;
+      }
     }
   </style>
 </head>
@@ -149,15 +179,11 @@
         Un soporte versátil para casco, llaves y chaqueta. Fabricado con tecnología de impresión 3D
         y materiales de alta resistencia. Personaliza cada parte con tus colores preferidos.
       </p>
-      <p><strong>Precio undidad:</strong> $38.000 COP</p>
-      <p><strong>Precio del par:</strong>  $70.000 COP</p>
-      <p>
-        <h3>Puedes personalizarlo a tu gusto: </h3>
-      </p>
-      
+      <p><strong>Precio unidad:</strong> $38.000 COP</p>
+      <p><strong>Precio del par:</strong> $70.000 COP</p>
+      <h3>Puedes personalizarlo a tu gusto:</h3>
       <button class="boton" onclick="location.href='visor.html'">Personalizar tu soporte aquí</button>
-        <BR></BR>
-
+      <br><br>
       <p>Cambia los colores de cada parte y crea tu propio diseño para hacer de este soporte algo único.</p>
     </div>
   </main>
@@ -177,6 +203,7 @@
       <img src="../../imagenes/soporte3en1_6.jpg" alt="Soporte6">
     </div>
   </section>
+
 <script>
 fetch('../../componentes/redes.html')
   .then(r=>r.text())
