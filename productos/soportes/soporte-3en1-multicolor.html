@@ -7,12 +7,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+    html,body{width:100%;overflow-x:hidden;}
     body{
       background:#000;
       color:#fff;
-      overflow-x:hidden;
       position:relative;
     }
+
     body::before{
       content:"";
       position:fixed;
@@ -49,12 +50,8 @@
       border-bottom:1px solid rgba(255,255,255,.1);
       z-index:10;
     }
-    header h1 a{
-      color:#f33;text-decoration:none;font-weight:700;letter-spacing:1px;
-    }
-    nav a{
-      color:#fff;text-decoration:none;margin:0 15px;font-weight:500;transition:.3s;
-    }
+    header h1 a{color:#f33;text-decoration:none;font-weight:700;letter-spacing:1px;}
+    nav a{color:#fff;text-decoration:none;margin:0 15px;font-weight:500;transition:.3s;}
     nav a:hover{color:#f33;}
 
     main{
@@ -71,6 +68,7 @@
 
     .img-box img{
       width:380px;
+      max-width:100%;
       border-radius:20px;
       box-shadow:0 0 25px rgba(255,0,0,.25);
       transition:.3s;
@@ -89,14 +87,16 @@
     .boton:hover{background:#fff;color:#f33;box-shadow:0 0 25px rgba(255,0,0,.6);}
 
     section.galeria{
-      padding:60px 40px;
+      padding:60px 20px;
       text-align:center;
       background:rgba(255,255,255,.03);
       margin-top:40px;
+      overflow:hidden;
     }
     section.galeria h3{
       font-size:1.6rem;margin-bottom:25px;color:#f33;font-weight:600;
     }
+
     .galeria-grid{
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -104,24 +104,19 @@
       max-width:1100px;
       margin:auto;
     }
-    .galeria-grid img{
+    .galeria-grid img, 
+    .galeria-grid video{
       width:100%;
+      height:auto;
       border-radius:15px;
+      display:block;
       box-shadow:0 0 15px rgba(0,0,0,.4);
       transition:.3s;
     }
-    .galeria-grid img:hover{
+    .galeria-grid img:hover,
+    .galeria-grid video:hover{
       transform:scale(1.04);
       box-shadow:0 0 25px rgba(255,0,0,.3);
-    }
-
-    .video-box{
-      margin-top:50px;
-      display:flex;justify-content:center;
-    }
-    .video-box iframe{
-      width:90%;max-width:800px;height:450px;border-radius:15px;border:none;
-      box-shadow:0 0 25px rgba(255,0,0,.25);
     }
 
     footer{
@@ -130,43 +125,22 @@
       margin-top:60px;
     }
 
-    /* --- RESPONSIVE --- */
     @media(max-width:768px){
-      header{
-        flex-direction:column;
-        padding:20px;
-        gap:10px;
-      }
+      header{flex-direction:column;padding:20px;gap:10px;}
       main{
         flex-direction:column;
         margin-top:180px;
         padding:25px 15px;
         gap:25px;
       }
-      .img-box img{
-        width:100%;
-        max-width:320px;
-        height:auto;
-      }
-      .info{
-        max-width:95%;
-        text-align:center;
-      }
+      .img-box img{max-width:320px;}
+      .info{max-width:95%;text-align:center;}
       .info h2{font-size:1.6rem;}
       .info p{font-size:.95rem;}
       .boton{padding:12px 28px;font-size:.95rem;}
-      .video-box iframe{
-        width:100%;
-        height:200px;
-      }
-      .galeria-grid{
-        grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-        gap:15px;
-      }
-      footer{
-        font-size:.85rem;
-        padding:20px 0 30px;
-      }
+      .galeria-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;}
+      .galeria-grid video{max-width:100%;height:auto;}
+      footer{font-size:.85rem;padding:20px 0 30px;}
     }
   </style>
 </head>
@@ -186,10 +160,8 @@
     </div>
     <div class="info">
       <h2>Soporte 3 en 1 Multicolor</h2>
-      <p>
-        Un soporte versátil para casco, llaves y chaqueta. Fabricado con tecnología de impresión 3D
-        y materiales de alta resistencia. Personaliza cada parte con tus colores preferidos.
-      </p>
+      <p>Un soporte versátil para casco, llaves y chaqueta. Fabricado con tecnología de impresión 3D
+         y materiales de alta resistencia. Personaliza cada parte con tus colores preferidos.</p>
       <p><strong>Precio unidad:</strong> $38.000 COP</p>
       <p><strong>Precio del par:</strong> $70.000 COP</p>
       <h3>Puedes personalizarlo a tu gusto:</h3>
@@ -202,7 +174,7 @@
   <section class="galeria">
     <h3>Galería del Soporte</h3>
     <div class="galeria-grid">
-      <div class="slide"><video src="../../imagenes/Black Friday Soporte casco 3D.mp4" muted loop autoplay playsinline></video></div>
+      <video src="../../imagenes/Black Friday Soporte casco 3D.mp4" muted loop autoplay playsinline></video>
     </div>
     <div class="galeria-grid">
       <img src="../../imagenes/soporte3en1_1.jpg" alt="Soporte1">
@@ -214,11 +186,11 @@
     </div>
   </section>
 
-<script>
-fetch('../../componentes/redes.html')
-  .then(r=>r.text())
-  .then(h=>document.body.insertAdjacentHTML('beforeend',h));
-</script>
+  <script>
+  fetch('../../componentes/redes.html')
+    .then(r=>r.text())
+    .then(h=>document.body.insertAdjacentHTML('beforeend',h));
+  </script>
 
   <footer>
     © 2025 Kreoma3D · Innovación en Impresión 3D Personalizada
