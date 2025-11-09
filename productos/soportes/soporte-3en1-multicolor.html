@@ -6,39 +6,132 @@
   <link rel="icon" href="../../logo_kreoma.png">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-    body{background:#0a0a0a;color:#fff;}
+    body{
+      background:#000;
+      color:#fff;
+      overflow-x:hidden;
+      position:relative;
+    }
+    /* logo desvanecido */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:url('../../logo_kreoma.png') center center no-repeat;
+      background-size:45%;
+      opacity:0.08;
+      z-index:-2;
+    }
+    /* luz animada */
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:radial-gradient(circle at 30% 40%,rgba(255,0,0,.15),transparent 60%),
+                 radial-gradient(circle at 70% 80%,rgba(255,255,255,.05),transparent 60%);
+      animation:moveBg 10s infinite alternate ease-in-out;
+      z-index:-1;
+    }
+    @keyframes moveBg{
+      0%{background-position:30% 40%,70% 80%;}
+      100%{background-position:50% 60%,50% 40%;}
+    }
+
     header{
       position:fixed;top:0;width:100%;
       display:flex;justify-content:space-between;align-items:center;
-      padding:20px 60px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
+      padding:20px 60px;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(255,255,255,.1);
+      z-index:10;
     }
-    header h1{color:#f33;}
-    nav a{color:#fff;text-decoration:none;margin:0 15px;font-weight:500;transition:.3s;}
+    header h1 a{
+      color:#f33;text-decoration:none;font-weight:700;letter-spacing:1px;
+    }
+    nav a{
+      color:#fff;text-decoration:none;margin:0 15px;font-weight:500;transition:.3s;
+    }
     nav a:hover{color:#f33;}
+
     main{
-      margin-top:100px;display:flex;flex-wrap:wrap;align-items:center;
-      justify-content:center;padding:40px;gap:40px;
+      margin-top:120px;
+      display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+      padding:40px;gap:50px;
+      animation:fadeIn 1s ease-out;
     }
+    @keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+
     .img-box img{
-      width:350px;border-radius:20px;box-shadow:0 0 25px rgba(255,0,0,.2);
+      width:380px;border-radius:20px;box-shadow:0 0 25px rgba(255,0,0,.25);
+      transition:.3s;
     }
-    .info{
-      max-width:450px;
-    }
-    .info h2{color:#fff;font-size:2rem;margin-bottom:10px;}
-    .info p{color:#ccc;line-height:1.5;margin-bottom:20px;}
+    .img-box img:hover{transform:scale(1.03);}
+    .info{max-width:480px;}
+    .info h2{font-size:2.1rem;margin-bottom:15px;}
+    .info p{color:#ccc;line-height:1.6;margin-bottom:20px;font-size:1rem;}
+    .info strong{color:#fff;}
     .boton{
       background:#f33;color:#fff;border:none;padding:15px 35px;
       border-radius:40px;font-size:1rem;font-weight:600;cursor:pointer;
       box-shadow:0 0 15px rgba(255,0,0,.4);transition:.3s;
     }
     .boton:hover{background:#fff;color:#f33;box-shadow:0 0 25px rgba(255,0,0,.6);}
-    footer{text-align:center;color:#777;padding:30px 0;}
+
+    /* Galería */
+    section.galeria{
+      padding:60px 40px;
+      text-align:center;
+      background:rgba(255,255,255,.03);
+      margin-top:40px;
+    }
+    section.galeria h3{
+      font-size:1.6rem;margin-bottom:25px;color:#f33;font-weight:600;
+    }
+    .galeria-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:25px;
+      max-width:1100px;
+      margin:auto;
+    }
+    .galeria-grid img{
+      width:100%;
+      border-radius:15px;
+      box-shadow:0 0 15px rgba(0,0,0,.4);
+      transition:.3s;
+    }
+    .galeria-grid img:hover{
+      transform:scale(1.04);
+      box-shadow:0 0 25px rgba(255,0,0,.3);
+    }
+
+    /* Video */
+    .video-box{
+      margin-top:50px;
+      display:flex;justify-content:center;
+    }
+    .video-box iframe{
+      width:90%;max-width:800px;height:450px;border-radius:15px;border:none;
+      box-shadow:0 0 25px rgba(255,0,0,.25);
+    }
+
+    footer{
+      text-align:center;color:#888;padding:30px 0 40px;
+      border-top:1px solid rgba(255,255,255,.08);
+      margin-top:60px;
+    }
+
+    @media(max-width:700px){
+      header{padding:15px 25px;flex-direction:column;gap:10px;}
+      main{padding:20px;}
+      .img-box img{width:90%;max-width:300px;}
+      .info{text-align:center;}
+      .video-box iframe{height:240px;}
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1><a href="../../index.html" style="color:#f33;text-decoration:none;">Kreoma3D</a></h1>
+    <h1><a href="../../index.html">Kreoma3D</a></h1>
     <nav>
       <a href="../../index.html">Inicio</a>
       <a href="../index.html">Productos</a>
@@ -53,17 +146,45 @@
     <div class="info">
       <h2>Soporte 3 en 1 Multicolor</h2>
       <p>
-        Un soporte versátil diseñado para cascos, llaves y chaquetas.  
-        Fabricado con tecnología 3D y materiales de alta resistencia, con opción de personalizar colores en cada parte.
+        Un soporte versátil para casco, llaves y chaqueta. Fabricado con tecnología de impresión 3D
+        y materiales de alta resistencia. Personaliza cada parte con tus colores preferidos.
       </p>
-      <p><strong>Precio:</strong> $38.000 COP</p>
-      <button class="boton" onclick="location.href='visor.html'">Personalizar en 3D</button>
+      <p><strong>Precio undidad:</strong> $38.000 COP</p>
+      <p><strong>Precio del par:</strong>  $70.000 COP</p>
+      <p>
+        <h3>Puedes personalizarlo a tu gusto: </h3>
+      </p>
+      
+      <button class="boton" onclick="location.href='visor.html'">Personalizar tu soporte aquí</button>
+        <BR></BR>
+
+      <p>Cambia los colores de cada parte y crea tu propio diseño para hacer de este soporte algo único.</p>
     </div>
   </main>
 
+  <!-- Galería de fotos y video -->
+  <section class="galeria">
+    <h3>Galería del Soporte</h3>
+    <div class="galeria-grid">
+      <div class="slide"><video src="../../imagenes/Black Friday Soporte casco 3D.mp4" muted loop autoplay playsinline></video></div>
+    </div>
+    <div class="galeria-grid">
+      <img src="../../imagenes/soporte3en1_1.jpg" alt="Soporte1">
+      <img src="../../imagenes/soporte3en1_2.jpg" alt="Soporte2">
+      <img src="../../imagenes/soporte3en1_3.jpg" alt="Soporte3">
+      <img src="../../imagenes/soporte3en1_4.jpg" alt="Soporte4">
+      <img src="../../imagenes/soporte3en1_5.jpg" alt="Soporte5">
+      <img src="../../imagenes/soporte3en1_6.jpg" alt="Soporte6">
+    </div>
+  </section>
+<script>
+fetch('../../componentes/redes.html')
+  .then(r=>r.text())
+  .then(h=>document.body.insertAdjacentHTML('beforeend',h));
+</script>
+
   <footer>
-    © 2025 Kreoma3D · Innovación en Impresión 3D
+    © 2025 Kreoma3D · Innovación en Impresión 3D Personalizada
   </footer>
 </body>
 </html>
-

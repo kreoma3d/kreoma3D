@@ -125,6 +125,8 @@
     }
   </style>
 </head>
+
+
 <body>
   <header>
     <h1><a href="../index.html">Kreoma3D</a></h1>
@@ -149,7 +151,11 @@
       <h3>Decoración</h3>
     </div>
   </main>
-
+<script>
+fetch('../componentes/redes.html')
+  .then(r=>r.text())
+  .then(h=>document.body.insertAdjacentHTML('beforeend',h));
+</script>
   <footer>
     © 2025 Kreoma3D · Innovación en Impresión 3D
   </footer>

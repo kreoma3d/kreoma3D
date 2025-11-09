@@ -7,41 +7,135 @@
   <style>
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
     body{
-      background:#0a0a0a url('../../logo_kreoma.png') center center no-repeat fixed;
-      background-size:40%;
+      background:#000;
       color:#fff;
       min-height:100vh;
       display:flex;
       flex-direction:column;
       align-items:center;
+      overflow-x:hidden;
+      position:relative;
     }
+    /* logo de fondo desvanecido */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:url('../../logo_kreoma.png') center center no-repeat;
+      background-size:45%;
+      opacity:0.08;
+      z-index:-2;
+    }
+    /* capa de luz animada suave */
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:radial-gradient(circle at 30% 40%,rgba(255,0,0,.15),transparent 60%),
+                 radial-gradient(circle at 70% 80%,rgba(255,255,255,.05),transparent 60%);
+      animation:moveBg 10s infinite alternate ease-in-out;
+      z-index:-1;
+    }
+    @keyframes moveBg{
+      0%{background-position:30% 40%,70% 80%;}
+      100%{background-position:50% 60%,50% 40%;}
+    }
+
     header{
-      width:100%;display:flex;justify-content:space-between;align-items:center;
-      padding:20px 60px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
+      width:100%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px 60px;
+      background:rgba(0,0,0,.6);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(255,255,255,.1);
       position:fixed;top:0;z-index:10;
     }
-    header h1{color:#f33;}
-    nav a{color:#fff;text-decoration:none;margin:0 15px;font-weight:500;transition:.3s;}
+    header h1 a{
+      color:#f33;
+      text-decoration:none;
+      font-weight:700;
+      letter-spacing:1px;
+    }
+    nav a{
+      color:#fff;
+      text-decoration:none;
+      margin:0 15px;
+      font-weight:500;
+      transition:.3s;
+    }
     nav a:hover{color:#f33;}
+    
     main{
-      margin-top:120px;
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-      gap:40px;padding:0 40px;max-width:1200px;width:100%;
+      margin-top:130px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+      gap:40px;
+      padding:0 40px 60px;
+      max-width:1300px;
+      width:100%;
     }
     .card{
-      background:#111;border-radius:20px;box-shadow:0 0 20px rgba(0,0,0,.4);
-      overflow:hidden;transition:.3s;cursor:pointer;text-align:center;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:20px;
+      box-shadow:0 0 25px rgba(0,0,0,.5);
+      overflow:hidden;
+      transition:.35s;
+      cursor:pointer;
+      text-align:center;
+      position:relative;
     }
-    .card:hover{transform:translateY(-5px);box-shadow:0 0 25px rgba(255,0,0,.3);}
-    .card img{width:100%;height:180px;object-fit:cover;}
-    .card h3{margin:15px 0;color:#fff;}
-    .card p{color:#bbb;font-size:.9rem;padding:0 10px 15px;}
-    footer{text-align:center;color:#777;padding:30px 0;margin-top:40px;}
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(135deg,rgba(255,0,0,.15),transparent);
+      opacity:0;
+      transition:.35s;
+    }
+    .card:hover::after{opacity:1;}
+    .card:hover{
+      transform:translateY(-6px) scale(1.02);
+      box-shadow:0 0 35px rgba(255,0,0,.3);
+    }
+    .card img{
+      width:100%;
+      height:190px;
+      object-fit:cover;
+    }
+    .card h3{
+      margin:18px 0 8px;
+      font-size:1.1rem;
+      color:#fff;
+    }
+    .card p{
+      color:#bbb;
+      font-size:.9rem;
+      padding:0 15px 20px;
+      line-height:1.4;
+    }
+
+    footer{
+      text-align:center;
+      color:#888;
+      font-size:.9rem;
+      padding:25px 0 40px;
+      border-top:1px solid rgba(255,255,255,.08);
+      margin-top:auto;
+    }
+
+    @media(max-width:700px){
+      header{padding:15px 25px;flex-direction:column;gap:10px;}
+      nav a{margin:0 10px;}
+      main{padding:0 20px 60px;}
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1><a href="../../index.html" style="color:#f33;text-decoration:none;">Kreoma3D</a></h1>
+    <h1><a href="../../index.html">Kreoma3D</a></h1>
     <nav>
       <a href="../../index.html">Inicio</a>
       <a href="../index.html">Productos</a>
@@ -53,21 +147,17 @@
     <div class="card" onclick="location.href='soporte-3en1-multicolor.html'">
       <img src="../../imagenes/soporte3en1.png" alt="Soporte 3 en 1 Multicolor">
       <h3>Soporte 3 en 1 Multicolor</h3>
-      <p>Ideal para casco, llaves y chaquetas. Personalízalo con tus colores.</p>
+      <p>Diseño funcional y moderno. Sostiene casco, llaves y chaqueta. Personalízalo a tu gusto.</p>
     </div>
-
-    <!-- futuras tarjetas -->
-    <!--
-    <div class="card" onclick="location.href='otro-soporte.html'">
-      <img src="../../imagenes/otro-soporte.jpg" alt="Otro Soporte">
-      <h3>Otro modelo</h3>
-      <p>Descripción corta del producto.</p>
-    </div>
-    -->
   </main>
+<script>
+fetch('../../componentes/redes.html')
+  .then(r=>r.text())
+  .then(h=>document.body.insertAdjacentHTML('beforeend',h));
+</script>
 
   <footer>
-    © 2025 Kreoma3D · Innovación en Impresión 3D
+    © 2025 Kreoma3D · Innovación en Impresión 3D Personalizada
   </footer>
 </body>
 </html>
