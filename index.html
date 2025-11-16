@@ -49,6 +49,9 @@
       position:relative;
       overflow-x:hidden;
     }
+    html, body{
+  background:#000 !important;
+}
 
     /* Marca de agua logo */
     body::before{
@@ -843,6 +846,21 @@
         right:16px;
       }
     }
+    @media(max-width:768px){
+  body{
+    background:#000;
+  }
+
+  body::before{
+    opacity:0.05; 
+    background-size:120vmin;
+  }
+
+  body::after{
+    display:none;
+  }
+}
+
   </style>
 </head>
 
