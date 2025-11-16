@@ -952,6 +952,18 @@
   object-fit:cover;       /* Igual que las imágenes */
   display:block;
 }
+nav a.btn-galeria{
+  padding:8px 16px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.3);
+  background:radial-gradient(circle at 0 0,#ff3333,#8b0000);
+  box-shadow:0 0 18px rgba(255,51,51,.5);
+  font-weight:600;
+}
+nav a.btn-galeria:hover{
+  transform:translateY(-1px) scale(1.02);
+  box-shadow:0 0 26px rgba(255,51,51,.8);
+}
 
   </style>
 </head>
@@ -1037,6 +1049,13 @@
 
       </div>
     </section>
+    <!-- BOTON GALERIA -->
+
+    <nav>
+      <!-- NUEVO: botón a la galería -->
+      <a href="galeria.html" class="btn-galeria">Galería de impresiones</a>
+    </nav>
+
 
     <!-- QUE HACEMOS -->
     <section id="nosotros" class="reveal">

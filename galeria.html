@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Galería | Kreoma3D</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="logo_kreoma.png">
+  <style>
+    :root{
+      --rojo:#ff3333;
+      --rojo2:#ff6b6b;
+      --oscuro:#050509;
+      --oscuro2:#111119;
+      --texto:#f5f5f5;
+      --borde:#2a2a3a;
+      --card:#151524;
+      --card2:#1e1e30;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',system-ui,sans-serif;}
+
+    body{
+      min-height:100vh;
+      background:radial-gradient(circle at 0% 0%,#3b0000 0,#000 35%,#05050b 100%);
+      color:var(--texto);
+      overflow-x:hidden;
+    }
+
+    /* Fondo con logo y blobs animados */
+    .bg-logo{
+      position:fixed;
+      inset:0;
+      background:url('logo_kreoma.png') center center no-repeat;
+      background-size:55vmin;
+      opacity:0.04;
+      filter:drop-shadow(0 0 40px #000);
+      z-index:-3;
+      pointer-events:none;
+    }
+
+    .blob{
+      position:fixed;
+      width:420px;
+      height:420px;
+      border-radius:50%;
+      filter:blur(40px);
+      opacity:0.4;
+      mix-blend-mode:screen;
+      z-index:-4;
+      animation:blobMove 28s infinite alternate ease-in-out;
+    }
+    .blob.b1{background:radial-gradient(circle,var(--rojo2),transparent);top:-80px;left:-120px;}
+    .blob.b2{background:radial-gradient(circle,#ff0099,transparent);bottom:-160px;right:-120px;animation-delay:-6s;}
+    .blob.b3{background:radial-gradient(circle,#ffbf00,transparent);top:40%;left:-140px;animation-delay:-12s;}
+
+    @keyframes blobMove{
+      0%{transform:translate3d(0,0,0) scale(1);}
+      50%{transform:translate3d(80px,-40px,0) scale(1.1);}
+      100%{transform:translate3d(-40px,60px,0) scale(0.95);}
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter:blur(18px);
+      background:linear-gradient(90deg,rgba(0,0,0,.9),rgba(20,20,30,.8),rgba(0,0,0,.9));
+      border-bottom:1px solid rgba(255,255,255,.07);
+      box-shadow:0 12px 40px rgba(0,0,0,.7);
+    }
+
+    .nav{
+      max-width:1120px;
+      margin:0 auto;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+    }
+
+    .nav-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .nav-logo{
+      width:42px;height:42px;
+      border-radius:50%;
+      overflow:hidden;
+      border:2px solid rgba(255,255,255,.18);
+      box-shadow:0 0 20px rgba(255,51,51,.4);
+    }
+    .nav-logo img{width:100%;height:100%;object-fit:contain;background:#000;}
+
+    .nav-title{
+      display:flex;
+      flex-direction:column;
+      line-height:1.2;
+    }
+    .nav-title span:first-child{font-size:1.02rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+    .nav-title span:last-child{font-size:.7rem;opacity:.7;}
+
+    .nav-right{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn-nav{
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      padding:8px 16px;
+      font-size:.8rem;
+      color:var(--texto);
+      text-decoration:none;
+      background:radial-gradient(circle at 0 0,rgba(255,51,51,.45),rgba(10,10,20,.9));
+      box-shadow:0 0 0 rgba(255,51,51,0);
+      position:relative;
+      overflow:hidden;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      transition:.2s transform,.2s box-shadow,.2s border-color;
+    }
+    .btn-nav span.icon{font-size:.9rem;}
+    .btn-nav::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(120deg,rgba(255,255,255,.12),transparent 55%);
+      transform:translateX(-120%);
+      transition:.35s;
+    }
+    .btn-nav:hover{
+      transform:translateY(-1px) scale(1.02);
+      box-shadow:0 0 20px rgba(255,51,51,.4);
+      border-color:rgba(255,255,255,.4);
+    }
+    .btn-nav:hover::after{transform:translateX(120%);}
+
+    main{
+      max-width:1140px;
+      margin:0 auto;
+      padding:24px 16px 48px;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:minmax(0,2.2fr) minmax(0,1.6fr);
+      gap:26px;
+      align-items:center;
+      margin-top:12px;
+    }
+
+    @media (max-width:840px){
+      .hero{grid-template-columns:1fr;}
+    }
+
+    .hero-text h1{
+      font-size:clamp(1.8rem,4vw,2.5rem);
+      font-weight:800;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      margin-bottom:10px;
+    }
+
+    .hero-text h1 span{
+      background:linear-gradient(120deg,#fff,#ffb3b3,#ff3333);
+      -webkit-background-clip:text;
+      color:transparent;
+    }
+
+    .hero-text p{
+      font-size:.94rem;
+      max-width:540px;
+      opacity:.88;
+      line-height:1.6;
+      margin-bottom:18px;
+    }
+
+    .hero-badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:16px;
+    }
+    .hero-badge{
+      font-size:.72rem;
+      text-transform:uppercase;
+      border-radius:999px;
+      padding:5px 10px;
+      border:1px solid rgba(255,255,255,.2);
+      background:rgba(0,0,0,.5);
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      backdrop-filter:blur(10px);
+    }
+    .hero-badge i{font-style:normal;color:var(--rojo2);}
+
+    .hero-cta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .btn-primary,.btn-ghost{
+      border-radius:999px;
+      padding:10px 18px;
+      font-size:.85rem;
+      border:1px solid;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .btn-primary{
+      border-color:rgba(255,255,255,.18);
+      background:radial-gradient(circle at 10% 0%,#ff3333,#a00000);
+      color:#fff;
+      box-shadow:0 14px 35px rgba(0,0,0,.7);
+    }
+    .btn-primary:hover{transform:translateY(-1px) scale(1.01);box-shadow:0 20px 45px rgba(0,0,0,.85);}
+    .btn-ghost{
+      border-color:rgba(255,255,255,.22);
+      background:rgba(0,0,0,.4);
+      color:#fff;
+    }
+    .btn-ghost:hover{background:rgba(255,255,255,.06);}
+
+    .hero-visual{
+      position:relative;
+      padding:12px;
+    }
+
+    .hero-frame{
+      border-radius:26px;
+      border:1px solid rgba(255,255,255,.15);
+      background:radial-gradient(circle at 0 0,rgba(255,51,51,.2),rgba(10,10,22,.98));
+      box-shadow:
+        0 25px 70px rgba(0,0,0,.95),
+        0 0 40px rgba(255,51,51,.25);
+      padding:14px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-preview{
+      border-radius:18px;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+    .hero-preview img{
+      width:100%;
+      display:block;
+      object-fit:cover;
+      aspect-ratio:4/3;
+      transform:scale(1.04);
+      filter:saturate(1.25) contrast(1.1);
+      animation:floatImg 10s infinite alternate ease-in-out;
+    }
+    @keyframes floatImg{
+      0%{transform:scale(1.04) translateY(0);}
+      100%{transform:scale(1.06) translateY(-6px);}
+    }
+
+    .hero-counter{
+      position:absolute;
+      bottom:10px;
+      left:10px;
+      background:rgba(0,0,0,.75);
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:.7rem;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      border:1px solid rgba(255,255,255,.25);
+      backdrop-filter:blur(8px);
+    }
+    .hero-counter span:first-child{
+      width:22px;height:22px;border-radius:50%;
+      background:radial-gradient(circle at 0 0,#ff3333,#640000);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:700;font-size:.7rem;
+    }
+
+    .hero-chip{
+      position:absolute;
+      top:10px;right:10px;
+      font-size:.7rem;
+      padding:4px 10px;
+      border-radius:999px;
+      background:rgba(0,0,0,.75);
+      border:1px solid rgba(255,255,255,.4);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+
+    /* Filtros */
+    .section-top{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      margin:34px 0 16px;
+    }
+    .section-top h2{
+      font-size:1.1rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      opacity:.9;
+    }
+    .filter-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .filter-btn{
+      border-radius:999px;
+      padding:6px 12px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.4);
+      font-size:.78rem;
+      cursor:pointer;
+      color:#f5f5f5;
+      opacity:.82;
+      transition:.18s;
+    }
+    .filter-btn.active{
+      background:radial-gradient(circle at 0 0,#ff3333,#a00000);
+      border-color:rgba(255,255,255,.6);
+      opacity:1;
+      box-shadow:0 0 18px rgba(255,51,51,.55);
+    }
+    .filter-btn:hover{opacity:1;transform:translateY(-1px);}
+
+    /* Grid de tarjetas */
+    .gallery-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+      gap:16px;
+    }
+
+    .card{
+      position:relative;
+      border-radius:20px;
+      background:radial-gradient(circle at 0 0,var(--card2),var(--card));
+      border:1px solid var(--borde);
+      overflow:hidden;
+      cursor:pointer;
+      box-shadow:0 20px 40px rgba(0,0,0,.8);
+      transform:translateY(14px);
+      opacity:0;
+      transition:
+        .25s transform,
+        .25s box-shadow,
+        .25s border-color,
+        .25s background,
+        .25s opacity;
+    }
+    .card.visible{
+      transform:translateY(0);
+      opacity:1;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-120%;
+      background:linear-gradient(120deg,rgba(255,255,255,.08),transparent 55%);
+      transform:translateX(-100%);
+      transition:.4s;
+      pointer-events:none;
+    }
+
+    .card:hover{
+      transform:translateY(-6px) scale(1.01);
+      box-shadow:0 30px 70px rgba(0,0,0,.9);
+      border-color:rgba(255,255,255,.32);
+      background:radial-gradient(circle at 0 0,#2b1116,#141421);
+    }
+    .card:hover::before{transform:translateX(80%);}
+
+    .card-img{
+      position:relative;
+      overflow:hidden;
+    }
+    .card-img img{
+      width:100%;
+      display:block;
+      object-fit:cover;
+      aspect-ratio:4/3;
+      transition:.28s transform,.28s filter;
+      filter:saturate(1.1) contrast(1.03);
+    }
+    .card:hover .card-img img{
+      transform:scale(1.07) translateY(-4px);
+      filter:saturate(1.35) contrast(1.1);
+    }
+    .card-tag{
+      position:absolute;
+      left:10px;bottom:10px;
+      padding:4px 9px;
+      font-size:.7rem;
+      border-radius:999px;
+      background:rgba(0,0,0,.76);
+      border:1px solid rgba(255,255,255,.5);
+    }
+
+    .card-body{
+      padding:10px 12px 10px;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .card-title{
+      font-size:.9rem;
+      font-weight:600;
+    }
+    .card-meta{
+      font-size:.75rem;
+      opacity:.8;
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .pill{
+      font-size:.7rem;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.2);
+      background:rgba(0,0,0,.6);
+    }
+
+    footer{
+      margin-top:32px;
+      padding-top:18px;
+      border-top:1px solid rgba(255,255,255,.08);
+      font-size:.74rem;
+      opacity:.75;
+      text-align:center;
+    }
+
+    /* Lightbox */
+    .lightbox{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.92);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      z-index:50;
+      opacity:0;
+      pointer-events:none;
+      transition:.22s;
+    }
+    .lightbox.visible{
+      opacity:1;
+      pointer-events:auto;
+    }
+    .lightbox-img{
+      max-width:min(92vw,980px);
+      max-height:70vh;
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:0 30px 90px rgba(0,0,0,1);
+      border:1px solid rgba(255,255,255,.32);
+      background:#000;
+    }
+    .lightbox-img img{
+      display:block;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+    }
+    .lightbox-info{
+      margin-top:10px;
+      font-size:.8rem;
+      opacity:.9;
+      text-align:center;
+      max-width:460px;
+    }
+    .lightbox-close{
+      position:absolute;
+      top:14px;right:18px;
+      width:34px;height:34px;
+      border-radius:50%;
+      border:none;
+      background:rgba(0,0,0,.85);
+      color:#fff;
+      cursor:pointer;
+      font-size:1.1rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.4);
+      transition:.2s;
+    }
+    .lightbox-close:hover{background:rgba(255,255,255,.15);}
+  </style>
+</head>
+<body>
+  <div class="bg-logo"></div>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+
+  <header>
+    <div class="nav">
+      <div class="nav-left">
+        <div class="nav-logo">
+          <img src="logo_kreoma.png" alt="Kreoma3D">
+        </div>
+        <div class="nav-title">
+          <span>KREOMA3D</span>
+          <span>Galería de impresiones reales</span>
+        </div>
+      </div>
+      <div class="nav-right">
+        <a href="index.html" class="btn-nav">
+          <span class="icon">⟵</span>
+          <span>Volver al inicio</span>
+        </a>
+        <a href="https://wa.me/573332395481" target="_blank" class="btn-nav">
+          <span class="icon">💬</span>
+          <span>Hablar por WhatsApp</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-text">
+        <h1><span>Nuestra pared de impresiones</span></h1>
+        <p>
+          Aquí se guarda el historial visual de lo que vamos imprimiendo:
+          soportes de casco, figuras, organizadores y experimentos en 3D.
+          Cada foto es una impresión real hecha en el taller.
+        </p>
+        <div class="hero-badges">
+          <div class="hero-badge"><i>●</i> Impresiones reales</div>
+          <div class="hero-badge"><i>●</i> Colores personalizados</div>
+          <div class="hero-badge"><i>●</i> Hecho en Medellín</div>
+        </div>
+        <div class="hero-cta">
+          <a href="#galeria" class="btn-primary">
+            Ver galería completa
+          </a>
+          <a href="https://wa.me/573332395481" target="_blank" class="btn-ghost">
+            Quiero una igual
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-frame">
+          <!-- Cambia esta imagen por un collage o foto bonita -->
+          <div class="hero-preview">
+            <img src="imagenes/galeria/preview-soportes.jpg" alt="Impresiones 3D Kreoma3D">
+            <div class="hero-counter">
+              <span id="hero-count">+24</span>
+              <span>proyectos listos<br>y contando</span>
+            </div>
+            <div class="hero-chip">Galería en tiempo real</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="galeria">
+      <div class="section-top">
+        <h2>Galería de impresiones</h2>
+        <div class="filter-row">
+          <button class="filter-btn active" data-filter="all">Todo</button>
+          <button class="filter-btn" data-filter="soporte">Soportes de casco</button>
+          <button class="filter-btn" data-filter="navidad">Temporada navideña</button>
+          <button class="filter-btn" data-filter="figura">Figuras y personajes</button>
+          <button class="filter-btn" data-filter="organizador">Organización del hogar</button>
+        </div>
+      </div>
+
+      <div class="gallery-grid" id="galleryGrid">
+        <!-- EJEMPLOS. Duplica y cambia rutas / textos -->
+        <article class="card" data-category="soporte">
+          <div class="card-img">
+            <img src="imagenes/galeria/soporte-rojo-azul.jpg" alt="Soporte de casco rojo y azul">
+            <div class="card-tag">Soporte 3 en 1</div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">Soporte casco bicolor</div>
+            <div class="card-meta">
+              <span class="pill">PLA • 0.2 mm</span>
+              <span>Tiempo: 4 h · 205 g</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-category="navidad">
+          <div class="card-img">
+            <img src="imagenes/galeria/arbol-navidad.jpg" alt="Árbol de navidad en 3D">
+            <div class="card-tag">Navidad 3D</div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">Árbol de navidad modular</div>
+            <div class="card-meta">
+              <span class="pill">PLA verde • Multicolor</span>
+              <span>Tiempo: 3 h</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-category="navidad">
+          <div class="card-img">
+            <img src="imagenes/galeria/muñeco-nieve.jpg" alt="Muñeco de nieve en 3D">
+            <div class="card-tag">Navidad 3D</div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">Muñeco de nieve</div>
+            <div class="card-meta">
+              <span class="pill">Blanco + naranja</span>
+              <span>Tiempo: 2.5 h</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-category="navidad">
+          <div class="card-img">
+            <img src="imagenes/galeria/angel-navidad.jpg" alt="Ángel navideño en 3D">
+            <div class="card-tag">Navidad 3D</div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">Ángel decorativo</div>
+            <div class="card-meta">
+              <span class="pill">Blanco perla</span>
+              <span>Tiempo: 2 h</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-category="organizador">
+          <div class="card-img">
+            <img src="imagenes/galeria/organizador-llaves.jpg" alt="Organizador de llaves en 3D">
+            <div class="card-tag">Hogar</div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">Organizador de llaves</div>
+            <div class="card-meta">
+              <span class="pill">PLA negro</span>
+              <span>Tiempo: 1.5 h</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-category="figura">
+          <div class="card-img">
+            <img src="imagenes/galeria/figura-monstruo.jpg" alt="Figura de monstruo 3D">
+            <div class="card-tag">Figura</div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">Figura coleccionable</div>
+            <div class="card-meta">
+              <span class="pill">Multicolor</span>
+              <span>Tiempo: 5 h</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Añade más tarjetas aquí copiando un <article> -->
+      </div>
+    </section>
+
+    <footer>
+      Kreoma3D · Impresiones 3D personalizadas · Medellín, Colombia
+    </footer>
+  </main>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">✕</button>
+    <div class="lightbox-img">
+      <img src="" alt="" id="lightboxImg">
+    </div>
+    <div class="lightbox-info" id="lightboxInfo"></div>
+  </div>
+
+  <script>
+    // Filtros por categoría
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.card');
+
+    filterButtons.forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const filter = btn.dataset.filter;
+        filterButtons.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+
+        cards.forEach(card=>{
+          const cat = card.dataset.category;
+          if(filter === 'all' || cat === filter){
+            card.style.display = '';
+            setTimeout(()=>card.classList.add('visible'),10);
+          }else{
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Animación de aparición al hacer scroll
+    const observer = new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },{threshold:0.25});
+
+    cards.forEach(card=>observer.observe(card));
+
+    // Lightbox básico
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxInfo = document.getElementById('lightboxInfo');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    cards.forEach(card=>{
+      card.addEventListener('click',()=>{
+        const img = card.querySelector('img');
+        const title = card.querySelector('.card-title')?.textContent || '';
+        const meta = card.querySelector('.card-meta')?.textContent || '';
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        lightboxInfo.textContent = title ? (title + (meta ? ' · ' + meta : '')) : img.alt;
+        lightbox.classList.add('visible');
+      });
+    });
+
+    lightboxClose.addEventListener('click',()=>lightbox.classList.remove('visible'));
+    lightbox.addEventListener('click',e=>{
+      if(e.target === lightbox){lightbox.classList.remove('visible');}
+    });
+
+    document.addEventListener('keydown',e=>{
+      if(e.key === 'Escape') lightbox.classList.remove('visible');
+    });
+  </script>
+</body>
+</html>
