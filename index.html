@@ -129,7 +129,7 @@
     }
 
     .brand-logo img{
-      width:110%;
+      width:100%;
       height:auto;
       object-fit:contain;
       filter:drop-shadow(0 0 4px rgba(0,0,0,0.7));
@@ -946,6 +946,13 @@
         bottom:22px;
       }
     }
+    .hero-video{
+  width:100%;
+  height:100%;
+  object-fit:cover;       /* Igual que las imágenes */
+  display:block;
+}
+
   </style>
 </head>
 
@@ -1012,28 +1019,22 @@
       </div>
 
       <div class="hero-visual reveal">
-        <div class="hero-card">
-          <div>
-            <span class="hero-card-tag">Vista rápida</span>
-            <div class="hero-card-slider">
-              <!-- Usa tus imágenes existentes -->
-              <img src="imagenes/slide2.jpg" alt="Soporte de casco 3D">
-              <div class="hero-card-chip">
-                <i class="fa-solid fa-rotate"></i>
-                Soporte 3 en 1 y más piezas
-              </div>
-            </div>
-          </div>
-          <div class="hero-card-footer">
-            <div>
-              Soportes, organizadores y figuras
-              <small>Hechos en impresión 3D desde Medellín</small>
-            </div>
-            <div class="hero-card-pill">
-              <i class="fa-solid fa-palette"></i> Colores combinables
-            </div>
-          </div>
-        </div>
+        <div class="hero-card-slider">
+  <video 
+    src="imagenes/NAVIDAD.mp4"
+    autoplay
+    muted
+    loop
+    playsinline
+    class="hero-video">
+  </video>
+
+  <div class="hero-card-chip">
+    <i class="fa-solid fa-rotate"></i>
+    Temporada de Navidad
+  </div>
+</div>
+
       </div>
     </section>
 
@@ -1336,7 +1337,14 @@
 
     window.addEventListener('scroll',setActiveLink);
     setActiveLink();
+    const video = document.getElementById('navidadVideo');
+
+video.addEventListener('click', () => {
+  if(video.muted){
+    video.muted = false;
+    video.play();
+  }
+});
   </script>
 </body>
 </html>
-
