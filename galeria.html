@@ -257,14 +257,15 @@
       isolation:isolate;
     }
     .hero-preview img{
-      width:100%;
-      display:block;
-      object-fit:cover;
-      aspect-ratio:4/3;
-      transform:scale(1.04);
-      filter:saturate(1.25) contrast(1.1);
-      animation:floatImg 10s infinite alternate ease-in-out;
-    }
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:contain;   /* antes: cover */
+  background:#000;      /* relleno sin deformar */
+  aspect-ratio:4/3;
+  transform:none;       /* quita zoom */
+  animation:none;       /* quita movimiento */
+}
     @keyframes floatImg{
       0%{transform:scale(1.04) translateY(0);}
       100%{transform:scale(1.06) translateY(-6px);}
@@ -576,9 +577,9 @@
         <div class="hero-frame">
           <!-- Cambia esta imagen por un collage o foto bonita -->
           <div class="hero-preview">
-            <img src="imagenes/galeria/preview-soportes.jpg" alt="Impresiones 3D Kreoma3D">
+            <img src="imagenes/galeria/imagen.jpg" alt="Impresiones 3D Kreoma3D">
             <div class="hero-counter">
-              <span id="hero-count">+24</span>
+              <span id="hero-count">+60</span>
               <span>proyectos listos<br>y contando</span>
             </div>
             <div class="hero-chip">Galería en tiempo real</div>
