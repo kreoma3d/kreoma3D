@@ -508,6 +508,14 @@
       transition:.2s;
     }
     .lightbox-close:hover{background:rgba(255,255,255,.15);}
+
+    .gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(210px, 210px));
+  justify-content:center;
+  gap:16px;
+}
+
   </style>
 </head>
 <body>
@@ -591,94 +599,55 @@
         </div>
       </div>
 
-      <div class="gallery-grid" id="galleryGrid">
-        <!-- EJEMPLOS. Duplica y cambia rutas / textos -->
-        <article class="card" data-category="soporte">
-          <div class="card-img">
-            <img src="imagenes/galeria/soporte-rojo-azul.jpg" alt="Soporte de casco rojo y azul">
-            <div class="card-tag">Soporte 3 en 1</div>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Soporte casco bicolor</div>
-            <div class="card-meta">
-              <span class="pill">PLA • 0.2 mm</span>
-              <span>Tiempo: 4 h · 205 g</span>
-            </div>
-          </div>
-        </article>
+      <div class="gallery-grid" id="galleryGrid"></div>
 
-        <article class="card" data-category="navidad">
-          <div class="card-img">
-            <img src="imagenes/galeria/arbol-navidad.jpg" alt="Árbol de navidad en 3D">
-            <div class="card-tag">Navidad 3D</div>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Árbol de navidad modular</div>
-            <div class="card-meta">
-              <span class="pill">PLA verde • Multicolor</span>
-              <span>Tiempo: 3 h</span>
-            </div>
-          </div>
-        </article>
+<script>
+async function cargarGaleria(){
+  const contenedor = document.getElementById('galleryGrid');
 
-        <article class="card" data-category="navidad">
-          <div class="card-img">
-            <img src="imagenes/galeria/muñeco-nieve.jpg" alt="Muñeco de nieve en 3D">
-            <div class="card-tag">Navidad 3D</div>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Muñeco de nieve</div>
-            <div class="card-meta">
-              <span class="pill">Blanco + naranja</span>
-              <span>Tiempo: 2.5 h</span>
-            </div>
-          </div>
-        </article>
+  try{
+    const res = await fetch("https://www.fpc.com.co/Kreoma/api_galeria.php");
+    const data = await res.json();
 
-        <article class="card" data-category="navidad">
-          <div class="card-img">
-            <img src="imagenes/galeria/angel-navidad.jpg" alt="Ángel navideño en 3D">
-            <div class="card-tag">Navidad 3D</div>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Ángel decorativo</div>
-            <div class="card-meta">
-              <span class="pill">Blanco perla</span>
-              <span>Tiempo: 2 h</span>
-            </div>
-          </div>
-        </article>
+    contenedor.innerHTML = "";
 
-        <article class="card" data-category="organizador">
-          <div class="card-img">
-            <img src="imagenes/galeria/organizador-llaves.jpg" alt="Organizador de llaves en 3D">
-            <div class="card-tag">Hogar</div>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Organizador de llaves</div>
-            <div class="card-meta">
-              <span class="pill">PLA negro</span>
-              <span>Tiempo: 1.5 h</span>
-            </div>
-          </div>
-        </article>
+    data.forEach(item=>{
+      const card = document.createElement("article");
+      card.className = "card visible";
+      card.dataset.category = item.categoria;
 
-        <article class="card" data-category="figura">
-          <div class="card-img">
-            <img src="imagenes/galeria/figura-monstruo.jpg" alt="Figura de monstruo 3D">
-            <div class="card-tag">Figura</div>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Figura coleccionable</div>
+      card.innerHTML = `
+        <div class="card-img">
+            <img src="${item.img}" alt="${item.titulo}">
+            <div class="card-tag">${item.tag}</div>
+        </div>
+        <div class="card-body">
+            <div class="card-title">${item.titulo}</div>
             <div class="card-meta">
-              <span class="pill">Multicolor</span>
-              <span>Tiempo: 5 h</span>
+                <span class="pill">${item.detalle}</span>
+                <span>ID ${item.id}</span>
             </div>
-          </div>
-        </article>
+        </div>
+      `;
 
-        <!-- Añade más tarjetas aquí copiando un <article> -->
-      </div>
+      card.addEventListener("click",()=>{
+          document.getElementById("lightboxImg").src = item.img;
+          document.getElementById("lightboxInfo").innerText =
+              item.titulo + " · " + item.detalle;
+          document.getElementById("lightbox").classList.add("visible");
+      });
+
+      contenedor.appendChild(card);
+    });
+
+  }catch(e){
+    contenedor.innerHTML = "<p>Error cargando galería.</p>";
+  }
+}
+
+cargarGaleria();
+</script>
+
     </section>
 
     <footer>
