@@ -1,9 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Inicio -->
   <url>
     <loc>https://kreoma3d.github.io/kreoma3D/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Soportes -->
+  <url>
+    <loc>https://kreoma3d.github.io/kreoma3D/productos/soportes/</loc>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://kreoma3d.github.io/kreoma3D/productos/soportes/soporte-3en1-multicolor.html</loc>
+    <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://kreoma3d.github.io/kreoma3D/productos/soportes/visor.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Índice de productos -->
+  <url>
+    <loc>https://kreoma3d.github.io/kreoma3D/productos/index.html#productos</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Accesorios -->
+  <url>
+    <loc>https://kreoma3d.github.io/kreoma3D/productos/accesorios/index.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kreoma3d.github.io/kreoma3D/productos/accesorios/llavero3d.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kreoma3d.github.io/kreoma3D/productos/accesorios/organizador.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Decoración -->
+  <url>
+    <loc>https://kreoma3d.github.io/kreoma3D/productos/decoracion/luz_luna.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Galería -->
+  <url>
+    <loc>https://kreoma3d.github.io/kreoma3D/galeria.html</loc>
+    <priority>0.7</priority>
+  </url>
+
 </urlset>
