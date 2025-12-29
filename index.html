@@ -3,1367 +3,374 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Kreoma3D - Impresión 3D personalizada en Medellín. Soportes, accesorios y figuras impresas en 3D.">
-  <meta name="keywords" content="impresión 3D, personalización, soportes, cascos, figuras 3D, Medellín, Kreoma3D">
-  <meta name="author" content="Kreoma3D">
-  <meta property="og:title" content="Kreoma3D | Impresión y Personalización 3D">
-  <meta property="og:description" content="Soportes, accesorios y figuras personalizadas impresas en 3D.">
-  <meta property="og:image" content="imagenes/soporte1.jpg">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://kreoma3d.github.io/kreoma3D/">
-  <title>Kreoma3D | Impresión y Personalización 3D</title>
-  <link rel="icon" type="image/png" sizes="512x512" href="logo_kreoma.png">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <meta name="description" content="Kreoma3D - Impresión 3D Premium. Personalización, soportes de casco y figuras.">
+  <title>Kreoma3D | Creación y Forma</title>
+  
+  <link rel="icon" type="image/png" href="logo_kreoma.png">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
-    :root{
-      --rojo:#ff3333;
-      --rojo-soft:#ff4b4b;
-      --fondo:#050509;
-      --panel:#111119;
-      --texto:#f5f5f5;
-      --texto-sec:#c2c2c2;
-      --borde:#2a2a35;
-      --glass:rgba(15,15,25,0.8);
-      --radius:18px;
-      --shadow:0 18px 40px rgba(0,0,0,0.65);
-      --dur:0.7s;
+    :root {
+      --primary: #ff3333;
+      --bg-dark: #050505;
+      --bg-card: #0f0f12;
+      --text-main: #ffffff;
+      --text-muted: #9999aa;
+      --border: rgba(255, 255, 255, 0.1);
+      --font-main: 'Outfit', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; transition: 0.3s; }
+    img, video { width: 100%; height: auto; display: block; object-fit: cover; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+    /* --- HEADER FLOTANTE --- */
+    header {
+      position: fixed; top: 20px; left: 0; width: 100%; z-index: 100;
+      display: flex; justify-content: center; padding: 0 16px;
+      transition: top 0.3s;
+    }
+    .nav-capsule {
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      padding: 10px 24px; border-radius: 100px;
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; max-width: 950px;
+      box-shadow: 0 15px 35px -5px rgba(0,0,0,0.7);
+    }
+    /* LOGO: Respetando Kreoma3D */
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.2rem; color: white; letter-spacing: 0.5px; }
+    .brand img { width: 32px; height: 32px; border-radius: 8px; }
+    
+    nav { display: flex; gap: 24px; align-items: center; }
+    nav a { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+    nav a:hover, nav a.active { color: white; }
+
+    .btn-contact {
+      background: white; color: black; padding: 8px 18px; border-radius: 50px;
+      font-weight: 600; font-size: 0.85rem; transition: 0.3s;
+    }
+    .btn-contact:hover { transform: scale(1.05); }
+
+    /* --- HERO --- */
+    .hero {
+      height: 100vh; display: flex; align-items: center; justify-content: center;
+      position: relative; text-align: center; overflow: hidden;
+    }
+    .hero-video {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; opacity: 0.35; z-index: -1;
+    }
+    .hero-content h1 {
+      font-size: clamp(3.5rem, 8vw, 7rem); font-weight: 800; line-height: 1;
+      margin-bottom: 20px;
+      /* Texto Kreoma3D grande */
+      background: linear-gradient(to bottom, #fff, #999);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-content p {
+      font-size: 1.2rem; color: #ccc; max-width: 600px; margin: 0 auto 30px;
+    }
+
+    /* --- SECCIÓN 1: VISOR (Tecnología) --- */
+    .section-tech {
+      padding: 100px 0; border-top: 1px solid var(--border);
+      background: radial-gradient(circle at 50% 50%, #110505 0%, #000 70%);
+      text-align: center;
+    }
+    .tech-box {
+      background: rgba(255, 51, 51, 0.05); border: 1px solid rgba(255, 51, 51, 0.3);
+      padding: 40px; border-radius: 30px; display: inline-block;
+      max-width: 900px; width: 100%;
+      box-shadow: 0 0 50px rgba(255, 51, 51, 0.1);
+    }
+    .tech-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 15px; }
+    .tech-btn {
+      margin-top: 25px;
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--primary); color: white; padding: 14px 30px; border-radius: 10px;
+      font-weight: 600; font-size: 1rem;
+      box-shadow: 0 10px 30px rgba(255, 51, 51, 0.4);
+      transition: 0.3s;
+    }
+    .tech-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255, 51, 51, 0.6); }
+
+    /* --- SECCIÓN 2: PRODUCTOS (FLIP CARDS) --- */
+    .section-products { padding: 100px 0; }
+    .grid-products {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;
+      margin-top: 50px;
+    }
+
+    /* ESTILO FLIP CARD */
+    .flip-card {
+      background-color: transparent;
+      width: 100%; height: 420px;
+      perspective: 1000px; /* Efecto 3D */
+      cursor: pointer;
+    }
+
+    .flip-inner {
+      position: relative; width: 100%; height: 100%;
+      text-align: center; transition: transform 0.8s;
+      transform-style: preserve-3d;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border-radius: 20px;
+    }
+
+    .flip-card:hover .flip-inner {
+      transform: rotateY(180deg); /* La vuelta */
+    }
+
+    .flip-front, .flip-back {
+      position: absolute; inset: 0;
+      backface-visibility: hidden; /* Ocultar la cara de atrás */
+      border-radius: 20px; overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .flip-front img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: 0.5s;
+    }
+    
+    /* Cara de ATRÁS (Texto) */
+    .flip-back {
+      background: #0f0f12;
+      color: white;
+      transform: rotateY(180deg);
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      padding: 30px;
+    }
+
+    .flip-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 15px; }
+    .flip-desc { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 25px; line-height: 1.6; }
+    
+    .btn-outline {
+      border: 1px solid white; color: white; padding: 10px 24px; border-radius: 50px;
+      font-weight: 600; transition: 0.3s;
+    }
+    .btn-outline:hover { background: white; color: black; }
+
+    /* --- SECCIÓN 3: GALERÍA PREVIEW --- */
+    .section-gallery { padding: 80px 0; background: #080808; border-top: 1px solid var(--border); }
+    .gallery-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+      margin-top: 40px; margin-bottom: 30px;
+    }
+    .gallery-preview-item {
+      aspect-ratio: 1/1; overflow: hidden; border-radius: 12px;
+      position: relative; border: 1px solid var(--border);
+    }
+    .gallery-preview-item img {
+      width: 100%; height: 100%; object-fit: cover; transition: 0.5s;
+    }
+    .gallery-preview-item:hover img { transform: scale(1.1); }
+    
+    .link-gallery {
+      display: inline-block; color: var(--primary); font-weight: 600; 
+      border-bottom: 1px solid var(--primary); padding-bottom: 2px;
+    }
+
+    /* --- SECCIÓN 4: SERVICIOS (Texto) --- */
+    .section-text { padding: 100px 0; border-top: 1px solid var(--border); }
+    .text-container { max-width: 800px; margin: 0 auto; text-align: center; }
+    .text-title { font-size: 2.5rem; margin-bottom: 20px; }
+    .text-p { color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; margin-bottom: 20px; }
+    
+    .services-icons {
+      display: flex; justify-content: center; gap: 40px; margin-top: 40px; flex-wrap: wrap;
+    }
+    .s-icon { display: flex; flex-direction: column; align-items: center; gap: 10px; color: white; }
+    .s-icon i { font-size: 1.5rem; color: var(--primary); }
+
+    /* --- FOOTER --- */
+    footer { padding: 60px 0; background: #020202; text-align: center; border-top: 1px solid var(--border); color: #666; }
+
+    /* REDES */
+    .redes { position: fixed; bottom: 30px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 90; }
+    .social-btn {
+      width: 45px; height: 45px; background: rgba(20,20,25,0.9); backdrop-filter: blur(5px);
+      border: 1px solid var(--border); border-radius: 50%; color: white; 
+      display: flex; align-items: center; justify-content: center; transition: 0.3s;
+    }
+    .social-btn:hover { background: var(--primary); border-color: var(--primary); transform: scale(1.1); }
+
+    /* Responsive */
+    @media(max-width: 900px){
+      .nav-capsule { width: 90%; justify-content: space-around; bottom: 20px; top: auto; padding: 12px; }
+      header { top: auto; bottom: 0; padding-bottom: 20px; }
+      .brand span, .nav-text { display: none; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-content h1 { font-size: 12vw; }
+      .redes { bottom: 100px; }
     }
-
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
-
-    html{
-      scroll-behavior:smooth;
-    }
-
-    body{
-      font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:radial-gradient(circle at top,#181828 0%,#050509 55%,#020206 100%);
-      color:var(--texto);
-      min-height:100vh;
-      overflow-x:hidden;
-      position:relative;
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      background:url("logo_kreoma.png") center center no-repeat;
-      background-size:75vmin;
-      opacity:0.06;
-      filter:blur(1px);
-      pointer-events:none;
-      z-index:-3;
-    }
-
-    body::after{
-      content:"";
-      position:fixed;
-      inset:-20%;
-      background:
-        radial-gradient(circle at 15% 10%,rgba(255,80,80,0.25) 0,transparent 50%),
-        radial-gradient(circle at 80% 90%,rgba(255,80,80,0.16) 0,transparent 55%);
-      opacity:0.9;
-      mix-blend-mode:screen;
-      z-index:-2;
-    }
-
-    a{
-      color:inherit;
-      text-decoration:none;
-    }
-
-    img{
-      max-width:100%;
-      display:block;
-    }
-
-    /* HEADER */
-
-    header{
-      position:sticky;
-      top:0;
-      z-index:20;
-      backdrop-filter:blur(14px);
-      background:linear-gradient(to bottom,rgba(5,5,10,0.96),rgba(5,5,10,0.85),transparent);
-      border-bottom:1px solid rgba(255,255,255,0.04);
-    }
-
-    .nav-inner{
-      max-width:1200px;
-      margin:0 auto;
-      padding:10px 16px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-family:'Montserrat',sans-serif;
-      font-weight:600;
-      letter-spacing:0.04em;
-      font-size:1.05rem;
-    }
-
-    .brand-logo{
-      width:34px;
-      height:34px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,0.2);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:radial-gradient(circle at 30% 0%,#ff8080,rgba(40,40,55,0.9));
-      box-shadow:0 0 16px rgba(255,90,90,0.5);
-      overflow:hidden;
-    }
-
-    .brand-logo img{
-      width:100%;
-      height:auto;
-      object-fit:contain;
-      filter:drop-shadow(0 0 4px rgba(0,0,0,0.7));
-    }
-
-    nav{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:0.9rem;
-  flex-wrap:wrap;         /* <-- importante */
-  justify-content:flex-end;
-}
-
-    nav a{
-      padding:6px 14px;
-      border-radius:999px;
-      border:1px solid transparent;
-      color:var(--texto-sec);
-      transition:all 0.25s;
-      position:relative;
-      overflow:hidden;
-    }
-
-    nav a::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(120deg,rgba(255,255,255,0.12),transparent 55%);
-      opacity:0;
-      transform:translateX(-40%);
-      transition:all 0.25s;
-    }
-
-    nav a:hover::before{
-      opacity:1;
-      transform:translateX(0);
-    }
-
-    nav a:hover{
-      color:var(--texto);
-    }
-
-    nav a.active{
-      border-color:rgba(255,255,255,0.2);
-      background:radial-gradient(circle at top left,rgba(255,80,80,0.4),rgba(20,20,30,0.95));
-      color:#fff;
-    }
-
-    /* Layout principal */
-
-    main{
-      max-width:1200px;
-      margin:0 auto;
-      padding:18px 16px 80px;
-    }
-
-    section{
-      margin-bottom:70px;
-    }
-
-    .section-header{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      margin-bottom:28px;
-    }
-
-    .section-pill{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:3px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,0.1);
-      background:rgba(5,5,15,0.85);
-      font-size:0.7rem;
-      text-transform:uppercase;
-      letter-spacing:0.12em;
-      color:var(--texto-sec);
-    }
-
-    .section-pill i{
-      font-size:0.75rem;
-      color:var(--rojo-soft);
-    }
-
-    .section-title{
-      font-family:'Montserrat',sans-serif;
-      font-size:1.7rem;
-      letter-spacing:0.03em;
-    }
-
-    .section-sub{
-      font-size:0.92rem;
-      color:var(--texto-sec);
-      max-width:540px;
-    }
-
-    /* HERO */
-
-    #inicio{
-      display:grid;
-      grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);
-      gap:26px;
-      align-items:center;
-      margin-top:16px;
-    }
-
-    .hero-panel{
-      background:var(--glass);
-      border-radius:24px;
-      border:1px solid rgba(255,255,255,0.12);
-      box-shadow:var(--shadow);
-      padding:20px 20px 22px;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .hero-panel::before{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background:
-        radial-gradient(circle at 0% 0%,rgba(255,255,255,0.06) 0,transparent 52%),
-        radial-gradient(circle at 110% 10%,rgba(255,90,90,0.26) 0,transparent 55%);
-      opacity:0.9;
-      pointer-events:none;
-      mix-blend-mode:screen;
-    }
-
-    .hero-panel-inner{
-      position:relative;
-      z-index:2;
-    }
-
-    .hero-chip-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-bottom:12px;
-      font-size:0.75rem;
-    }
-
-    .hero-chip{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:6px 12px;
-      border-radius:999px;
-      background:rgba(0,0,0,0.65);
-      border:1px solid rgba(255,255,255,0.18);
-      color:var(--texto-sec);
-    }
-
-    .hero-chip i{
-      color:var(--rojo-soft);
-      font-size:0.85rem;
-    }
-
-    .hero-title{
-      font-family:'Montserrat',sans-serif;
-      font-size:clamp(1.9rem,4.5vw,2.5rem);
-      line-height:1.15;
-      margin-bottom:8px;
-    }
-
-    .hero-title span{
-      background:linear-gradient(120deg,#ff8080,#ff3333);
-      -webkit-background-clip:text;
-      color:transparent;
-    }
-
-    .hero-text{
-      font-size:0.95rem;
-      color:var(--texto-sec);
-      margin-bottom:18px;
-      max-width:520px;
-    }
-
-    .hero-badges{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin-bottom:18px;
-    }
-
-    .hero-badge{
-      display:flex;
-      flex-direction:column;
-      padding:8px 10px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.09);
-      background:rgba(5,5,10,0.9);
-      min-width:130px;
-    }
-
-    .hero-badge span:first-child{
-      font-size:0.75rem;
-      color:var(--texto-sec);
-    }
-
-    .hero-badge span:last-child{
-      font-size:0.9rem;
-      font-weight:500;
-    }
-
-    .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-bottom:6px;
-    }
-
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:9px 16px;
-      font-size:0.9rem;
-      border-radius:999px;
-      border:1px solid transparent;
-      cursor:pointer;
-      transition:all 0.25s;
-      white-space:nowrap;
-    }
-
-    .btn-primary{
-      background:linear-gradient(135deg,#ff6161,#ff2929);
-      color:#fff;
-      box-shadow:0 0 22px rgba(255,80,80,0.7);
-    }
-
-    .btn-primary:hover{
-      transform:translateY(-1px) scale(1.02);
-      box-shadow:0 0 26px rgba(255,80,80,0.9);
-    }
-
-    .btn-ghost{
-      border-color:rgba(255,255,255,0.2);
-      background:rgba(5,5,15,0.9);
-      color:var(--texto-sec);
-    }
-
-    .btn-ghost i{
-      color:var(--rojo-soft);
-    }
-
-    .btn-ghost:hover{
-      border-color:rgba(255,255,255,0.35);
-      color:#fff;
-    }
-
-    .hero-note{
-      font-size:0.75rem;
-      color:var(--texto-sec);
-    }
-
-    .hero-note i{
-      color:#21c25e;
-    }
-
-    .hero-visual{
-      position:relative;
-      min-height:220px;
-    }
-
-    .hero-card{
-      position:relative;
-      height:100%;
-      border-radius:24px;
-      background:radial-gradient(circle at 30% 0%,rgba(255,80,80,0.45),rgba(15,15,25,0.95));
-      border:1px solid rgba(255,255,255,0.12);
-      box-shadow:var(--shadow);
-      padding:14px 14px 18px;
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      transform:translateY(0);
-      transition:transform 0.5s;
-    }
-
-    .hero-card:hover{
-      transform:translateY(-6px);
-    }
-
-    .hero-card-tag{
-      font-size:0.7rem;
-      text-transform:uppercase;
-      letter-spacing:0.18em;
-      color:rgba(255,255,255,0.8);
-      opacity:0.85;
-    }
-
-    .hero-card-slider{
-      position:relative;
-      margin-top:10px;
-      border-radius:18px;
-      overflow:hidden;
-      background:#000;
-    }
-
-    .hero-card-slider img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
-
-    .hero-card-chip{
-      position:absolute;
-      bottom:10px;
-      left:10px;
-      padding:4px 9px;
-      border-radius:999px;
-      background:rgba(0,0,0,0.7);
-      font-size:0.7rem;
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      color:#f3f3f3;
-    }
-
-    .hero-card-chip i{
-      color:#ffd36b;
-      font-size:0.8rem;
-    }
-
-    .hero-card-footer{
-      margin-top:10px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      font-size:0.8rem;
-      color:rgba(255,255,255,0.9);
-    }
-
-    .hero-card-footer small{
-      display:block;
-      color:rgba(255,255,255,0.75);
-      font-size:0.7rem;
-    }
-
-    .hero-card-pill{
-      padding:4px 9px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,0.3);
-      font-size:0.7rem;
-      background:rgba(0,0,0,0.6);
-    }
-
-    /* QUE HACEMOS */
-
-    #nosotros .cards-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:18px;
-    }
-
-    .mini-card{
-      background:rgba(10,10,18,0.95);
-      border-radius:18px;
-      padding:14px 14px 16px;
-      border:1px solid rgba(255,255,255,0.08);
-      box-shadow:0 10px 26px rgba(0,0,0,0.55);
-      position:relative;
-      overflow:hidden;
-    }
-
-    .mini-card::before{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background:radial-gradient(circle at 0 0,rgba(255,255,255,0.09) 0,transparent 40%);
-      opacity:0;
-      transition:opacity 0.4s;
-    }
-
-    .mini-card:hover::before{
-      opacity:1;
-    }
-
-    .mini-icon{
-      width:30px;
-      height:30px;
-      border-radius:12px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      margin-bottom:8px;
-      background:radial-gradient(circle at 0 0,#ff8080,rgba(50,50,60,1));
-      color:#fff;
-      font-size:0.9rem;
-    }
-
-    .mini-title{
-      font-size:0.95rem;
-      margin-bottom:4px;
-    }
-
-    .mini-text{
-      font-size:0.8rem;
-      color:var(--texto-sec);
-    }
-
-    /* SLIDER SIMPLE */
-
-    #slider{
-      margin-bottom:70px;
-    }
-
-    .slider-shell{
-      border-radius:22px;
-      background:rgba(8,8,16,0.95);
-      border:1px solid rgba(255,255,255,0.08);
-      padding:16px 16px 14px;
-      box-shadow:0 16px 36px rgba(0,0,0,0.7);
-    }
-
-    .slider-container{
-      position:relative;
-      border-radius:16px;
-      overflow:hidden;
-      aspect-ratio:16/9;
-      max-height:420px;
-    }
-
-    .slide{
-      position:absolute;
-      inset:0;
-      opacity:0;
-      transform:scale(1.03);
-      transition:opacity 0.8s ease,transform 0.8s ease;
-    }
-
-    .slide.active{
-      opacity:1;
-      transform:scale(1);
-    }
-
-    .slide img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
-
-    .slider-dots{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:7px;
-      margin-top:10px;
-    }
-
-    .dot{
-      width:8px;
-      height:8px;
-      border-radius:999px;
-      background:rgba(255,255,255,0.25);
-      cursor:pointer;
-      transition:all 0.25s;
-    }
-
-    .dot.active{
-      width:22px;
-      background:var(--rojo-soft);
-      box-shadow:0 0 10px rgba(255,80,80,0.9);
-    }
-
-    /* PRODUCTOS FLIP */
-
-    #productos .productos-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:18px;
-    }
-
-    .flip-card{
-      perspective:900px;
-    }
-
-    .flip-inner{
-      position:relative;
-      width:100%;
-      height:280px;
-      transform-style:preserve-3d;
-      transition:transform 0.6s;
-    }
-
-    .flip-card:hover .flip-inner{
-      transform:rotateY(180deg);
-    }
-
-    .flip-face{
-      position:absolute;
-      inset:0;
-      border-radius:20px;
-      overflow:hidden;
-      backface-visibility:hidden;
-      border:1px solid rgba(255,255,255,0.1);
-      background:#050509;
-      box-shadow:0 12px 30px rgba(0,0,0,0.65);
-      display:flex;
-      flex-direction:column;
-    }
-
-    .flip-front img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      transform:scale(1.03);
-      transition:transform 0.5s;
-    }
-
-    .flip-card:hover .flip-front img{
-      transform:scale(1.07);
-    }
-
-    .flip-back{
-      transform:rotateY(180deg);
-      padding:14px 14px 16px;
-      background:radial-gradient(circle at top,#26263a,#080812);
-    }
-
-    .flip-tag{
-      font-size:0.7rem;
-      text-transform:uppercase;
-      letter-spacing:0.16em;
-      color:rgba(255,255,255,0.7);
-      margin-bottom:6px;
-    }
-
-    .flip-title{
-      font-size:0.95rem;
-      font-weight:500;
-      margin-bottom:6px;
-    }
-
-    .flip-text{
-      font-size:0.8rem;
-      color:var(--texto-sec);
-      margin-bottom:10px;
-    }
-
-    .flip-links{
-      margin-top:auto;
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-    }
-
-    .chip-link{
-      font-size:0.75rem;
-      padding:5px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,0.16);
-      background:rgba(0,0,0,0.55);
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-    }
-
-    .chip-link i{
-      font-size:0.8rem;
-      color:var(--rojo-soft);
-    }
-
-    /* CONTACTO */
-
-    #contacto .contact-grid{
-      display:grid;
-      grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
-      gap:18px;
-      align-items:flex-start;
-    }
-
-    .contact-panel{
-      background:rgba(10,10,18,0.96);
-      border-radius:20px;
-      padding:16px 16px 18px;
-      border:1px solid rgba(255,255,255,0.08);
-      box-shadow:0 14px 32px rgba(0,0,0,0.7);
-      font-size:0.9rem;
-      color:var(--texto-sec);
-    }
-
-    .contact-panel strong{
-      color:var(--texto);
-    }
-
-    form{
-      background:rgba(8,8,16,0.96);
-      border-radius:20px;
-      padding:16px;
-      border:1px solid rgba(255,255,255,0.08);
-      box-shadow:0 14px 32px rgba(0,0,0,0.7);
-    }
-
-    form input,
-    form textarea{
-      width:100%;
-      padding:9px 10px;
-      margin-bottom:10px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,0.16);
-      background:rgba(3,3,8,0.9);
-      color:var(--texto);
-      font-size:0.85rem;
-      outline:none;
-    }
-
-    form input:focus,
-    form textarea:focus{
-      border-color:var(--rojo-soft);
-      box-shadow:0 0 0 1px rgba(255,80,80,0.35);
-    }
-
-    form button{
-      width:100%;
-      border:none;
-      border-radius:999px;
-      padding:9px 14px;
-      font-size:0.9rem;
-      cursor:pointer;
-      background:linear-gradient(135deg,#ff6161,#ff2929);
-      color:#fff;
-      box-shadow:0 0 19px rgba(255,80,80,0.7);
-      transition:all 0.25s;
-    }
-
-    form button:hover{
-      transform:translateY(-1px);
-      box-shadow:0 0 24px rgba(255,80,80,0.9);
-    }
-
-    footer{
-      padding:18px 16px 14px;
-      text-align:center;
-      font-size:0.75rem;
-      color:var(--texto-sec);
-      border-top:1px solid rgba(255,255,255,0.05);
-      background:rgba(3,3,8,0.98);
-    }
-
-    footer span{
-      opacity:0.8;
-    }
-
-    /* BOTONES FLOTANTES */
-
-    .redes{
-      position:fixed;
-      bottom:110px;
-      right:18px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      z-index:25;
-    }
-
-    .redes a{
-      width:44px;
-      height:44px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border-radius:50%;
-      background:#111119;
-      color:#fff;
-      font-size:1.2rem;
-      border:1px solid rgba(255,255,255,0.1);
-      box-shadow:0 8px 22px rgba(0,0,0,0.8);
-      transition:all 0.25s;
-    }
-
-    .redes a:hover{
-      transform:translateY(-2px) scale(1.03);
-    }
-
-    .instagram:hover{background:#E1306C;}
-    .facebook:hover{background:#1877F2;}
-    .whatsapp:hover{background:#25D366;}
-    .marketplace:hover{background:#4267B2;}
-
-    #volverArriba{
-      position:fixed;
-      bottom:28px;
-      right:26px;
-      width:44px;
-      height:44px;
-      border-radius:50%;
-      background:var(--rojo-soft);
-      color:#fff;
-      border:none;
-      cursor:pointer;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      font-size:1.1rem;
-      z-index:25;
-      box-shadow:0 10px 24px rgba(0,0,0,0.85);
-      transition:all 0.25s;
-    }
-
-    #volverArriba:hover{
-      transform:translateY(-2px);
-      background:#ffffff;
-      color:var(--rojo-soft);
-    }
-
-    /* ANIMACIONES SCROLL */
-
-    .reveal{
-      opacity:0;
-      transform:translateY(26px);
-      transition:opacity var(--dur) ease,transform var(--dur) ease;
-    }
-
-    .reveal.visible{
-      opacity:1;
-      transform:translateY(0);
-    }
-
-    /* RESPONSIVE */
-
-    @media(max-width:900px){
-      #inicio{
-        grid-template-columns:1fr;
-      }
-
-      .hero-visual{
-        order:-1;
-      }
-
-      main{
-        padding-bottom:70px;
-      }
-
-      #nosotros .cards-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-
-      #productos .productos-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-
-      #contacto .contact-grid{
-        grid-template-columns:1fr;
-      }
-    }
-
-    @media(max-width:640px){
-      .nav-inner{
-    padding-inline:10px;
-    gap:8px;
-  }
-
-      nav{
-    gap:4px;
-    font-size:0.78rem;
-    flex-wrap:wrap;       /* asegura que baje a dos filas si hace falta */
-  }
-
-      nav a{
-    padding:4px 8px;
-  }
-
-      main{
-        padding-inline:14px;
-      }
-
-      #inicio{
-        gap:18px;
-      }
-
-      .hero-panel{
-        border-radius:20px;
-      }
-
-      .hero-badges{
-        gap:8px;
-      }
-
-      .hero-badge{
-        min-width:0;
-        flex:1;
-      }
-
-      #nosotros .cards-grid{
-        grid-template-columns:1fr;
-      }
-
-      #productos .productos-grid{
-        grid-template-columns:1fr;
-      }
-
-      .flip-inner{
-        height:260px;
-      }
-
-      .slider-container{
-        aspect-ratio:4/3;
-      }
-
-      .redes{
-        right:14px;
-        bottom:98px;
-      }
-
-      #volverArriba{
-        right:18px;
-        bottom:22px;
-      }
-    }
-    .hero-video{
-  width:100%;
-  height:100%;
-  object-fit:cover;       /* Igual que las imágenes */
-  display:block;
-}
-nav a.btn-galeria{
-  padding:8px 16px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.3);
-  background:radial-gradient(circle at 0 0,#ff3333,#8b0000);
-  box-shadow:0 0 18px rgba(255,51,51,.5);
-  font-weight:600;
-}
-nav a.btn-galeria:hover{
-  transform:translateY(-1px) scale(1.02);
-  box-shadow:0 0 26px rgba(255,51,51,.8);
-}
-
   </style>
 </head>
 
 <body>
+
   <header>
-    <div class="nav-inner">
-      <a href="#inicio" class="brand">
-        <div class="brand-logo">
-          <img src="logo_kreoma.png" alt="Kreoma3D">
-        </div>
-        <span>Kreoma3D</span>
-      </a>
+    <div class="nav-capsule">
+      <a href="#" class="brand">
+        <img src="logo_kreoma.png" alt="Logo">
+        <span>Kreoma3D</span> </a>
       <nav>
-        <a href="#inicio" class="active">Inicio</a>
-        <a href="#nosotros">Qué hacemos</a>
-        <a href="#productos">Colección</a>
-        <a href="#contacto">Contacto</a>
+        <a href="#inicio" class="active"><i class="fa-solid fa-house"></i> <span class="nav-text">Inicio</span></a>
+        <a href="#visor"><i class="fa-solid fa-cube"></i> <span class="nav-text">Visor</span></a>
+        <a href="#productos"><i class="fa-solid fa-store"></i> <span class="nav-text">Productos</span></a>
+        <a href="#galeria"><i class="fa-solid fa-images"></i> <span class="nav-text">Galería</span></a>
       </nav>
+      <a href="#contacto" class="btn-contact">Contacto</a>
     </div>
   </header>
 
-  <main>
-    <!-- HERO -->
-    <section id="inicio">
-      <div class="hero-panel reveal">
-        <div class="hero-panel-inner">
-          <div class="hero-chip-row">
-            <div class="hero-chip"><i class="fa-solid fa-cube"></i> Impresión 3D personalizada</div>
-            <div class="hero-chip"><i class="fa-solid fa-helmet-safety"></i> Soportes, accesorios y figuras</div>
-          </div>
-
-          <h1 class="hero-title">Ordena tu espacio con <span>impresión 3D</span></h1>
-          <p class="hero-text">
-            Fabricamos piezas impresas en 3D para tu hogar y tu moto: soportes para casco, organizadores, bases y otras creaciones listas para usar.
-          </p>
-
-          <div class="hero-badges">
-            <div class="hero-badge">
-              <span>Enfoque</span>
-              <span>Hogar organizado y funcional</span>
-            </div>
-            <div class="hero-badge">
-              <span>Personalización</span>
-              <span>Colores y configuraciones a tu gusto</span>
-            </div>
-          </div>
-
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="productos/soportes/soporte-3en1-multicolor.html">
-              Ver soporte para casco
-              <i class="fa-solid fa-arrow-right"></i>
-            </a>
-            <a class="btn btn-ghost" href="#productos">
-              Ver más creaciones
-              <i class="fa-solid fa-grid-2"></i>
-            </a>
-          </div>
-
-          <p class="hero-note">
-            <i class="fa-solid fa-circle-check"></i>
-            Piezas impresas bajo pedido, ajustadas a tus necesidades.
-          </p>
-        </div>
+  <section id="inicio" class="hero">
+    <video src="imagenes/Video_Portada2.mp4" autoplay muted loop playsinline class="hero-video"></video>
+    <div class="hero-content container">
+      <h1>Kreoma3D</h1>
+      <p>Llevamos tus ideas a la realidad con impresión 3D de alta definición.</p>
+      <div style="margin-top:40px;">
+        <i class="fa-solid fa-chevron-down" style="font-size:1.5rem; animation: bounce 8s infinite;"></i>
       </div>
+    </div>
+  </section>
 
-      <div class="hero-visual reveal">
-        <div class="hero-card-slider">
-  <video 
-    src="imagenes/NAVIDAD.mp4"
-    autoplay
-    muted
-    loop
-    playsinline
-    class="hero-video">
-  </video>
-
-  <div class="hero-card-chip">
-    <i class="fa-solid fa-rotate"></i>
-    Temporada de Navidad
-  </div>
-</div>
-
-      </div>
-    </section>
-    <!-- BOTON GALERIA -->
-
-    <nav>
-      <!-- NUEVO: botón a la galería -->
-      <a href="galeria.html" class="btn-galeria">Galería de impresiones</a>
-    </nav>
-
-<BR></BR>
-    <!-- QUE HACEMOS -->
-    <section id="nosotros" class="reveal">
-      <div class="section-header">
-        <div class="section-pill">
-          <i class="fa-solid fa-layer-group"></i>
-          Qué hacemos
-        </div>
-        <h2 class="section-title">Impresión 3D para tu casa y tus proyectos</h2>
-        <p class="section-sub">
-          Trabajamos con modelos 3D seleccionados y configuraciones propias de impresión,
-          para ofrecerte piezas útiles y visualmente atractivas que ayudan a mantener tus espacios en orden.
+  <section id="visor" class="section-tech">
+    <div class="container">
+      <div class="tech-box">
+        <i class="fa-solid fa-layer-group" style="font-size:3rem; color:var(--primary); margin-bottom:20px;"></i>
+        <h2 class="tech-title">Personaliza tu Soporte</h2>
+        <p style="color:#ccc; font-size:1.1rem;">
+          Prueba nuestra herramienta exclusiva. Elige colores, gira el modelo en 360° y diseña el soporte perfecto para tu casco de moto.
         </p>
+        <a href="productos/soportes/visor.html" class="tech-btn">
+          <i class="fa-solid fa-cube"></i> Abrir Visor 3D
+        </a>
       </div>
+    </div>
+  </section>
 
-      <div class="cards-grid">
-        <div class="mini-card">
-          <div class="mini-icon"><i class="fa-solid fa-helmet-safety"></i></div>
-          <div class="mini-title">Soportes para casco y accesorios</div>
-          <div class="mini-text">
-            Soportes murales prácticos para casco, maleta, chaqueta y llaves, con combinaciones de color pensadas para tu moto y tu espacio.
+  <section id="productos" class="section-products container">
+    <div style="text-align:center;">
+      <h2 style="font-size:2.5rem; font-weight:700;">Nuestra Colección</h2>
+      <p style="color:var(--text-muted);">Kreoma3D</p>
+    </div>
+
+    <div class="grid-products">
+      
+      <div class="flip-card">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <img src="imagenes/soporte3en1_7.jpeg" alt="Soporte Casco">
           </div>
-        </div>
-
-        <div class="mini-card">
-          <div class="mini-icon"><i class="fa-solid fa-table-cells-large"></i></div>
-          <div class="mini-title">Organizadores y bases</div>
-          <div class="mini-text">
-            Bases y organizadores para escritorio, entrada de la casa y otros puntos donde se acumulan cosas.
-          </div>
-        </div>
-
-        <div class="mini-card">
-          <div class="mini-icon"><i class="fa-solid fa-cubes-stacked"></i></div>
-          <div class="mini-title">Figuras y piezas especiales</div>
-          <div class="mini-text">
-            Figuras decorativas y piezas impresas que complementan tus proyectos personales y regalos.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SLIDER DESTACADO -->
-    <section id="slider" class="reveal">
-      <div class="section-header">
-        <div class="section-pill">
-          <i class="fa-solid fa-images"></i>
-          Vitrina rápida
-        </div>
-        <h2 class="section-title">Algunas de nuestras impresiones</h2>
-      </div>
-
-      <div class="slider-shell">
-        <div class="slider-container" id="sliderContainer">
-          <div class="slide active">
-            <img src="imagenes/slide2.jpg" alt="Impresión 3D 1" loading="lazy">
-          </div>
-          <div class="slide">
-            <img src="imagenes/slide3.jpg" alt="Impresión 3D 2" loading="lazy">
-          </div>
-          <div class="slide">
-            <img src="imagenes/slide4.jpg" alt="Impresión 3D 3" loading="lazy">
-          </div>
-        </div>
-        <div class="slider-dots" id="sliderDots">
-          <div class="dot active"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- PRODUCTOS CON FLIP -->
-    <section id="productos" class="reveal">
-      <div class="section-header">
-        <div class="section-pill">
-          <i class="fa-solid fa-grid-2"></i>
-          Colección
-        </div>
-        <h2 class="section-title">Explora nuestras piezas</h2>
-        <p class="section-sub">
-          Diferentes tipos de piezas impresas en 3D para mantener tu casco, tus llaves y tus objetos en su lugar.
-        </p>
-      </div>
-
-      <div class="productos-grid">
-        <!-- Soporte casco -->
-        <div class="flip-card">
-          <div class="flip-inner">
-            <div class="flip-face flip-front">
-              <a href="productos/soportes/index.html">
-                <img src="imagenes/soporte1.jpg" alt="Soporte de casco 3D" loading="lazy">
-              </a>
-            </div>
-            <div class="flip-face flip-back">
-              <div class="flip-tag">Soporte para casco</div>
-              <div class="flip-title">Soporte de casco multicolor 3 en 1</div>
-              <div class="flip-text">
-                Diseñado para darle un lugar fijo al casco y otros elementos, evitando que queden en la cama o en la silla.
-              </div>
-              <div class="flip-links">
-                <a href="productos/soportes/soporte-3en1-multicolor.html" class="chip-link">
-                  <i class="fa-solid fa-palette"></i> Ver combinaciones
-                </a>
-                <a href="productos/soportes/index.html" class="chip-link">
-                  <i class="fa-solid fa-arrow-right"></i> Ver más soportes
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Organizadores -->
-        <div class="flip-card">
-          <div class="flip-inner">
-            <div class="flip-face flip-front">
-              <a href="productos/accesorios/index.html">
-                <img src="imagenes/soporte2.jpg" alt="Organizador 3D" loading="lazy">
-              </a>
-            </div>
-            <div class="flip-face flip-back">
-              <div class="flip-tag">Organización</div>
-              <div class="flip-title">Organizadores y accesorios</div>
-              <div class="flip-text">
-                Piezas impresas en 3D para que llaves, controles, gafas y otros elementos no queden regados por la casa.
-              </div>
-              <div class="flip-links">
-                <a href="productos/accesorios/index.html" class="chip-link">
-                  <i class="fa-solid fa-table-cells-large"></i> Ver organizadores
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Figuras / otros -->
-        <div class="flip-card">
-          <div class="flip-inner">
-            <div class="flip-face flip-front">
-              <a href="productos/decoracion/index.html">
-                <img src="imagenes/soporte3.jpg" alt="Figuras 3D" loading="lazy">
-              </a>
-            </div>
-            <div class="flip-face flip-back">
-              <div class="flip-tag">Figuras y extras</div>
-              <div class="flip-title">Figuras y piezas impresas</div>
-              <div class="flip-text">
-                Figuras y otras piezas impresas en 3D que complementan tu espacio y tus proyectos, según la disponibilidad.
-              </div>
-              <div class="flip-links">
-                <a href="productos/decoracion/index.html" class="chip-link">
-                  <i class="fa-solid fa-star"></i> Ver más opciones
-                </a>
-              </div>
-            </div>
+          <div class="flip-back">
+            <div class="flip-title">Soporte 3 en 1</div>
+            <p class="flip-desc">Organiza tu casco, chaqueta y llaves en un solo lugar. Resistente y personalizable.</p>
+            <a href="productos/soportes/soporte-3en1-multicolor.html" class="btn-outline">Ver Opciones</a>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- CONTACTO -->
-    <section id="contacto" class="reveal">
-      <div class="section-header">
-        <div class="section-pill">
-          <i class="fa-solid fa-message"></i>
-          Contacto
+      <div class="flip-card">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <img src="imagenes/soporte2.jpg" alt="Organizadores">
+          </div>
+          <div class="flip-back">
+            <div class="flip-title">Organizadores</div>
+            <p class="flip-desc">Bases para escritorio, accesorios de oficina y hogar para mantener el orden.</p>
+            <a href="productos/accesorios/index.html" class="btn-outline">Ver Catálogo</a>
+          </div>
         </div>
-        <h2 class="section-title">Hablemos sobre tu próxima impresión</h2>
       </div>
 
-      <div class="contact-grid">
-        <div class="contact-panel">
-          <p>
-            Escríbenos si quieres un soporte para casco, un organizador o alguna pieza en 3D que tengas en mente.
-          </p>
-          <br>
-          <p>
-            <strong>WhatsApp directo:</strong><br>
-            <a href="https://wa.me/573332395481" target="_blank">
-              <i class="fa-brands fa-whatsapp"></i> +57 333 239 5481
-            </a>
-          </p>
-          <br>
-          <p>
-            También puedes usar el formulario para describir lo que necesitas, el uso que le vas a dar y los colores que te gustaría combinar.
-          </p>
+      <div class="flip-card">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <img src="imagenes/soporte3.jpg" alt="Figuras">
+          </div>
+          <div class="flip-back">
+            <div class="flip-title">Decoración</div>
+            <p class="flip-desc">Figuras coleccionables y piezas de arte impresas en alta calidad.</p>
+            <a href="productos/decoracion/index.html" class="btn-outline">Ver Figuras</a>
+          </div>
         </div>
-
-        <form action="https://formspree.io/f/mzzbgvwn" method="POST">
-          <input type="text" name="nombre" placeholder="Tu nombre" required>
-          <input type="tel" name="telefono" placeholder="Tu teléfono" pattern="[0-9]{10}" minlength="10" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" required>
-          <input type="email" name="email" placeholder="Tu correo" required>
-          <textarea name="mensaje" rows="4" placeholder="Cuéntanos qué te gustaría imprimir..." required></textarea>
-          <button type="submit">Enviar mensaje</button>
-        </form>
       </div>
-    </section>
-  </main>
+
+    </div>
+  </section>
+
+  <section id="galeria" class="section-gallery">
+    <div class="container" style="text-align:center;">
+      <h2 style="font-size:2.5rem; font-weight:700;">Hecho en Kreoma3D</h2>
+      
+      <div class="gallery-grid">
+        <div class="gallery-preview-item"><img src="imagenes/slide2.jpg" alt="Trabajo 1"></div>
+        <div class="gallery-preview-item"><img src="imagenes/slide3.jpg" alt="Trabajo 2"></div>
+        <div class="gallery-preview-item"><img src="imagenes/slide4.jpg" alt="Trabajo 3"></div>
+        <div class="gallery-preview-item"><img src="imagenes/soporte1.jpg" alt="Trabajo 4"></div>
+      </div>
+
+      <a href="galeria.html" class="link-gallery">Ver galería completa <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </section>
+
+  <section class="section-text">
+    <div class="container text-container">
+      <h2 class="text-title">Más que imprimir, creamos soluciones</h2>
+      <p class="text-p">
+        En <strong>Kreoma3D</strong> nos especializamos en transformar ideas digitales en objetos físicos funcionales. 
+        Ya sea para organizar tu hogar, personalizar tu negocio o crear regalos únicos, utilizamos tecnología de punta para garantizar acabados perfectos.
+      </p>
+      <p class="text-p">
+        Trabajamos con materiales resistentes y ecológicos, ofreciendo una amplia gama de colores y posibilidades de personalización que no encontrarás en tiendas convencionales.
+      </p>
+
+      <div class="services-icons">
+        <div class="s-icon"><i class="fa-solid fa-pen-ruler"></i><span>Diseño</span></div>
+        <div class="s-icon"><i class="fa-solid fa-print"></i><span>Impresión</span></div>
+        <div class="s-icon"><i class="fa-solid fa-truck-fast"></i><span>Envíos</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto" style="padding:80px 0; background:#000; text-align:center;">
+    <h2 style="font-size:2.5rem; margin-bottom:20px;">¿Tienes una idea?</h2>
+    <a href="https://wa.me/573332395481" target="_blank" class="btn-contact" style="background:var(--primary); color:white; border:none; font-size:1.1rem; padding:12px 30px;">
+      <i class="fa-brands fa-whatsapp"></i> Contactar ahora
+    </a>
+  </section>
 
   <footer>
-    <span>Kreoma3D · Impresiones 3D personalizadas</span>
+    <div class="container">
+      <p>© 2025 Kreoma3D. Todos los derechos reservados.</p>
+    </div>
   </footer>
 
-  <!-- REDES -->
   <div class="redes">
-    <a href="https://www.instagram.com/kreoma3d" target="_blank" class="instagram"><i class="fab fa-instagram"></i></a>
-    <a href="https://www.facebook.com/kreoma3d" target="_blank" class="facebook"><i class="fab fa-facebook-f"></i></a>
-    <a href="https://wa.me/573332395481" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
-    <a href="https://www.facebook.com/marketplace/profile/kreoma3d" target="_blank" class="marketplace"><i class="fa-solid fa-store"></i></a>
+    <a href="https://www.instagram.com/kreoma3d" target="_blank" class="social-btn"><i class="fab fa-instagram"></i></a>
+    <a href="https://wa.me/573332395481" target="_blank" class="social-btn"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://www.facebook.com/kreoma3d" target="_blank" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://www.facebook.com/marketplace/profile/61583384394602/" target="_blank" class="social-btn"><i class="fa-solid fa-store"></i></a>
   </div>
 
-  <button id="volverArriba"><i class="fa-solid fa-arrow-up"></i></button>
+  <style>
+    @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform:translateY(0);} 40% {transform:translateY(-10px);} 60% {transform:translateY(-5px);} }
+  </style>
 
-  <script>
-    // Slider simple
-    const slides = document.querySelectorAll('.slide');
-    const dots = document.querySelectorAll('.dot');
-    let currentSlide = 0;
-    let sliderInterval = null;
-
-    function showSlide(index){
-      slides.forEach((s,i)=>{
-        s.classList.toggle('active',i===index);
-      });
-      dots.forEach((d,i)=>{
-        d.classList.toggle('active',i===index);
-      });
-      currentSlide = index;
-    }
-
-    function nextSlide(){
-      const next = (currentSlide + 1) % slides.length;
-      showSlide(next);
-    }
-
-    function startSlider(){
-      sliderInterval = setInterval(nextSlide,4000);
-    }
-
-    dots.forEach((dot,index)=>{
-      dot.addEventListener('click',()=>{
-        showSlide(index);
-        clearInterval(sliderInterval);
-        startSlider();
-      });
-    });
-
-    if(slides.length>0){
-      startSlider();
-    }
-
-    // Botón volver arriba
-    const btnTop = document.getElementById('volverArriba');
-    window.addEventListener('scroll',()=>{
-      if(window.scrollY>260){
-        btnTop.style.display='flex';
-      }else{
-        btnTop.style.display='none';
-      }
-    });
-
-    btnTop.addEventListener('click',()=>{
-      window.scrollTo({top:0,behavior:'smooth'});
-    });
-
-    // Animaciones al hacer scroll
-    const reveals = document.querySelectorAll('.reveal');
-
-    const observer = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    },{
-      threshold:0.15
-    });
-
-    reveals.forEach(el=>observer.observe(el));
-
-    // Activar link de menú según scroll
-    const sections = document.querySelectorAll('main section');
-    const navLinks = document.querySelectorAll('nav a');
-
-    function setActiveLink(){
-      let currentId = 'inicio';
-      sections.forEach(sec=>{
-        const rect = sec.getBoundingClientRect();
-        if(rect.top<=120 && rect.bottom>=120){
-          currentId = sec.id;
-        }
-      });
-      navLinks.forEach(link=>{
-        link.classList.toggle('active',link.getAttribute('href') === '#' + currentId);
-      });
-    }
-
-    window.addEventListener('scroll',setActiveLink);
-    setActiveLink();
-    const video = document.getElementById('navidadVideo');
-
-video.addEventListener('click', () => {
-  if(video.muted){
-    video.muted = false;
-    video.play();
-  }
-});
-  </script>
 </body>
 </html>
