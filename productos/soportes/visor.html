@@ -143,6 +143,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
+/* ============================
+   CONFIG API (NUEVO)
+   ============================ */
+const API_URL = "https://www.fpc.com.co/Kreoma/api/pedidos_create.php";
+const WHATSAPP_NUM = "573332395481";
+
 /* CONFIGURACIÓN ESCENA */
 const canvasContainer = document.getElementById("canvas-container");
 const scene = new THREE.Scene();
@@ -252,9 +258,6 @@ function cargarLogoSTL(archivo){
 function generarTexto3D(textoString){
   limpiarLogoAnterior();
   if(!fuenteCargada) return;
-  
-  // Convertimos a mayúsculas para mejor consistencia (opcional)
-  // textoString = textoString.toUpperCase(); 
 
   if(!textoString || textoString === "") return;
 
@@ -273,46 +276,37 @@ function generarTexto3D(textoString){
   const mat = new THREE.MeshStandardMaterial({color: seleccion.logo.c});
 
   letras.forEach(letra => {
-    
-    // --- FIX: Si es un espacio, solo avanzamos el offset y saltamos ---
+    // FIX: espacio
     if(letra === " "){
-        // Avanzamos el ancho aprox de un espacio (ej: tamaño / 2)
-        offsetActual += sizeLetra / 1.5;
-        return; 
+      offsetActual += sizeLetra / 1.5;
+      return; 
     }
 
-    // Geometría individual
     const geo = new TextGeometry(letra, {
-        font: fuenteCargada, 
-        size: sizeLetra, 
-        height: alturaLetra, 
-        curveSegments: 4,
-        bevelEnabled: true, bevelThickness: 0.5, bevelSize: 0.3, bevelOffset: 0, bevelSegments: 3
+      font: fuenteCargada, 
+      size: sizeLetra, 
+      height: alturaLetra, 
+      curveSegments: 4,
+      bevelEnabled: true, bevelThickness: 0.5, bevelSize: 0.3, bevelOffset: 0, bevelSegments: 3
     });
 
     geo.computeBoundingBox();
     const anchoLetra = geo.boundingBox.max.x - geo.boundingBox.min.x;
-    
-    // Movemos la geometría a su posición en la fila
     geo.translate(offsetActual, 0, 0);
 
     const meshLetra = new THREE.Mesh(geo, mat);
     grupoTexto.add(meshLetra);
 
-    // Aumentamos el offset para la siguiente letra
     offsetActual += anchoLetra + espacioLetras;
   });
 
-  // Centrar el GRUPO completo
   const centroX = -offsetActual / 2;
   const centroY = -sizeLetra / 2; 
 
-  // Ajuste interno del grupo para que su pivote sea el centro
   grupoTexto.children.forEach(child => {
-      child.geometry.translate(centroX, centroY, 0);
+    child.geometry.translate(centroX, centroY, 0);
   });
 
-  // APLICAR TUS VALORES DE CALIBRACIÓN AL GRUPO
   grupoTexto.position.set(TXT_POS.x, TXT_POS.y, TXT_POS.z);
   grupoTexto.rotation.set(TXT_ROT.x, TXT_ROT.y, TXT_ROT.z);
 
@@ -358,14 +352,11 @@ function aplicarColor(grupo, hex){
   if(grupo==="superior" && piezas.superior.mesh) piezas.superior.mesh.material.color.set(hex);
   if(grupo==="insert") piezas.insertMeshes.forEach(m=>m.material.color.set(hex));
   
-  // LOGO: Ahora puede ser un Grupo (Texto) o un Mesh (STL)
   if(grupo==="logo" && piezas.logo.mesh) {
     if(piezas.logo.mesh.isGroup) {
-        // Si es texto (grupo), pintamos cada letra
-        piezas.logo.mesh.children.forEach(child => child.material.color.set(hex));
+      piezas.logo.mesh.children.forEach(child => child.material.color.set(hex));
     } else {
-        // Si es STL, pintamos normal
-        piezas.logo.mesh.material.color.set(hex);
+      piezas.logo.mesh.material.color.set(hex);
     }
   }
 }
@@ -414,25 +405,103 @@ logos.forEach(l=>{
 });
 logoSelect.addEventListener("change",()=>{ cargarLogoSTL(logoSelect.value); });
 
-/* WHATSAPP */
+/* ============================
+   WHATSAPP (MODIFICADO)
+   Guarda en MySQL y luego abre WhatsApp con código KRE-xxxxxx
+   ============================ */
 function nombreColor(hex){
-  const c = colores.find(x=>x.c.toLowerCase()===hex.toLowerCase()); return c ? c.n : "Personalizado";
+  const c = colores.find(x=>x.c.toLowerCase()===hex.toLowerCase());
+  return c ? c.n : "Personalizado";
 }
-document.getElementById("enviarWhatsApp").addEventListener("click",()=>{
+
+async function guardarPedidoSoporte(){
   const baseC = nombreColor(seleccion.base.c);
   const supC  = nombreColor(seleccion.superior.c);
   const insC  = nombreColor(seleccion.insert.c);
   const logC  = nombreColor(seleccion.logo.c);
-  let infoLogo = "";
+
+  let payloadLogo = {};
   if(modoLogo === "catalogo"){
     const nombreL = logoSelect.selectedOptions[0]?.textContent || "Ninguno";
-    infoLogo = `Logo catálogo: ${nombreL}`;
+    payloadLogo = {
+      tipo_logo: "catalogo",
+      logo_nombre: nombreL,
+      logo_archivo_stl: logoSelect.value || ""
+    };
   } else {
-    const texto = customInput.value || "Sin texto";
-    infoLogo = `Nombre personalizado: "${texto}"`;
+    const texto = (customInput.value || "").trim();
+    payloadLogo = {
+      tipo_logo: "texto",
+      texto_personalizado: texto
+    };
   }
-  const msg = `Hola Kreoma3D! 👋\nQuiero mi soporte personalizado:\n• Base: ${baseC}\n• Superior: ${supC}\n• Insertos: ${insC}\n• ${infoLogo} (Color: ${logC})`;
-  window.open(`https://wa.me/573332395481?text=${encodeURIComponent(msg)}`,"_blank");
+
+  const payload = {
+    producto_key: "SOPORTE_3EN1",
+    piezas: {
+      base:     { color_nombre: baseC, color_hex: seleccion.base.c },
+      superior: { color_nombre: supC,  color_hex: seleccion.superior.c },
+      insertos: { color_nombre: insC,  color_hex: seleccion.insert.c, cantidad: 5 },
+      logo:     { color_nombre: logC,  color_hex: seleccion.logo.c, ...payloadLogo }
+    },
+    meta: { fuente: "visor.html", ts: new Date().toISOString() }
+  };
+
+  const res = await fetch(API_URL, {
+    method: "POST",
+    mode: "cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  const json = await res.json().catch(()=> ({}));
+  if(!res.ok || !json.ok){
+    throw new Error(json.error || "No se pudo guardar el pedido");
+  }
+  return json; // {ok:true,codigo,pedido_id}
+}
+
+document.getElementById("enviarWhatsApp").addEventListener("click", async ()=>{
+  const btn = document.getElementById("enviarWhatsApp");
+  btn.disabled = true;
+  const prev = btn.textContent;
+  btn.textContent = "Guardando pedido...";
+
+  try{
+    const r = await guardarPedidoSoporte();
+    const codigo = r.codigo;
+
+    const baseC = nombreColor(seleccion.base.c);
+    const supC  = nombreColor(seleccion.superior.c);
+    const insC  = nombreColor(seleccion.insert.c);
+    const logC  = nombreColor(seleccion.logo.c);
+
+    let infoLogo = "";
+    if(modoLogo === "catalogo"){
+      const nombreL = logoSelect.selectedOptions[0]?.textContent || "Ninguno";
+      infoLogo = `Logo catálogo: ${nombreL}`;
+    } else {
+      const texto = customInput.value || "Sin texto";
+      infoLogo = `Nombre personalizado: "${texto}"`;
+    }
+
+    const msg =
+`Hola Kreoma3D! 👋
+Código de pedido: ${codigo}
+
+Quiero mi soporte personalizado:
+• Base: ${baseC}
+• Superior: ${supC}
+• Insertos: ${insC}
+• ${infoLogo} (Color: ${logC})`;
+
+    window.open(`https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(msg)}`,"_blank");
+  } catch(err){
+    alert("Error: " + (err?.message || err));
+  } finally {
+    btn.disabled = false;
+    btn.textContent = prev;
+  }
 });
 
 /* LOOP */
@@ -447,5 +516,4 @@ cargarEstructura();
 crearPaleta();
 </script>
 </body>
-
 </html>
