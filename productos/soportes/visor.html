@@ -414,25 +414,76 @@ logos.forEach(l=>{
 });
 logoSelect.addEventListener("change",()=>{ cargarLogoSTL(logoSelect.value); });
 
-/* WHATSAPP */
-function nombreColor(hex){
-  const c = colores.find(x=>x.c.toLowerCase()===hex.toLowerCase()); return c ? c.n : "Personalizado";
+/* WHATSAPP + CAPTURA LEAD EN ERP */
+function nombreColor(hex) {
+  const c = colores.find(x => x.c.toLowerCase() === hex.toLowerCase());
+  return c ? c.n : "Personalizado";
 }
-document.getElementById("enviarWhatsApp").addEventListener("click",()=>{
+
+document.getElementById("enviarWhatsApp").addEventListener("click", async () => {
   const baseC = nombreColor(seleccion.base.c);
   const supC  = nombreColor(seleccion.superior.c);
   const insC  = nombreColor(seleccion.insert.c);
   const logC  = nombreColor(seleccion.logo.c);
+
   let infoLogo = "";
-  if(modoLogo === "catalogo"){
+  let logoModo = "";
+  let logoValor = "";
+
+  if (modoLogo === "catalogo") {
     const nombreL = logoSelect.selectedOptions[0]?.textContent || "Ninguno";
     infoLogo = `Logo catálogo: ${nombreL}`;
+    logoModo = "catalogo";
+    logoValor = nombreL;
   } else {
     const texto = customInput.value || "Sin texto";
     infoLogo = `Nombre personalizado: "${texto}"`;
+    logoModo = "texto";
+    logoValor = texto;
   }
-  const msg = `Hola Kreoma3D! 👋\nQuiero mi soporte personalizado:\n• Base: ${baseC}\n• Superior: ${supC}\n• Insertos: ${insC}\n• ${infoLogo} (Color: ${logC})`;
-  window.open(`https://wa.me/573332395481?text=${encodeURIComponent(msg)}`,"_blank");
+
+  const msg =
+`Hola Kreoma3D! 👋
+Quiero mi soporte personalizado:
+• Base: ${baseC}
+• Superior: ${supC}
+• Insertos: ${insC}
+• ${infoLogo} (Color: ${logC})`;
+
+  // 1) Enviar LEAD al ERP (sin frenar WhatsApp si falla)
+  const API_URL = "https://www.fpc.com.co/Kreoma/api/lead_create.php";
+  const API_KEY = "f7N#z2K9v$Lp8Qx@m5W&1jR*tS6uB4cY9gH3eD!aV0n"; // Clave larga insertada
+
+  try {
+    const payload = {
+      origen: "visor_soporte_v1",
+      producto_key: "SOPORTE_3EN1",
+      base_color: baseC,
+      superior_color: supC,
+      insert_color: insC,
+      logo_color: logC,
+      logo_modo: logoModo,
+      logo_valor: logoValor,
+      mensaje_whatsapp: msg
+    };
+
+    // Usamos keepalive para intentar que el envío no se cancele al abrir WhatsApp
+    await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-KREOMA-KEY": API_KEY
+      },
+      body: JSON.stringify(payload),
+      keepalive: true
+    });
+  } catch (e) {
+    // Silenciamos el error para asegurar que el usuario siempre llegue a WhatsApp
+    console.error("Error enviando lead:", e);
+  }
+
+  // 2) Abrir WhatsApp como siempre
+  window.open(`https://wa.me/573332395481?text=${encodeURIComponent(msg)}`, "_blank");
 });
 
 /* LOOP */
@@ -449,3 +500,4 @@ crearPaleta();
 </body>
 
 </html>
+
