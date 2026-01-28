@@ -403,18 +403,20 @@ function enviarLeadNoBloqueante(payload) {
   const API_URL = "https://www.fpc.com.co/Kreoma/api/lead_create.php";
   const API_KEY = "f7N#z2K9v$Lp8Qx@m5W&1jR*tS6uB4cY9gH3eD!aV0n";
 
+  // 1) Intento beacon “simple”
   try {
-    // Preferimos sendBeacon (más confiable cuando la página cambia)
     if (navigator.sendBeacon) {
-      const blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
-      // sendBeacon no permite headers custom; enviamos la key por querystring
       const urlConKey = API_URL + "?k=" + encodeURIComponent(API_KEY);
-      navigator.sendBeacon(urlConKey, blob);
-      return;
+
+      // IMPORTANTE: text/plain para evitar líos de CORS/preflight con beacon
+      const blob = new Blob([JSON.stringify(payload)], { type: "text/plain;charset=UTF-8" });
+
+      const ok = navigator.sendBeacon(urlConKey, blob);
+      if (ok) return;
     }
   } catch (e) {}
 
-  // Fallback: fetch sin await (no bloquea el popup)
+  // 2) Fallback fetch keepalive (sin await)
   try {
     fetch(API_URL, {
       method: "POST",
@@ -429,6 +431,7 @@ function enviarLeadNoBloqueante(payload) {
     }).catch(()=>{});
   } catch (e) {}
 }
+
 
 document.getElementById("enviarWhatsApp").addEventListener("click", () => {
   const baseC = nombreColor(seleccion.base.c);
