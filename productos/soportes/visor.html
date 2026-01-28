@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  
   <title>Personalizador 3D - Kreoma3D</title>
 
 <style>
 :root{
-  --panelH:35vh;            
+  --panelH:35vh;
   --topbarH:62px;
   --fontBig:clamp(16px,4.8vw,22px);
   --fontSemi:clamp(14px,4vw,19px);
@@ -129,7 +128,7 @@ canvas{ filter:drop-shadow(0 20px 35px rgba(0,0,0,.4)); }
     </div>
   </div>
 
-  <button id="enviarWhatsApp">Enviar Personalización a WhatsApp</button>
+  <button id="enviarWhatsApp" type="button">Enviar Personalización a WhatsApp</button>
 </div>
 
 <script type="importmap">
@@ -166,19 +165,16 @@ world.position.y = -160; world.position.x = 170;
 scene.add(world);
 
 /* --- CONFIGURACIÓN DE POSICIONES --- */
-
-// 1. Posición para los Logos STL
 const STL_POS = { x: 11, y: -15, z: -5 };
 const STL_ROT = { x: Math.PI, y: 0, z: Math.PI };
 
-// 2. Posición CALIBRADA para el Texto 3D
 const TXT_POS = { x: -156, y: 103, z: -17 };
 const TXT_ROT = { x: 1.5, y: 5.3, z: 3.1 };
 
 /* GESTIÓN DE MODELOS */
 const loader = new STLLoader();
 const fontLoader = new FontLoader();
-let fuenteCargada = null; 
+let fuenteCargada = null;
 const FONT_URL = 'https://unpkg.com/three@0.158.0/examples/fonts/helvetiker_bold.typeface.json';
 
 const piezas = {
@@ -186,7 +182,7 @@ const piezas = {
   superior: {file:"Helm-Halter.stl", mesh:null},
   inserts: ["Insert1.stl","Insert2.stl","Insert3.stl","Insert4.stl","Insert5.stl"],
   insertMeshes: [],
-  logo: { mesh:null } // Puede ser Mesh (STL) o Group (Texto separado)
+  logo: { mesh:null } // Mesh (STL) o Group (Texto)
 };
 
 let grupoActivo = "base";
@@ -211,7 +207,7 @@ function cargarEstructura(){
       m.rotation.set(Math.PI,0,Math.PI); world.add(m); piezas.insertMeshes.push(m);
     });
   });
-  
+
   fontLoader.load(FONT_URL, (font) => { fuenteCargada = font; });
   cargarLogoSTL("logoYamaha.stl");
 }
@@ -220,14 +216,12 @@ function cargarEstructura(){
 function limpiarLogoAnterior(){
   if(piezas.logo.mesh){
     world.remove(piezas.logo.mesh);
-    // Si es un grupo (Texto separado)
     if(piezas.logo.mesh.isGroup){
       piezas.logo.mesh.children.forEach(c => {
         if(c.geometry) c.geometry.dispose();
         if(c.material) c.material.dispose();
       });
     } else {
-      // Si es un mesh normal (STL)
       if(piezas.logo.mesh.geometry) piezas.logo.mesh.geometry.dispose();
       if(piezas.logo.mesh.material) piezas.logo.mesh.material.dispose();
     }
@@ -235,7 +229,6 @@ function limpiarLogoAnterior(){
   }
 }
 
-// 1. Cargar STL
 function cargarLogoSTL(archivo){
   limpiarLogoAnterior();
   if(!archivo || archivo === "") return;
@@ -248,75 +241,57 @@ function cargarLogoSTL(archivo){
   });
 }
 
-// 2. Generar Texto 3D (CORREGIDO PARA ESPACIOS)
 function generarTexto3D(textoString){
   limpiarLogoAnterior();
   if(!fuenteCargada) return;
-  
-  // Convertimos a mayúsculas para mejor consistencia (opcional)
-  // textoString = textoString.toUpperCase(); 
-
   if(!textoString || textoString === "") return;
 
-  // --- CONFIGURACIÓN ---
-  const espacioLetras = 2; // Separación extra
+  const espacioLetras = 2;
   const sizeLetra = 18;
   const alturaLetra = 2;
-  
+
   const grupoTexto = new THREE.Group();
   let offsetActual = 0;
 
-  // Recorremos cada letra
   const letras = textoString.split('');
-  
-  // Material único compartido
   const mat = new THREE.MeshStandardMaterial({color: seleccion.logo.c});
 
   letras.forEach(letra => {
-    
-    // --- FIX: Si es un espacio, solo avanzamos el offset y saltamos ---
     if(letra === " "){
-        // Avanzamos el ancho aprox de un espacio (ej: tamaño / 2)
-        offsetActual += sizeLetra / 1.5;
-        return; 
+      offsetActual += sizeLetra / 1.5;
+      return;
     }
 
-    // Geometría individual
     const geo = new TextGeometry(letra, {
-        font: fuenteCargada, 
-        size: sizeLetra, 
-        height: alturaLetra, 
-        curveSegments: 4,
-        bevelEnabled: true, bevelThickness: 0.5, bevelSize: 0.3, bevelOffset: 0, bevelSegments: 3
+      font: fuenteCargada,
+      size: sizeLetra,
+      height: alturaLetra,
+      curveSegments: 4,
+      bevelEnabled: true, bevelThickness: 0.5, bevelSize: 0.3, bevelOffset: 0, bevelSegments: 3
     });
 
     geo.computeBoundingBox();
     const anchoLetra = geo.boundingBox.max.x - geo.boundingBox.min.x;
-    
-    // Movemos la geometría a su posición en la fila
+
     geo.translate(offsetActual, 0, 0);
 
     const meshLetra = new THREE.Mesh(geo, mat);
     grupoTexto.add(meshLetra);
 
-    // Aumentamos el offset para la siguiente letra
     offsetActual += anchoLetra + espacioLetras;
   });
 
-  // Centrar el GRUPO completo
   const centroX = -offsetActual / 2;
-  const centroY = -sizeLetra / 2; 
+  const centroY = -sizeLetra / 2;
 
-  // Ajuste interno del grupo para que su pivote sea el centro
   grupoTexto.children.forEach(child => {
-      child.geometry.translate(centroX, centroY, 0);
+    child.geometry.translate(centroX, centroY, 0);
   });
 
-  // APLICAR TUS VALORES DE CALIBRACIÓN AL GRUPO
   grupoTexto.position.set(TXT_POS.x, TXT_POS.y, TXT_POS.z);
   grupoTexto.rotation.set(TXT_ROT.x, TXT_ROT.y, TXT_ROT.z);
 
-  world.add(grupoTexto); 
+  world.add(grupoTexto);
   piezas.logo.mesh = grupoTexto;
 }
 
@@ -357,22 +332,22 @@ function aplicarColor(grupo, hex){
   if(grupo==="base" && piezas.base.mesh) piezas.base.mesh.material.color.set(hex);
   if(grupo==="superior" && piezas.superior.mesh) piezas.superior.mesh.material.color.set(hex);
   if(grupo==="insert") piezas.insertMeshes.forEach(m=>m.material.color.set(hex));
-  
-  // LOGO: Ahora puede ser un Grupo (Texto) o un Mesh (STL)
+
   if(grupo==="logo" && piezas.logo.mesh) {
     if(piezas.logo.mesh.isGroup) {
-        // Si es texto (grupo), pintamos cada letra
-        piezas.logo.mesh.children.forEach(child => child.material.color.set(hex));
+      piezas.logo.mesh.children.forEach(child => child.material.color.set(hex));
     } else {
-        // Si es STL, pintamos normal
-        piezas.logo.mesh.material.color.set(hex);
+      piezas.logo.mesh.material.color.set(hex);
     }
   }
 }
 
 function crearPaleta(){
   colores.forEach(col=>{
-    const el=document.createElement("div"); el.className="color"; el.dataset.hex=col.c; el.style.background=col.c;
+    const el=document.createElement("div");
+    el.className="color";
+    el.dataset.hex=col.c;
+    el.style.background=col.c;
     el.addEventListener("click",()=>{ aplicarColor(grupoActivo, col.c); resaltarSeleccion(); });
     paleta.appendChild(el);
   });
@@ -392,7 +367,8 @@ const logoBlock = document.getElementById("logo-block");
 
 tabs.forEach(tab=>{
   tab.addEventListener("click",()=>{
-    tabs.forEach(t=>t.classList.remove("activo")); tab.classList.add("activo");
+    tabs.forEach(t=>t.classList.remove("activo"));
+    tab.classList.add("activo");
     grupoActivo=tab.dataset.grupo;
     if(grupoActivo==="logo") logoBlock.style.display="flex"; else logoBlock.style.display="none";
     resaltarSeleccion();
@@ -409,7 +385,9 @@ const logos=[
   {n:"Kawasaki",f:"logoKawasaki.stl"}, {n:"Discover",f:"logoDiscover.stl"}
 ];
 logos.forEach(l=>{
-  const opt=document.createElement("option"); opt.value=l.f; opt.textContent=l.n;
+  const opt=document.createElement("option");
+  opt.value=l.f;
+  opt.textContent=l.n;
   logoSelect.appendChild(opt);
 });
 logoSelect.addEventListener("change",()=>{ cargarLogoSTL(logoSelect.value); });
@@ -420,7 +398,39 @@ function nombreColor(hex) {
   return c ? c.n : "Personalizado";
 }
 
-document.getElementById("enviarWhatsApp").addEventListener("click", async () => {
+// Envío NO bloqueante (para que WhatsApp nunca se frene)
+function enviarLeadNoBloqueante(payload) {
+  const API_URL = "https://www.fpc.com.co/Kreoma/api/lead_create.php";
+  const API_KEY = "f7N#z2K9v$Lp8Qx@m5W&1jR*tS6uB4cY9gH3eD!aV0n";
+
+  try {
+    // Preferimos sendBeacon (más confiable cuando la página cambia)
+    if (navigator.sendBeacon) {
+      const blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
+      // sendBeacon no permite headers custom; enviamos la key por querystring
+      const urlConKey = API_URL + "?k=" + encodeURIComponent(API_KEY);
+      navigator.sendBeacon(urlConKey, blob);
+      return;
+    }
+  } catch (e) {}
+
+  // Fallback: fetch sin await (no bloquea el popup)
+  try {
+    fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-KREOMA-KEY": API_KEY
+      },
+      body: JSON.stringify(payload),
+      keepalive: true,
+      mode: "cors",
+      credentials: "omit"
+    }).catch(()=>{});
+  } catch (e) {}
+}
+
+document.getElementById("enviarWhatsApp").addEventListener("click", () => {
   const baseC = nombreColor(seleccion.base.c);
   const supC  = nombreColor(seleccion.superior.c);
   const insC  = nombreColor(seleccion.insert.c);
@@ -436,7 +446,7 @@ document.getElementById("enviarWhatsApp").addEventListener("click", async () => 
     logoModo = "catalogo";
     logoValor = nombreL;
   } else {
-    const texto = customInput.value || "Sin texto";
+    const texto = (customInput.value || "").trim() || "Sin texto";
     infoLogo = `Nombre personalizado: "${texto}"`;
     logoModo = "texto";
     logoValor = texto;
@@ -450,45 +460,38 @@ Quiero mi soporte personalizado:
 • Insertos: ${insC}
 • ${infoLogo} (Color: ${logC})`;
 
-  // 1) Enviar LEAD al ERP (sin frenar WhatsApp si falla)
-  const API_URL = "https://www.fpc.com.co/Kreoma/api/lead_create.php";
-  const API_KEY = "f7N#z2K9v$Lp8Qx@m5W&1jR*tS6uB4cY9gH3eD!aV0n"; // Clave larga insertada
+  // URL WhatsApp (IMPORTANTE: abrirla SIN esperar nada para que no la bloquee el navegador)
+  const waUrl = `https://wa.me/573332395481?text=${encodeURIComponent(msg)}`;
 
-  try {
-    const payload = {
-      origen: "visor_soporte_v1",
-      producto_key: "SOPORTE_3EN1",
-      base_color: baseC,
-      superior_color: supC,
-      insert_color: insC,
-      logo_color: logC,
-      logo_modo: logoModo,
-      logo_valor: logoValor,
-      mensaje_whatsapp: msg
-    };
+  // 1) Abrir WhatsApp primero (misma acción del click => no bloquea popups)
+  const waWin = window.open(waUrl, "_blank");
 
-    // Usamos keepalive para intentar que el envío no se cancele al abrir WhatsApp
-    await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-KREOMA-KEY": API_KEY
-      },
-      body: JSON.stringify(payload),
-      keepalive: true
-    });
-  } catch (e) {
-    // Silenciamos el error para asegurar que el usuario siempre llegue a WhatsApp
-    console.error("Error enviando lead:", e);
+  // Fallback si el navegador bloquea el popup
+  if (!waWin) {
+    window.location.href = waUrl;
   }
 
-  // 2) Abrir WhatsApp como siempre
-  window.open(`https://wa.me/573332395481?text=${encodeURIComponent(msg)}`, "_blank");
+  // 2) Enviar lead en segundo plano (no bloquea WhatsApp)
+  const payload = {
+    origen: "visor_soporte_v1",
+    producto_key: "SOPORTE_3EN1",
+    base_color: baseC,
+    superior_color: supC,
+    insert_color: insC,
+    logo_color: logC,
+    logo_modo: logoModo,
+    logo_valor: logoValor,
+    mensaje_whatsapp: msg
+  };
+
+  // Disparar envío tras liberar el hilo del click
+  setTimeout(() => enviarLeadNoBloqueante(payload), 0);
 });
 
 /* LOOP */
 function animate(){ requestAnimationFrame(animate); controls.update(); renderer.render(scene,camera); }
 animate();
+
 window.addEventListener("resize",()=>{
   const w = canvasContainer.clientWidth; const h = canvasContainer.clientHeight;
   renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix();
@@ -498,6 +501,4 @@ cargarEstructura();
 crearPaleta();
 </script>
 </body>
-
 </html>
-
