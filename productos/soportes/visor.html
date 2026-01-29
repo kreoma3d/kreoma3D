@@ -7,8 +7,7 @@
 
 <style>
 :root{
-  /* CAMBIO 1: Aumentamos la altura del panel para que quepa el botón */
-  --panelH:50vh; /* Antes era 35vh */
+  --panelH:55vh; 
   --topbarH:62px;
   --fontBig:clamp(16px,4.8vw,22px);
   --fontSemi:clamp(14px,4vw,19px);
@@ -47,17 +46,29 @@ body{
 #panel{
   position:fixed; bottom:0; left:0; right:0; height:var(--panelH); z-index:20;
   background:#ffffffee; backdrop-filter:blur(9px); border-top:1px solid var(--border);
-  padding:clamp(12px,3vw,24px); display:flex; flex-direction:column; gap:clamp(10px,3vw,14px);
+  padding:clamp(12px,3vw,24px); display:flex; flex-direction:column; gap:12px;
   overflow-y:auto;
 }
 
-/* TABS */
-#tabs{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
-.tab{
-  padding:8px 16px; border-radius:99px; background:#f5f5f5; border:1px solid #ccc;
-  font-size:var(--fontSemi); font-weight:600; text-align:center; cursor:pointer; transition:all .2s;
+/* AYUDA VISUAL */
+#instruccion {
+  background: #fff3e0;
+  color: #e65100;
+  padding: 8px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  border: 1px dashed #ffb74d;
 }
-.tab:hover{ transform:translateY(-1px); box-shadow:0 4px 10px rgba(0,0,0,.15); }
+
+/* TABS */
+#tabs{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+.tab{
+  padding:10px 14px; border-radius:99px; background:#f5f5f5; border:1px solid #ccc;
+  font-size:13px; font-weight:700; text-align:center; cursor:pointer; transition:all .2s;
+  text-transform: uppercase;
+}
 .tab.activo{ background:#111; color:#fff; border-color:#111; transform:translateY(-1px); }
 
 /* COLORES */
@@ -67,32 +78,27 @@ body{
   width:var(--colorSize); height:var(--colorSize); border-radius:50%; border:3px solid #fff;
   box-shadow:0 0 6px rgba(0,0,0,.3); cursor:pointer; transition:transform .15s;
 }
-.color:hover{ transform:scale(1.1); }
-.color.sel{ outline:3px solid #000; }
+.color.sel{ outline:3px solid #000; transform: scale(1.1); }
 
 /* LOGO BLOCK */
 #logo-block{ display:none; flex-direction:column; gap:8px; background:rgba(0,0,0,0.03); padding:10px; border-radius:var(--radius); }
 .logo-type-switch{ display:flex; gap:15px; margin-bottom:5px; }
 .logo-type-switch label{ display:flex; align-items:center; gap:6px; font-size:var(--fontSemi); cursor:pointer; font-weight:600; }
-.logo-type-switch input[type="radio"] { accent-color:#ff8000; transform:scale(1.2); }
-select, input[type="text"]{ width:100%; padding:10px 14px; border-radius:12px; border:1px solid #ccc; font-size:16px; font-family:inherit; }
-input[type="text"]:focus, select:focus{ outline:2px solid #ff8000; border-color:#ff8000; }
-.hidden{ display:none; }
+select, input[type="text"]{ width:100%; padding:12px; border-radius:12px; border:1px solid #ccc; font-size:16px; text-transform: uppercase; }
 
-/* BOTÓN */
+/* BOTÓN WHATSAPP GRANDE */
 #enviarWhatsApp{
-  margin-top:auto; width:100%; padding:14px; background:#25D366; color:#fff; border:none;
-  border-radius:var(--radius); font-size:16px; font-weight:1000; cursor:pointer;
-  box-shadow:0 6px 16px rgba(0,0,0,.25); transition:transform .15s;
-}
-#enviarWhatsApp:hover{ background:#1ebe5c; transform:translateY(-1px); }
-canvas{ filter:drop-shadow(0 20px 35px rgba(0,0,0,.4)); }
-
-@media(min-width:900px){ :root{ --panelH:30vh; } #panel{ padding:20px 40px; } #tabs{ justify-content:flex-start; } }
-
-#custom-text {
+  margin-top:10px; width:100%; padding:18px; background:#25D366; color:#fff; border:none;
+  border-radius:var(--radius); font-size:18px; font-weight:900; cursor:pointer;
+  box-shadow:0 6px 16px rgba(0,0,0,.25); transition:all .2s;
   text-transform: uppercase;
 }
+#enviarWhatsApp:active { transform: scale(0.95); }
+
+.hidden{ display:none; }
+canvas{ filter:drop-shadow(0 20px 35px rgba(0,0,0,.4)); }
+
+@media(min-width:900px){ :root{ --panelH:35vh; } #panel{ padding:20px 40px; } }
 </style>
 </head>
 
@@ -100,7 +106,7 @@ canvas{ filter:drop-shadow(0 20px 35px rgba(0,0,0,.4)); }
 
 <div class="topbar">
   <a href="../../index.html"><img src="logo_kreoma.png" alt="Kreoma3D"></a>
-  <h1>Personalizador 3D • Soporte de casco 3 en 1</h1>
+  <h1>Personalizador • Soporte 3 en 1</h1>
   <nav><a href="../index.html">Inicio</a></nav>
 </div>
 
@@ -110,30 +116,31 @@ canvas{ filter:drop-shadow(0 20px 35px rgba(0,0,0,.4)); }
 </div>
 
 <div id="panel">
+  <p id="instruccion">👉 Paso 1: Toca una de las opciones de abajo</p>
+
   <div id="tabs">
-    <div class="tab activo" data-grupo="base">Base</div>
-    <div class="tab" data-grupo="superior">Superior</div>
-    <div class="tab" data-grupo="insert">Insertos</div>
-    <div class="tab" data-grupo="logo">Logo / Nombre</div>
+    <div class="tab activo" data-grupo="base"> Base</div>
+    <div class="tab" data-grupo="superior"> Superior</div>
+    <div class="tab" data-grupo="insert"> Insertos</div>
+    <div class="tab" data-grupo="logo">✍️ Nombre/Logo</div>
   </div>
 
   <div id="bloque-colores">
-    <h3>Color</h3>
     <div id="paleta"></div>
   </div>
 
   <div id="logo-block">
     <div class="logo-type-switch">
-      <label><input type="radio" name="tipoLogo" value="catalogo" checked> Logo Catálogo</label>
-      <label><input type="radio" name="tipoLogo" value="texto"> Escribir Nombre</label>
+      <label><input type="radio" name="tipoLogo" value="catalogo" checked> Logo</label>
+      <label><input type="radio" name="tipoLogo" value="texto"> Nombre</label>
     </div>
     <div id="cont-select-logo"><select id="logo-select"></select></div>
     <div id="cont-input-text" class="hidden">
-      <input type="text" id="custom-text" placeholder="Escribe tu nombre (Máx 10 letras)" maxlength="12">
+      <input type="text" id="custom-text" placeholder="ESCRIBE AQUÍ TU NOMBRE" maxlength="12">
     </div>
   </div>
 
-  <button id="enviarWhatsApp" type="button">Enviar Personalización a WhatsApp</button>
+  <button id="enviarWhatsApp" type="button">✅ PEDIR POR WHATSAPP</button>
 </div>
 
 <script type="importmap">
@@ -152,8 +159,8 @@ const canvasContainer = document.getElementById("canvas-container");
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, canvasContainer.clientWidth/canvasContainer.clientHeight, 0.1, 10000);
 
-/* CAMBIO 2: Acercamos la cámara (Zoom in) */
-camera.position.set(-130,0,130); // Antes era (-200,0,200)
+// ZOOM AJUSTADO
+camera.position.set(-130,0,130);
 
 const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
 renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
@@ -166,19 +173,17 @@ scene.add(new THREE.AmbientLight(0xffffff,0.35));
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true; controls.dampingFactor = 0.06;
 
-/* GRUPO PRINCIPAL */
+/* GRUPO PRINCIPAL - PIEZA SUBIDA */
 const world = new THREE.Group();
-world.position.y = -130; world.position.x = 180;
+world.position.y = -110; world.position.x = 175;
 scene.add(world);
 
-/* --- CONFIGURACIÓN DE POSICIONES --- */
+/* CONFIG POSICIONES LOGO */
 const STL_POS = { x: 11, y: -15, z: -5 };
 const STL_ROT = { x: Math.PI, y: 0, z: Math.PI };
-
 const TXT_POS = { x: -156, y: 103, z: -17 };
 const TXT_ROT = { x: 1.5, y: 5.3, z: 3.1 };
 
-/* GESTIÓN DE MODELOS */
 const loader = new STLLoader();
 const fontLoader = new FontLoader();
 let fuenteCargada = null;
@@ -189,7 +194,7 @@ const piezas = {
   superior: {file:"Helm-Halter.stl", mesh:null},
   inserts: ["Insert1.stl","Insert2.stl","Insert3.stl","Insert4.stl","Insert5.stl"],
   insertMeshes: [],
-  logo: { mesh:null } // Mesh (STL) o Group (Texto)
+  logo: { mesh:null }
 };
 
 let grupoActivo = "base";
@@ -214,32 +219,20 @@ function cargarEstructura(){
       m.rotation.set(Math.PI,0,Math.PI); world.add(m); piezas.insertMeshes.push(m);
     });
   });
-
   fontLoader.load(FONT_URL, (font) => { fuenteCargada = font; });
   cargarLogoSTL("logoYamaha.stl");
 }
 
-/* LÓGICA DE LOGOS (STL Y TEXTO) */
 function limpiarLogoAnterior(){
   if(piezas.logo.mesh){
     world.remove(piezas.logo.mesh);
-    if(piezas.logo.mesh.isGroup){
-      piezas.logo.mesh.children.forEach(c => {
-        if(c.geometry) c.geometry.dispose();
-        if(c.material) c.material.dispose();
-      });
-    } else {
-      if(piezas.logo.mesh.geometry) piezas.logo.mesh.geometry.dispose();
-      if(piezas.logo.mesh.material) piezas.logo.mesh.material.dispose();
-    }
     piezas.logo.mesh = null;
   }
 }
 
 function cargarLogoSTL(archivo){
   limpiarLogoAnterior();
-  if(!archivo || archivo === "") return;
-
+  if(!archivo) return;
   loader.load(archivo, g=>{
     const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:seleccion.logo.c}));
     m.position.set(STL_POS.x, STL_POS.y, STL_POS.z);
@@ -250,268 +243,128 @@ function cargarLogoSTL(archivo){
 
 function generarTexto3D(textoString){
   limpiarLogoAnterior();
-  if(!fuenteCargada) return;
-  if(!textoString || textoString === "") return;
-
-  // ESTA LÍNEA ES LA CLAVE: convierte a mayúsculas antes de crear el 3D
+  if(!fuenteCargada || !textoString) return;
   const textoMayus = textoString.toUpperCase();
-
-  const espacioLetras = 1;
-  const sizeLetra = 18;
-  const alturaLetra = 2;
-
+  const mat = new THREE.MeshStandardMaterial({color: seleccion.logo.c});
   const grupoTexto = new THREE.Group();
   let offsetActual = 0;
-
-  const letras = textoMayus.split('');
-  const mat = new THREE.MeshStandardMaterial({color: seleccion.logo.c});
-
-  letras.forEach(letra => {
-    if(letra === " "){
-      offsetActual += sizeLetra / 1.5;
-      return;
-    }
-
-    const geo = new TextGeometry(letra, {
-      font: fuenteCargada,
-      size: sizeLetra,
-      height: alturaLetra,
-      curveSegments: 4,
-      bevelEnabled: true, bevelThickness: 0.5, bevelSize: 0.3, bevelOffset: 0, bevelSegments: 3
-    });
-
+  
+  textoMayus.split('').forEach(letra => {
+    if(letra === " "){ offsetActual += 10; return; }
+    const geo = new TextGeometry(letra, { font: fuenteCargada, size: 18, height: 2, curveSegments: 4, bevelEnabled: true, bevelThickness: 0.5, bevelSize: 0.3 });
     geo.computeBoundingBox();
-    const anchoLetra = geo.boundingBox.max.x - geo.boundingBox.min.x;
-
+    const ancho = geo.boundingBox.max.x - geo.boundingBox.min.x;
     geo.translate(offsetActual, 0, 0);
-
-    const meshLetra = new THREE.Mesh(geo, mat);
-    grupoTexto.add(meshLetra);
-
-    offsetActual += anchoLetra + espacioLetras;
+    grupoTexto.add(new THREE.Mesh(geo, mat));
+    offsetActual += ancho + 2;
   });
-
+  
   const centroX = -offsetActual / 2;
-  const centroY = -sizeLetra / 2;
-
-  grupoTexto.children.forEach(child => {
-    child.geometry.translate(centroX, centroY, 0);
-  });
-
+  grupoTexto.children.forEach(c => c.geometry.translate(centroX, -9, 0));
   grupoTexto.position.set(TXT_POS.x, TXT_POS.y, TXT_POS.z);
   grupoTexto.rotation.set(TXT_ROT.x, TXT_ROT.y, TXT_ROT.z);
-
-  world.add(grupoTexto);
-  piezas.logo.mesh = grupoTexto;
+  world.add(grupoTexto); piezas.logo.mesh = grupoTexto;
 }
 
-/* INTERFAZ LOGO */
-const radioInputs = document.querySelectorAll('input[name="tipoLogo"]');
-const contSelect = document.getElementById('cont-select-logo');
-const contInput = document.getElementById('cont-input-text');
-const logoSelect = document.getElementById('logo-select');
-const customInput = document.getElementById('custom-text');
-
-radioInputs.forEach(radio => {
-  radio.addEventListener('change', (e) => {
-    modoLogo = e.target.value;
-    if(modoLogo === 'catalogo'){
-      contSelect.classList.remove('hidden'); contInput.classList.add('hidden');
-      cargarLogoSTL(logoSelect.value);
-    } else {
-      contSelect.classList.add('hidden'); contInput.classList.remove('hidden');
-      generarTexto3D(customInput.value);
-    }
-  });
-});
-
-customInput.addEventListener('input', (e)=>{ generarTexto3D(e.target.value); });
-
-/* COLORES */
+/* INTERFAZ */
+const instruccionTxt = document.getElementById("instruccion");
 const colores=[
-  {n:"Amarillo",c:"#ffff00"}, {n:"Dorado",c:"#d4af37"}, {n:"Blanco",c:"#ffffff"},
+  {n:"Amarillo",c:"#ffff00"}, {n:"Oro",c:"#d4af37"}, {n:"Blanco",c:"#ffffff"},
   {n:"Negro",c:"#000000"}, {n:"Azul",c:"#0000ff"}, {n:"Verde Limón",c:"#ccff00"},
-  {n:"Verde",c:"#2e7d32"}, {n:"Rosado",c:"#ffb6c1"}, {n:"Morado",c:"#8000ff"},
+  {n:"Verde",c:"#2e7d32"}, {n:"Rosado Pantera",c:"#fbaed2"}, {n:"Morado",c:"#8000ff"},
   {n:"Café",c:"#8b4513"}, {n:"Rojo",c:"#ff0000"}, {n:"Gris",c:"#808080"}, {n:"Naranja",c:"#ff8000"}
 ];
 
-const paleta = document.getElementById("paleta");
+function crearPaleta(){
+  const paleta = document.getElementById("paleta");
+  colores.forEach(col=>{
+    const el=document.createElement("div");
+    el.className="color"; el.dataset.hex=col.c; el.style.background=col.c;
+    el.addEventListener("click",()=>{ 
+      aplicarColor(grupoActivo, col.c); 
+      resaltarSeleccion();
+      instruccionTxt.innerText = "✅ ¡Bien! Ahora elige otra parte o dale a WhatsApp";
+    });
+    paleta.appendChild(el);
+  });
+  resaltarSeleccion();
+}
 
 function aplicarColor(grupo, hex){
   seleccion[grupo].c = hex;
   if(grupo==="base" && piezas.base.mesh) piezas.base.mesh.material.color.set(hex);
   if(grupo==="superior" && piezas.superior.mesh) piezas.superior.mesh.material.color.set(hex);
   if(grupo==="insert") piezas.insertMeshes.forEach(m=>m.material.color.set(hex));
-
   if(grupo==="logo" && piezas.logo.mesh) {
-    if(piezas.logo.mesh.isGroup) {
-      piezas.logo.mesh.children.forEach(child => child.material.color.set(hex));
-    } else {
-      piezas.logo.mesh.material.color.set(hex);
-    }
+    if(piezas.logo.mesh.isGroup) piezas.logo.mesh.children.forEach(c => c.material.color.set(hex));
+    else piezas.logo.mesh.material.color.set(hex);
   }
-}
-
-function crearPaleta(){
-  colores.forEach(col=>{
-    const el=document.createElement("div");
-    el.className="color";
-    el.dataset.hex=col.c;
-    el.style.background=col.c;
-    el.addEventListener("click",()=>{ aplicarColor(grupoActivo, col.c); resaltarSeleccion(); });
-    paleta.appendChild(el);
-  });
-  resaltarSeleccion();
 }
 
 function resaltarSeleccion(){
   const hexSel=seleccion[grupoActivo].c;
-  paleta.querySelectorAll(".color").forEach(el=>{
+  document.querySelectorAll(".color").forEach(el=>{
     if(el.dataset.hex===hexSel) el.classList.add("sel"); else el.classList.remove("sel");
   });
 }
 
-/* TABS */
 const tabs = document.querySelectorAll(".tab");
-const logoBlock = document.getElementById("logo-block");
-
 tabs.forEach(tab=>{
   tab.addEventListener("click",()=>{
     tabs.forEach(t=>t.classList.remove("activo"));
     tab.classList.add("activo");
     grupoActivo=tab.dataset.grupo;
-    if(grupoActivo==="logo") logoBlock.style.display="flex"; else logoBlock.style.display="none";
+    document.getElementById("logo-block").style.display = (grupoActivo==="logo") ? "flex" : "none";
     resaltarSeleccion();
+    
+    // AYUDA DINÁMICA
+    if(grupoActivo === "logo") instruccionTxt.innerText = "👇 Paso 2: Escribe tu nombre o elige un Logo";
+    else instruccionTxt.innerText = "👇 Paso 2: Toca un color para esta pieza";
   });
 });
 
 /* LISTA LOGOS */
-const logos=[
-  {n:"Yamaha",f:"logoYamaha.stl"}, {n:"Sin logo",f:""}, {n:"Nmax",f:"logoNmax.stl"},
-  {n:"V-Strom",f:"logoVstrom.stl"}, {n:"Ktm",f:"logoKtm.stl"}, {n:"FOX",f:"logoFox.stl"},
-  {n:"Monster",f:"logoMonster.stl"}, {n:"Nike",f:"logoNike.stl"}, {n:"Honda",f:"logoHonda.stl"},
-  {n:"Suzuki",f:"logoSuzuki.stl"}, {n:"Pulsar",f:"logoPulsar.stl"}, {n:"AKT",f:"logoAKT.stl"},
-  {n:"Royal Enfield",f:"logoRoyal.stl"}, {n:"Dominar",f:"logoDominar.stl"},
-  {n:"Kawasaki",f:"logoKawasaki.stl"}, {n:"Discover",f:"logoDiscover.stl"}
-];
+const logos=[{n:"Yamaha",f:"logoYamaha.stl"},{n:"Sin logo",f:""},{n:"Nmax",f:"logoNmax.stl"},{n:"V-Strom",f:"logoVstrom.stl"},{n:"Ktm",f:"logoKtm.stl"},{n:"FOX",f:"logoFox.stl"},{n:"Monster",f:"logoMonster.stl"},{n:"Nike",f:"logoNike.stl"},{n:"Honda",f:"logoHonda.stl"},{n:"Suzuki",f:"logoSuzuki.stl"},{n:"Pulsar",f:"logoPulsar.stl"},{n:"AKT",f:"logoAKT.stl"},{n:"Royal Enfield",f:"logoRoyal.stl"},{n:"Dominar",f:"logoDominar.stl"},{n:"Kawasaki",f:"logoKawasaki.stl"},{n:"Discover",f:"logoDiscover.stl"}];
+const logoSelect = document.getElementById('logo-select');
 logos.forEach(l=>{
-  const opt=document.createElement("option");
-  opt.value=l.f;
-  opt.textContent=l.n;
+  const opt=document.createElement("option"); opt.value=l.f; opt.textContent=l.n;
   logoSelect.appendChild(opt);
 });
 logoSelect.addEventListener("change",()=>{ cargarLogoSTL(logoSelect.value); });
 
-/* WHATSAPP + CAPTURA LEAD EN ERP */
-function nombreColor(hex) {
-  const c = colores.find(x => x.c.toLowerCase() === hex.toLowerCase());
-  return c ? c.n : "Personalizado";
-}
+const customInput = document.getElementById('custom-text');
+customInput.addEventListener('input', (e)=>{ generarTexto3D(e.target.value); });
 
-// Envío NO bloqueante (para que WhatsApp nunca se frene)
-function enviarLeadNoBloqueante(payload) {
-  const API_URL = "https://www.fpc.com.co/Kreoma/api/lead_create.php";
-  const API_KEY = "f7N#z2K9v$Lp8Qx@m5W&1jR*tS6uB4cY9gH3eD!aV0n";
+document.querySelectorAll('input[name="tipoLogo"]').forEach(r => {
+  r.addEventListener('change', (e) => {
+    modoLogo = e.target.value;
+    document.getElementById('cont-select-logo').classList.toggle('hidden', modoLogo!=='catalogo');
+    document.getElementById('cont-input-text').classList.toggle('hidden', modoLogo!=='texto');
+    if(modoLogo==='catalogo') cargarLogoSTL(logoSelect.value); else generarTexto3D(customInput.value);
+  });
+});
 
-  // 1) Intento beacon “simple”
-  try {
-    if (navigator.sendBeacon) {
-      const urlConKey = API_URL + "?k=" + encodeURIComponent(API_KEY);
-
-      // IMPORTANTE: text/plain para evitar líos de CORS/preflight con beacon
-      const blob = new Blob([JSON.stringify(payload)], { type: "text/plain;charset=UTF-8" });
-
-      const ok = navigator.sendBeacon(urlConKey, blob);
-      if (ok) return;
-    }
-  } catch (e) {}
-
-  // 2) Fallback fetch keepalive (sin await)
-  try {
-    fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-KREOMA-KEY": API_KEY
-      },
-      body: JSON.stringify(payload),
-      keepalive: true,
-      mode: "cors",
-      credentials: "omit"
-    }).catch(()=>{});
-  } catch (e) {}
-}
-
-
+/* WHATSAPP */
 document.getElementById("enviarWhatsApp").addEventListener("click", () => {
+  const nombreColor = (hex) => colores.find(x => x.c.toLowerCase() === hex.toLowerCase())?.n || "Personalizado";
   const baseC = nombreColor(seleccion.base.c);
   const supC  = nombreColor(seleccion.superior.c);
   const insC  = nombreColor(seleccion.insert.c);
   const logC  = nombreColor(seleccion.logo.c);
+  let infoLogo = (modoLogo === "catalogo") ? `Logo: ${logoSelect.selectedOptions[0].textContent}` : `Nombre: ${customInput.value.toUpperCase()}`;
 
-  let infoLogo = "";
-  let logoModo = "";
-  let logoValor = "";
-
-  if (modoLogo === "catalogo") {
-    const nombreL = logoSelect.selectedOptions[0]?.textContent || "Ninguno";
-    infoLogo = `Logo catálogo: ${nombreL}`;
-    logoModo = "catalogo";
-    logoValor = nombreL;
-  } else {
-    const texto = (customInput.value || "").trim().toUpperCase() || "Sin texto";
-    infoLogo = `Nombre personalizado: "${texto}"`;
-    logoModo = "texto";
-    logoValor = texto;
-  }
-
-  const msg =
-`Hola Kreoma3D! 👋
-Quiero mi soporte personalizado:
-• Base: ${baseC}
-• Superior: ${supC}
-• Insertos: ${insC}
-• ${infoLogo} (Color: ${logC})`;
-
-  // URL WhatsApp (IMPORTANTE: abrirla SIN esperar nada para que no la bloquee el navegador)
-  const waUrl = `https://wa.me/573332395481?text=${encodeURIComponent(msg)}`;
-
-  // 1) Abrir WhatsApp primero (misma acción del click => no bloquea popups)
-  const waWin = window.open(waUrl, "_blank");
-
-  // Fallback si el navegador bloquea el popup
-  if (!waWin) {
-    window.location.href = waUrl;
-  }
-
-  // 2) Enviar lead en segundo plano (no bloquea WhatsApp)
-  const payload = {
-    origen: "visor_soporte_v1",
-    producto_key: "SOPORTE_3EN1",
-    base_color: baseC,
-    superior_color: supC,
-    insert_color: insC,
-    logo_color: logC,
-    logo_modo: logoModo,
-    logo_valor: logoValor,
-    mensaje_whatsapp: msg
-  };
-
-  // Disparar envío tras liberar el hilo del click
-  setTimeout(() => enviarLeadNoBloqueante(payload), 0);
+  const msg = `Hola Kreoma3D! 👋\nQuiero mi soporte personalizado:\n• Base: ${baseC}\n• Superior: ${supC}\n• Insertos: ${insC}\n• ${infoLogo}\n• Color Logo: ${logC}`;
+  window.open(`https://wa.me/573332395481?text=${encodeURIComponent(msg)}`, "_blank");
 });
 
-/* LOOP */
 function animate(){ requestAnimationFrame(animate); controls.update(); renderer.render(scene,camera); }
 animate();
-
 window.addEventListener("resize",()=>{
-  const w = canvasContainer.clientWidth; const h = canvasContainer.clientHeight;
-  renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix();
+  renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+  camera.aspect=canvasContainer.clientWidth/canvasContainer.clientHeight;
+  camera.updateProjectionMatrix();
 });
-
-cargarEstructura();
-crearPaleta();
+cargarEstructura(); crearPaleta();
 </script>
 </body>
 </html>
