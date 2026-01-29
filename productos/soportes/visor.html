@@ -159,7 +159,6 @@ const canvasContainer = document.getElementById("canvas-container");
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, canvasContainer.clientWidth/canvasContainer.clientHeight, 0.1, 10000);
 
-// ZOOM AJUSTADO
 camera.position.set(-130,0,130);
 
 const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
@@ -173,12 +172,10 @@ scene.add(new THREE.AmbientLight(0xffffff,0.35));
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true; controls.dampingFactor = 0.06;
 
-/* GRUPO PRINCIPAL - PIEZA SUBIDA */
 const world = new THREE.Group();
 world.position.y = -110; world.position.x = 175;
 scene.add(world);
 
-/* CONFIG POSICIONES LOGO */
 const STL_POS = { x: 11, y: -15, z: -5 };
 const STL_ROT = { x: Math.PI, y: 0, z: Math.PI };
 const TXT_POS = { x: -156, y: 103, z: -17 };
@@ -316,8 +313,6 @@ tabs.forEach(tab=>{
     grupoActivo=tab.dataset.grupo;
     document.getElementById("logo-block").style.display = (grupoActivo==="logo") ? "flex" : "none";
     resaltarSeleccion();
-    
-    // AYUDA DINÁMICA
     if(grupoActivo === "logo") instruccionTxt.innerText = "👇 Paso 2: Escribe tu nombre o elige un Logo";
     else instruccionTxt.innerText = "👇 Paso 2: Toca un color para esta pieza";
   });
@@ -344,17 +339,81 @@ document.querySelectorAll('input[name="tipoLogo"]').forEach(r => {
   });
 });
 
-/* WHATSAPP */
+/* WHATSAPP + CAPTURA LEAD EN ERP (RESTAURADO) */
+function nombreColor(hex) {
+  const c = colores.find(x => x.c.toLowerCase() === hex.toLowerCase());
+  return c ? c.n : "Personalizado";
+}
+
+function enviarLeadNoBloqueante(payload) {
+  const API_URL = "https://www.fpc.com.co/Kreoma/api/lead_create.php";
+  const API_KEY = "f7N#z2K9v$Lp8Qx@m5W&1jR*tS6uB4cY9gH3eD!aV0n";
+
+  try {
+    if (navigator.sendBeacon) {
+      const urlConKey = API_URL + "?k=" + encodeURIComponent(API_KEY);
+      const blob = new Blob([JSON.stringify(payload)], { type: "text/plain;charset=UTF-8" });
+      const ok = navigator.sendBeacon(urlConKey, blob);
+      if (ok) return;
+    }
+  } catch (e) {}
+
+  try {
+    fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-KREOMA-KEY": API_KEY
+      },
+      body: JSON.stringify(payload),
+      keepalive: true,
+      mode: "cors"
+    }).catch(()=>{});
+  } catch (e) {}
+}
+
 document.getElementById("enviarWhatsApp").addEventListener("click", () => {
-  const nombreColor = (hex) => colores.find(x => x.c.toLowerCase() === hex.toLowerCase())?.n || "Personalizado";
   const baseC = nombreColor(seleccion.base.c);
   const supC  = nombreColor(seleccion.superior.c);
   const insC  = nombreColor(seleccion.insert.c);
   const logC  = nombreColor(seleccion.logo.c);
-  let infoLogo = (modoLogo === "catalogo") ? `Logo: ${logoSelect.selectedOptions[0].textContent}` : `Nombre: ${customInput.value.toUpperCase()}`;
 
-  const msg = `Hola Kreoma3D! 👋\nQuiero mi soporte personalizado:\n• Base: ${baseC}\n• Superior: ${supC}\n• Insertos: ${insC}\n• ${infoLogo}\n• Color Logo: ${logC}`;
-  window.open(`https://wa.me/573332395481?text=${encodeURIComponent(msg)}`, "_blank");
+  let infoLogo = "";
+  let logoModo = "";
+  let logoValor = "";
+
+  if (modoLogo === "catalogo") {
+    const nombreL = logoSelect.selectedOptions[0]?.textContent || "Ninguno";
+    infoLogo = `Logo catálogo: ${nombreL}`;
+    logoModo = "catalogo";
+    logoValor = nombreL;
+  } else {
+    const texto = (customInput.value || "").trim().toUpperCase() || "Sin texto";
+    infoLogo = `Nombre personalizado: "${texto}"`;
+    logoModo = "texto";
+    logoValor = texto;
+  }
+
+  const msg = `Hola Kreoma3D! 👋\nQuiero mi soporte personalizado:\n• Base: ${baseC}\n• Superior: ${supC}\n• Insertos: ${insC}\n• ${infoLogo} (Color: ${logC})`;
+
+  const waUrl = `https://wa.me/573332395481?text=${encodeURIComponent(msg)}`;
+  const waWin = window.open(waUrl, "_blank");
+
+  if (!waWin) { window.location.href = waUrl; }
+
+  const payload = {
+    origen: "visor_soporte_v1",
+    producto_key: "SOPORTE_3EN1",
+    base_color: baseC,
+    superior_color: supC,
+    insert_color: insC,
+    logo_color: logC,
+    logo_modo: logoModo,
+    logo_valor: logoValor,
+    mensaje_whatsapp: msg
+  };
+
+  setTimeout(() => enviarLeadNoBloqueante(payload), 0);
 });
 
 function animate(){ requestAnimationFrame(animate); controls.update(); renderer.render(scene,camera); }
