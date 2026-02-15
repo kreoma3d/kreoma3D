@@ -50,17 +50,6 @@ body{
   overflow-y:auto;
 }
 
-/* AYUDA VISUAL */
-#instruccion {
-  background: #fff3e0;
-  color: #e65100;
-  padding: 8px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 700;
-  text-align: center;
-  border: 1px dashed #ffb74d;
-}
 
 /* TABS */
 #tabs{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
@@ -116,8 +105,6 @@ canvas{ filter:drop-shadow(0 20px 35px rgba(0,0,0,.4)); }
 </div>
 
 <div id="panel">
-  <p id="instruccion">👉 Paso 1: Toca una de las opciones de abajo</p>
-
   <div id="tabs">
     <div class="tab activo" data-grupo="base"> Base</div>
     <div class="tab" data-grupo="superior"> Superior</div>
@@ -264,7 +251,6 @@ function generarTexto3D(textoString){
 }
 
 /* INTERFAZ */
-const instruccionTxt = document.getElementById("instruccion");
 const colores=[
   {n:"Amarillo",c:"#fff700"}, {n:"Blanco",c:"#ffffff"},{n:"Verde Limón",c:"#68fd3f"},
   {n:"Negro",c:"#000000"}, {n:"Azul",c:"#0000ff"}, {n:"Oro",c:"#ffff94"},
@@ -281,7 +267,6 @@ function crearPaleta(){
     el.addEventListener("click",()=>{ 
       aplicarColor(grupoActivo, col.c); 
       resaltarSeleccion();
-      instruccionTxt.innerText = "✅ ¡Bien! Ahora elige otra parte o dale a WhatsApp";
     });
     paleta.appendChild(el);
   });
@@ -332,8 +317,6 @@ tabs.forEach(tab=>{
     grupoActivo=tab.dataset.grupo;
     document.getElementById("logo-block").style.display = (grupoActivo==="logo") ? "flex" : "none";
     resaltarSeleccion();
-    if(grupoActivo === "logo") instruccionTxt.innerText = "👇 Paso 2: Escribe tu nombre o elige un Logo";
-    else instruccionTxt.innerText = "👇 Paso 2: Toca un color para esta pieza";
   });
 });
 
@@ -446,5 +429,6 @@ cargarEstructura(); crearPaleta();
 </script>
 </body>
 </html>
+
 
 
