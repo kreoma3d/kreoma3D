@@ -198,7 +198,6 @@ select option { background: var(--bg-dark); color: #fff; }
 </div>
 
 <div id="panel">
-  <p id="instruccion">👉 Paso 1: Toca una de las opciones de abajo</p>
 
   <div id="tabs">
     <div class="tab activo" data-grupo="base"> Base</div>
@@ -366,7 +365,6 @@ function crearPaleta(){
     el.addEventListener("click",()=>{ 
       aplicarColor(grupoActivo, col.c); 
       resaltarSeleccion();
-      instruccionTxt.innerText = "✅ ¡Bien! Ahora elige otra parte o dale a WhatsApp";
     });
     paleta.appendChild(el);
   });
@@ -417,9 +415,6 @@ tabs.forEach(tab=>{
     grupoActivo=tab.dataset.grupo;
     document.getElementById("logo-block").style.display = (grupoActivo==="logo") ? "flex" : "none";
     resaltarSeleccion();
-    
-    if(grupoActivo === "logo") instruccionTxt.innerText = "👇 Paso 2: Escribe tu nombre o elige un Logo";
-    else instruccionTxt.innerText = "👇 Paso 2: Toca un color para esta pieza";
   });
 });
 
@@ -544,3 +539,4 @@ cargarEstructura(); crearPaleta();
 </script>
 </body>
 </html>
+
