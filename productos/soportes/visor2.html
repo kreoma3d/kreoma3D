@@ -104,15 +104,18 @@ body{
   box-shadow: 0 0 10px rgba(255, 102, 0, 0.1);
 }
 
-/* TABS */
-#tabs{ display:flex; gap:8px; flex-wrap:nowrap; overflow-x: auto; padding-bottom: 5px; justify-content: flex-start; }
-#tabs::-webkit-scrollbar { display: none; }
+/* TABS (AJUSTADOS PARA VERSE TODOS A LA VEZ) */
+#tabs{ display:flex; gap:5px; flex-wrap:wrap; justify-content:center; }
 .tab{
-  flex-shrink: 0; padding:8px 14px; border-radius:4px; 
+  flex: 1 1 auto; /* Permite que se encojan o estiren para rellenar el espacio equitativamente */
+  padding:8px 4px; border-radius:4px; 
   background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-  font-family: 'Orbitron', sans-serif; font-size:12px; font-weight:700; text-align:center; 
-  cursor:pointer; transition:all .3s; text-transform: uppercase; letter-spacing: 1px;
+  font-family: 'Orbitron', sans-serif; 
+  font-size:clamp(10px, 2.5vw, 12px); /* Letra que se ajusta a pantallas pequeñas */
+  font-weight:700; text-align:center; 
+  cursor:pointer; transition:all .3s; text-transform: uppercase; letter-spacing: 0.5px;
   color: #aaa; position: relative; overflow: hidden;
+  white-space: nowrap; /* Evita que el nombre del botón se parta en dos líneas */
 }
 .tab::before { content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 2px; background: var(--neon-cyan); transition: 0.3s; }
 .tab:hover { background: rgba(0,243,255,0.1); color: #fff; }
@@ -153,7 +156,7 @@ select, input[type="text"]{
 select:focus, input[type="text"]:focus { border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0,243,255,0.3); }
 select option { background: var(--bg-dark); color: #fff; }
 
-/* BOTÓN WHATSAPP - REACTOR CORE (Con tu texto original) */
+/* BOTÓN WHATSAPP - REACTOR CORE */
 #enviarWhatsApp{
   margin-top:auto; width:100%; padding:14px; 
   background: linear-gradient(45deg, #128C7E, #25D366); 
@@ -233,31 +236,28 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-/* CONFIGURACIÓN ESCENA EXACTA A LA TUYA ORIGINAL (SIN NIEBLA) */
+/* CONFIGURACIÓN ESCENA EXACTA A LA ORIGINAL */
 const canvasContainer = document.getElementById("canvas-container");
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, canvasContainer.clientWidth/canvasContainer.clientHeight, 0.1, 10000);
 
-/* POSICIÓN DE CÁMARA ORIGINAL */
 camera.position.set(-130,0,130);
 
 const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
 renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
 canvasContainer.appendChild(renderer.domElement);
 
-/* ILUMINACIÓN ORIGINAL RESTAURADA (Para colores exactos de PLA) */
+/* ILUMINACIÓN ORIGINAL RESTAURADA (Colores exactos de PLA) */
 const hemi = new THREE.HemisphereLight(0xffffff,0x777777,1.3); scene.add(hemi);
 const dir = new THREE.DirectionalLight(0xffffff,0.85); dir.position.set(1,1,1); scene.add(dir);
 scene.add(new THREE.AmbientLight(0xffffff,0.35));
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true; controls.dampingFactor = 0.06;
-/* Giro automático conservado del futurista */
 controls.autoRotate = true; 
 controls.autoRotateSpeed = 0.5;
 
 const world = new THREE.Group();
-/* POSICIÓN Y ORIGINAL (-140) PARA QUE NO QUEDE VOLANDO */
 world.position.y = -140; world.position.x = 175;
 scene.add(world);
 
@@ -366,7 +366,6 @@ function crearPaleta(){
     el.addEventListener("click",()=>{ 
       aplicarColor(grupoActivo, col.c); 
       resaltarSeleccion();
-      /* RESTAURADO EL TEXTO DE AYUDA */
       instruccionTxt.innerText = "✅ ¡Bien! Ahora elige otra parte o dale a WhatsApp";
     });
     paleta.appendChild(el);
@@ -419,7 +418,6 @@ tabs.forEach(tab=>{
     document.getElementById("logo-block").style.display = (grupoActivo==="logo") ? "flex" : "none";
     resaltarSeleccion();
     
-    /* RESTAURADO EL TEXTO DE AYUDA POR PESTAÑA */
     if(grupoActivo === "logo") instruccionTxt.innerText = "👇 Paso 2: Escribe tu nombre o elige un Logo";
     else instruccionTxt.innerText = "👇 Paso 2: Toca un color para esta pieza";
   });
@@ -437,7 +435,7 @@ logoSelect.addEventListener("change",()=>{ cargarLogoSTL(logoSelect.value); });
 const customInput = document.getElementById('custom-text');
 customInput.addEventListener('input', (e)=>{ generarTexto3D(e.target.value); });
 
-/* SCROLL AUTOMÁTICO AL TOCAR EL INPUT (Evita que el teclado tape todo) */
+/* SCROLL AUTOMÁTICO AL TOCAR EL INPUT */
 customInput.addEventListener('focus', () => {
   setTimeout(() => { document.getElementById('panel').scrollTop = document.getElementById('panel').scrollHeight; }, 300);
 });
