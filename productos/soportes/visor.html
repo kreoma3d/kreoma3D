@@ -266,11 +266,11 @@ function generarTexto3D(textoString){
 /* INTERFAZ */
 const instruccionTxt = document.getElementById("instruccion");
 const colores=[
-  {n:"Amarillo",c:"#ffff00"}, {n:"Oro",c:"#d4af37"}, {n:"Blanco",c:"#ffffff"},
-  {n:"Negro",c:"#000000"}, {n:"Azul",c:"#0000ff"}, {n:"Verde Limón",c:"#ccff00"},
-  {n:"Verde",c:"#2e7d32"}, {n:"Rosado Pantera",c:"#fbaed2"}, {n:"Morado",c:"#8000ff"},
-  {n:"Café",c:"#8b4513"}, {n:"Rojo",c:"#ff0000"}, {n:"Gris",c:"#808080"}, {n:"Naranja",c:"#ff8000"},
-  {n:"Madera",c:"#c19a6b"}
+  {n:"Amarillo",c:"#fff700"}, {n:"Blanco",c:"#ffffff"},{n:"Verde Limón",c:"#68fd3f"},
+  {n:"Negro",c:"#000000"}, {n:"Azul",c:"#0000ff"}, {n:"Oro",c:"#ffff94"},
+  {n:"Verde",c:"#2e7d32"}, {n:"Rosado",c:"#ff8783"}, {n:"Morado",c:"#7f00b2"}, {n:"Azul Cielo",c:"#80caff"},
+  {n:"Café",c:"#8b4513"}, {n:"Rojo",c:"#ff0000"}, {n:"Gris",c:"#8d8d8d"}, {n:"Naranja",c:"#ff8000"},
+  {n:"Menta",c:"#9ce0db"}, {n:"Madera",c:"#ffe8d0"}
 ];
 
 function crearPaleta(){
@@ -287,16 +287,34 @@ function crearPaleta(){
   });
   resaltarSeleccion();
 }
+  
 
 function aplicarColor(grupo, hex){
   seleccion[grupo].c = hex;
-  if(grupo==="base" && piezas.base.mesh) piezas.base.mesh.material.color.set(hex);
-  if(grupo==="superior" && piezas.superior.mesh) piezas.superior.mesh.material.color.set(hex);
-  if(grupo==="insert") piezas.insertMeshes.forEach(m=>m.material.color.set(hex));
-  if(grupo==="logo" && piezas.logo.mesh) {
-    if(piezas.logo.mesh.isGroup) piezas.logo.mesh.children.forEach(c => c.material.color.set(hex));
-    else piezas.logo.mesh.material.color.set(hex);
-  }
+  
+  const esOro = (hex.toLowerCase() === "#ffff94");
+  const valorMetal = esOro ? 0.4 : 0.0;
+  const valorRugosidad = esOro ? 0.1 : 0.8;
+
+  const actualizarMaterial = (mesh) => {
+    if(!mesh) return;
+    if(mesh.isGroup) {
+      mesh.children.forEach(c => {
+        c.material.color.set(hex);
+        c.material.metalness = valorMetal;
+        c.material.roughness = valorRugosidad;
+      });
+    } else {
+      mesh.material.color.set(hex);
+      mesh.material.metalness = valorMetal;
+      mesh.material.roughness = valorRugosidad;
+    }
+  };
+
+  if(grupo==="base") actualizarMaterial(piezas.base.mesh);
+  if(grupo==="superior") actualizarMaterial(piezas.superior.mesh);
+  if(grupo==="insert") piezas.insertMeshes.forEach(m => actualizarMaterial(m));
+  if(grupo==="logo") actualizarMaterial(piezas.logo.mesh);
 }
 
 function resaltarSeleccion(){
@@ -428,4 +446,5 @@ cargarEstructura(); crearPaleta();
 </script>
 </body>
 </html>
+
 
