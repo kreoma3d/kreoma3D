@@ -33,6 +33,18 @@ body{
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
 
 /* TOPBAR EFECTO CRISTAL */
+  .topbar {
+  justify-content: space-between; /* Ajustamos para que haya espacio entre el logo y el texto */
+}
+.logo-jp { 
+  height: 45px; 
+  cursor: pointer; 
+  filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); 
+  transition: transform 0.3s ease;
+}
+.logo-jp:hover {
+  transform: scale(1.05);
+}
 .topbar{
   position:fixed; top:0; left:0; right:0; height:var(--topbarH); z-index:30;
   display:flex; align-items:center; justify-content:center; padding:0 18px;
@@ -138,8 +150,9 @@ canvas{ filter:drop-shadow(0 30px 40px rgba(0,0,0,0.8)); }
 <body>
 
 <div class="topbar">
+  <img src="logojp.png" alt="Logo JP" class="logo-jp">
   <h1>Soporte 3 en 1</h1>
-</div>
+  <div style="width: 45px;"></div> </div>
 
 <div id="visor">
   <div id="canvas-container"></div>
@@ -423,4 +436,5 @@ window.addEventListener("resize",()=>{
 cargarEstructura(); crearPaleta();
 </script>
 </body>
+
 </html>
