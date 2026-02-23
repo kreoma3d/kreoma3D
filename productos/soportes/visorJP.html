@@ -33,8 +33,13 @@ body{
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
 
 /* TOPBAR EFECTO CRISTAL */
-  .topbar {
-  justify-content: space-between; /* Ajustamos para que haya espacio entre el logo y el texto */
+.topbar{
+  position:fixed; top:0; left:0; right:0; height:var(--topbarH); z-index:30;
+  display:flex; align-items:center; justify-content:space-between; padding:0 18px;
+  background: rgba(10, 11, 15, 0.5);
+  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 .logo-jp { 
   height: 45px; 
@@ -45,14 +50,6 @@ body{
 .logo-jp:hover {
   transform: scale(1.05);
 }
-.topbar{
-  position:fixed; top:0; left:0; right:0; height:var(--topbarH); z-index:30;
-  display:flex; align-items:center; justify-content:center; padding:0 18px;
-  background: rgba(10, 11, 15, 0.5);
-  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-  border-bottom: 1px solid var(--glass-border);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
 .topbar h1{
   font-size:clamp(16px,4vw,20px); font-weight:600; text-align:center;
   margin:0 12px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; 
@@ -61,6 +58,15 @@ body{
 
 /* VISOR 3D */
 #visor{ position:fixed; top:var(--topbarH); left:0; right:0; bottom:var(--panelH); height:auto; overflow:hidden; }
+#visor-bg{ 
+  position:absolute; inset:0; 
+  background:url("logojp.png") center center no-repeat; 
+  background-size:60vmin; 
+  opacity:0.04; 
+  pointer-events:none; 
+  z-index:1; 
+  filter: grayscale(100%); 
+}
 #canvas-container{ position:absolute; inset:0; z-index:5; }
 
 /* PANEL FLOTANTE TIPO HUD */
@@ -140,7 +146,6 @@ select:focus, input[type="text"]:focus {
 #enviarWhatsApp:active { transform: scale(0.97) translateY(0); }
 
 .hidden{ display:none; }
-/* SOMBRA MÁS PROFUNDA PARA EL MODELO 3D EN EL MODO OSCURO */
 canvas{ filter:drop-shadow(0 30px 40px rgba(0,0,0,0.8)); }
 
 @media(min-width:900px){ :root{ --panelH:35vh; } #panel{ padding:25px 50px; } }
@@ -152,9 +157,11 @@ canvas{ filter:drop-shadow(0 30px 40px rgba(0,0,0,0.8)); }
 <div class="topbar">
   <img src="logojp.png" alt="Logo JP" class="logo-jp">
   <h1>Soporte 3 en 1</h1>
-  <div style="width: 45px;"></div> </div>
+  <div style="width: 45px;"></div>
+</div>
 
 <div id="visor">
+  <div id="visor-bg"></div>
   <div id="canvas-container"></div>
 </div>
 
@@ -436,5 +443,4 @@ window.addEventListener("resize",()=>{
 cargarEstructura(); crearPaleta();
 </script>
 </body>
-
 </html>
