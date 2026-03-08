@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Personalizador 3D - Kreoma3D</title>
+
+<style>
+:root{
+  --panelH:36vh; 
+  --topbarH:60px;
+  --fontBig:clamp(16px,4.8vw,22px);
+  --fontSemi:clamp(13px,3.5vw,18px);
+  --colorSize:clamp(28px,6vw,38px); 
+  --radius:20px;
+  --brand-color: #ff6600;
+  --brand-glow: rgba(255, 102, 0, 0.5);
+  --glass-bg: rgba(15, 16, 20, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+}
+
+/* GENERAL - MODO OSCURO FUTURISTA */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  width:100vw; height:100vh; overflow:hidden;
+  background: radial-gradient(circle at 50% 40%, #20222b 0%, #090a0f 100%); 
+  font-family:system-ui,-apple-system,sans-serif; color:#e0e0e0;
+}
+
+/* SCROLLBAR FUTURISTA (Para el panel si es necesario) */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
+/* TOPBAR EFECTO CRISTAL */
+.topbar{
+  position:fixed; top:0; left:0; right:0; height:var(--topbarH); z-index:30;
+  display:flex; align-items:center; justify-content:space-between; padding:0 18px;
+  background: rgba(10, 11, 15, 0.5);
+  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.topbar img{ height:120px; cursor:pointer; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
+.topbar h1{
+  font-size:clamp(14px,4vw,18px); font-weight:400; text-align:center;
+  flex:1; margin:0 12px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; 
+  color:#fff; letter-spacing: 1px; text-transform: uppercase;
+}
+.topbar nav a{ color:var(--brand-color); text-decoration:none; margin-left:16px; font-weight:600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;}
+
+/* VISOR 3D */
+#visor{ position:fixed; top:var(--topbarH); left:0; right:0; bottom:var(--panelH); height:auto; overflow:hidden; }
+#visor-bg{ position:absolute; inset:0; background:url("logo_kreoma.png") center center no-repeat; background-size:60vmin; opacity:0.04; pointer-events:none; z-index:1; filter: grayscale(100%); }
+#canvas-container{ position:absolute; inset:0; z-index:5; }
+
+/* PANEL FLOTANTE TIPO HUD */
+#panel{
+  position:fixed; bottom:0; left:0; right:0; height:var(--panelH); z-index:20;
+  background: var(--glass-bg);
+  backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+  border-top: 1px solid rgba(255, 102, 0, 0.3);
+  border-radius: 30px 30px 0 0;
+  padding:clamp(15px,4vw,25px); display:flex; flex-direction:column; gap:15px;
+  overflow-y:auto;
+  box-shadow: 0 -15px 40px rgba(0,0,0,0.6);
+}
+
+/* TABS DE NEÓN */
+#tabs{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+.tab{
+  padding:8px 16px; border-radius:99px; background:rgba(255,255,255,0.03); 
+  border:1px solid rgba(255,255,255,0.1); color:#888;
+  font-size:12px; font-weight:600; text-align:center; cursor:pointer; 
+  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.tab:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.tab.activo{ 
+  background: linear-gradient(135deg, rgba(255,153,51,0.15), rgba(255,102,0,0.25)); 
+  color:#fff; border-color:var(--brand-color); 
+  box-shadow: 0 0 15px var(--brand-glow), inset 0 0 10px rgba(255,102,0,0.2); 
+  text-shadow: 0 0 8px rgba(255,102,0,0.8);
+}
+
+/* BLOQUE COLORES */
+#bloque-colores h3{
+  font-size:var(--fontSemi); font-weight:400; margin-bottom:5px; color:#aaa;
+  text-transform: uppercase; letter-spacing: 1px; font-size: 11px;
+}
+#paleta{ display:flex; flex-wrap:wrap; gap:12px; justify-content: center; }
+
+/* INDICADOR PEQUEÑO DEL COLOR ACTIVO */
+#color-info{
+  margin-top:8px;
+  min-height:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:11px;
+  line-height:1.2;
+  color:#d8d8d8;
+  letter-spacing:.8px;
+  text-transform: uppercase;
+}
+#color-info span{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.03);
+}
+#color-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,0.35);
+  flex:0 0 10px;
+}
+
+/* CÍRCULOS DE COLORES CON ANILLOS LUMINOSOS */
+.color{
+  width:var(--colorSize); height:var(--colorSize); border-radius:50%; 
+  border:2px solid rgba(255,255,255,0.15);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5); cursor:pointer; 
+  transition:all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  appearance:none;
+  -webkit-appearance:none;
+  background-clip:padding-box;
+}
+.color:hover { transform: scale(1.1); border-color: rgba(255,255,255,0.5); }
+.color:focus-visible{
+  outline:none;
+  border-color:#fff;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.15), 0 0 18px rgba(255,255,255,0.18);
+  transform: scale(1.08);
+}
+.color.sel{ 
+  border: 2px solid #111;
+  box-shadow: 0 0 0 3px var(--brand-color), 0 0 20px var(--brand-glow); 
+  transform: scale(1.15); 
+}
+
+/* LOGO BLOCK - ENTRADAS ESTILO CIBERNÉTICO */
+#logo-block{ display:none; flex-direction:column; gap:10px; background:rgba(0,0,0,0.2); padding:15px; border-radius:var(--radius); border: 1px solid var(--glass-border); }
+.logo-type-switch{ display:flex; gap:20px; margin-bottom:2px; justify-content: center;}
+.logo-type-switch label{ display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer; font-weight:500; text-transform: uppercase; color: #bbb; letter-spacing: 1px;}
+.logo-type-switch input[type="radio"] { accent-color: var(--brand-color); transform: scale(1.2); }
+
+select, input[type="text"]{ 
+  width:100%; padding:14px; border-radius:12px; 
+  background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); 
+  color:#fff; font-size:14px; text-transform: uppercase; letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+select:focus, input[type="text"]:focus { 
+  outline: none; border-color: var(--brand-color); 
+  box-shadow: 0 0 15px var(--brand-glow); background: rgba(0,0,0,0.6);
+}
+
+/* BOTÓN WHATSAPP GRANDE - ANIMADO */
+#enviarWhatsApp{
+  margin-top:auto; width:100%; padding:14px; 
+  background: linear-gradient(135deg, #20b054, #25D366); 
+  color:#fff; border:none; border-radius:var(--radius); 
+  font-size:16px; font-weight:800; cursor:pointer;
+  box-shadow: 0 8px 25px rgba(37,211,102,0.3), inset 0 2px 5px rgba(255,255,255,0.3); 
+  transition:all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;
+}
+#enviarWhatsApp:hover { box-shadow: 0 10px 35px rgba(37,211,102,0.5); filter: brightness(1.1); transform: translateY(-2px); }
+#enviarWhatsApp:active { transform: scale(0.97) translateY(0); }
+
+.hidden{ display:none; }
+/* SOMBRA MÁS PROFUNDA PARA EL MODELO 3D EN EL MODO OSCURO */
+canvas{ filter:drop-shadow(0 30px 40px rgba(0,0,0,0.8)); }
+
+@media(min-width:900px){ :root{ --panelH:35vh; } #panel{ padding:25px 50px; } }
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <a href="../../index.html"><img src="logo_kreoma.png" alt="Kreoma3D"></a>
+  <h1>Soporte 3 en 1</h1>
+  <nav><a href="../index.html">Inicio</a></nav>
+</div>
+
+<div id="visor">
+  <div id="visor-bg"></div>
+  <div id="canvas-container"></div>
+</div>
+
+<div id="panel">
+  <div id="tabs">
+    <div class="tab activo" data-grupo="base"> Base</div>
+    <div class="tab" data-grupo="superior"> Superior</div>
+    <div class="tab" data-grupo="insert"> Insertos</div>
+    <div class="tab" data-grupo="logo">✍️ Nombre / Logo</div>
+  </div>
+
+  <div id="bloque-colores">
+    <div id="paleta"></div>
+    <div id="color-info" aria-live="polite">
+      <span>
+        <i id="color-dot"></i>
+        <strong id="color-info-text">BASE: NEGRO</strong>
+      </span>
+    </div>
+  </div>
+
+  <div id="logo-block">
+    <div class="logo-type-switch">
+      <label><input type="radio" name="tipoLogo" value="catalogo" checked> 🖼️ Logo</label>
+      <label><input type="radio" name="tipoLogo" value="texto"> 🔠 Texto</label>
+    </div>
+    <div id="cont-select-logo"><select id="logo-select"></select></div>
+    <div id="cont-input-text" class="hidden">
+      <input type="text" id="custom-text" placeholder="TU NOMBRE AQUÍ" maxlength="12">
+    </div>
+  </div>
+
+  <button id="enviarWhatsApp" type="button">✅ PEDIR POR WHATSAPP</button>
+</div>
+
+<script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.158.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/" } }
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+
+/* CONFIGURACIÓN ESCENA */
+const canvasContainer = document.getElementById("canvas-container");
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, canvasContainer.clientWidth/canvasContainer.clientHeight, 0.1, 10000);
+
+camera.position.set(-130,0,130);
+
+const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+canvasContainer.appendChild(renderer.domElement);
+
+const hemi = new THREE.HemisphereLight(0xffffff,0x777777,1.3); scene.add(hemi);
+const dir = new THREE.DirectionalLight(0xffffff,0.85); dir.position.set(1,1,1); scene.add(dir);
+scene.add(new THREE.AmbientLight(0xffffff,0.35));
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.dampingFactor = 0.06;
+
+const world = new THREE.Group();
+world.position.y = -125; world.position.x = 175;
+scene.add(world);
+
+const STL_POS = { x: 11, y: -15, z: -5 };
+const STL_ROT = { x: Math.PI, y: 0, z: Math.PI };
+const TXT_POS = { x: -156, y: 103, z: -17 };
+const TXT_ROT = { x: 1.5, y: 5.3, z: 3.1 };
+
+const loader = new STLLoader();
+const fontLoader = new FontLoader();
+let fuenteCargada = null;
+const FONT_URL = 'https://unpkg.com/three@0.158.0/examples/fonts/helvetiker_bold.typeface.json';
+
+const piezas = {
+  base: {file:"Helm-Wandhalter.stl", mesh:null},
+  superior: {file:"Helm-Halter.stl", mesh:null},
+  inserts: ["Insert1.stl","Insert2.stl","Insert3.stl","Insert4.stl","Insert5.stl"],
+  insertMeshes: [],
+  logo: { mesh:null }
+};
+
+let grupoActivo = "base";
+let modoLogo = "catalogo";
+const seleccion = {
+  base: {c:"#000000"}, superior: {c:"#ff8000"}, insert: {c:"#ff8000"}, logo: {c:"#ff8000"}
+};
+
+/* CARGAR MODELOS */
+function cargarEstructura(){
+  loader.load(piezas.base.file, g=>{
+    const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:seleccion.base.c}));
+    m.rotation.set(Math.PI,0,Math.PI); world.add(m); piezas.base.mesh=m;
+  });
+  loader.load(piezas.superior.file,g=>{
+    const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:seleccion.superior.c}));
+    m.rotation.set(Math.PI,0,Math.PI); world.add(m); piezas.superior.mesh=m;
+  });
+  piezas.inserts.forEach(f=>{
+    loader.load(f,g=>{
+      const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:seleccion.insert.c}));
+      m.rotation.set(Math.PI,0,Math.PI); world.add(m); piezas.insertMeshes.push(m);
+    });
+  });
+  fontLoader.load(FONT_URL, (font) => { fuenteCargada = font; });
+  cargarLogoSTL("logoYamaha.stl");
+}
+
+function limpiarLogoAnterior(){
+  if(piezas.logo.mesh){
+    world.remove(piezas.logo.mesh);
+    piezas.logo.mesh = null;
+  }
+}
+
+function cargarLogoSTL(archivo){
+  limpiarLogoAnterior();
+  if(!archivo) return;
+  loader.load(archivo, g=>{
+    const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:seleccion.logo.c}));
+    m.position.set(STL_POS.x, STL_POS.y, STL_POS.z);
+    m.rotation.set(STL_ROT.x, STL_ROT.y, STL_ROT.z);
+    world.add(m); piezas.logo.mesh=m;
+  });
+}
+
+function generarTexto3D(textoString){
+  limpiarLogoAnterior();
+  if(!fuenteCargada || !textoString) return;
+  const textoMayus = textoString.toUpperCase();
+  const mat = new THREE.MeshStandardMaterial({color: seleccion.logo.c});
+  const grupoTexto = new THREE.Group();
+  let offsetActual = 0;
+  
+  textoMayus.split('').forEach(letra => {
+    if(letra === " "){ offsetActual += 10; return; }
+    const geo = new TextGeometry(letra, { font: fuenteCargada, size: 18, height: 2, curveSegments: 4, bevelEnabled: true, bevelThickness: 0.5, bevelSize: 0.3 });
+    geo.computeBoundingBox();
+    const ancho = geo.boundingBox.max.x - geo.boundingBox.min.x;
+    geo.translate(offsetActual, 0, 0);
+    grupoTexto.add(new THREE.Mesh(geo, mat));
+    offsetActual += ancho + 2;
+  });
+  
+  const centroX = -offsetActual / 2;
+  grupoTexto.children.forEach(c => c.geometry.translate(centroX, -9, 0));
+  grupoTexto.position.set(TXT_POS.x, TXT_POS.y, TXT_POS.z);
+  grupoTexto.rotation.set(TXT_ROT.x, TXT_ROT.y, TXT_ROT.z);
+  world.add(grupoTexto); piezas.logo.mesh = grupoTexto;
+}
+
+/* INTERFAZ */
+const colores=[
+  {n:"Amarillo",c:"#fff700"},
+  {n:"Blanco",c:"#ffffff"},
+  {n:"Verde Limón",c:"#68fd3f"},
+  {n:"Negro",c:"#000000"},
+  {n:"Azul",c:"#0000ff"},
+  {n:"Oro",c:"#ffff94"},
+  {n:"Verde",c:"#2e7d32"},
+  {n:"Rosado",c:"#ff8783"},
+  {n:"Morado",c:"#7f00b2"},
+  {n:"Azul Cielo",c:"#80caff"},
+  {n:"Café",c:"#8b4513"},
+  {n:"Rojo",c:"#ff0000"},
+  {n:"Gris",c:"#8d8d8d"},
+  {n:"Naranja",c:"#ff8000"},
+  {n:"Menta",c:"#9ce0db"},
+  {n:"Madera",c:"#f4dcc2"}
+];
+
+const nombresGrupo = {
+  base: "Base",
+  superior: "Superior",
+  insert: "Insertos",
+  logo: "Logo"
+};
+
+function nombreColor(hex) {
+  const c = colores.find(x => x.c.toLowerCase() === hex.toLowerCase());
+  return c ? c.n : "Personalizado";
+}
+
+function actualizarInfoColor(hex = seleccion[grupoActivo].c, grupo = grupoActivo){
+  const texto = document.getElementById("color-info-text");
+  const dot = document.getElementById("color-dot");
+  texto.textContent = `${(nombresGrupo[grupo] || grupo).toUpperCase()}: ${nombreColor(hex).toUpperCase()}`;
+  dot.style.background = hex;
+}
+
+function crearPaleta(){
+  const paleta = document.getElementById("paleta");
+  colores.forEach(col=>{
+    const el=document.createElement("button");
+    el.type = "button";
+    el.className="color";
+    el.dataset.hex=col.c;
+    el.dataset.name=col.n;
+    el.style.background=col.c;
+    el.title = col.n;
+    el.setAttribute("aria-label", `Color ${col.n}`);
+
+    el.addEventListener("click",()=>{ 
+      aplicarColor(grupoActivo, col.c); 
+      resaltarSeleccion();
+      actualizarInfoColor();
+    });
+
+    el.addEventListener("mouseenter", ()=>{
+      actualizarInfoColor(col.c, grupoActivo);
+    });
+
+    el.addEventListener("focus", ()=>{
+      actualizarInfoColor(col.c, grupoActivo);
+    });
+
+    el.addEventListener("mouseleave", ()=>{
+      actualizarInfoColor();
+    });
+
+    el.addEventListener("blur", ()=>{
+      actualizarInfoColor();
+    });
+
+    el.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        el.click();
+      }
+    });
+
+    paleta.appendChild(el);
+  });
+  resaltarSeleccion();
+  actualizarInfoColor();
+}
+  
+
+function aplicarColor(grupo, hex){
+  seleccion[grupo].c = hex;
+  
+  const esOro = (hex.toLowerCase() === "#ffff94");
+  const valorMetal = esOro ? 0.4 : 0.0;
+  const valorRugosidad = esOro ? 0.1 : 0.8;
+
+  const actualizarMaterial = (mesh) => {
+    if(!mesh) return;
+    if(mesh.isGroup) {
+      mesh.children.forEach(c => {
+        c.material.color.set(hex);
+        c.material.metalness = valorMetal;
+        c.material.roughness = valorRugosidad;
+      });
+    } else {
+      mesh.material.color.set(hex);
+      mesh.material.metalness = valorMetal;
+      mesh.material.roughness = valorRugosidad;
+    }
+  };
+
+  if(grupo==="base") actualizarMaterial(piezas.base.mesh);
+  if(grupo==="superior") actualizarMaterial(piezas.superior.mesh);
+  if(grupo==="insert") piezas.insertMeshes.forEach(m => actualizarMaterial(m));
+  if(grupo==="logo") actualizarMaterial(piezas.logo.mesh);
+}
+
+function resaltarSeleccion(){
+  const hexSel=seleccion[grupoActivo].c;
+  document.querySelectorAll(".color").forEach(el=>{
+    if(el.dataset.hex===hexSel) el.classList.add("sel"); else el.classList.remove("sel");
+  });
+}
+
+const tabs = document.querySelectorAll(".tab");
+tabs.forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    tabs.forEach(t=>t.classList.remove("activo"));
+    tab.classList.add("activo");
+    grupoActivo=tab.dataset.grupo;
+    document.getElementById("logo-block").style.display = (grupoActivo==="logo") ? "flex" : "none";
+    resaltarSeleccion();
+    actualizarInfoColor();
+  });
+});
+
+/* LISTA LOGOS */
+const logos=[{n:"Yamaha",f:"logoYamaha.stl"},{n:"Sin logo",f:""},{n:"Nmax",f:"logoNmax.stl"},{n:"V-Strom",f:"logoVstrom.stl"},{n:"Ktm",f:"logoKtm.stl"},{n:"FOX",f:"logoFox.stl"},{n:"Monster",f:"logoMonster.stl"},{n:"Nike",f:"logoNike.stl"},{n:"Honda",f:"logoHonda.stl"},{n:"Suzuki",f:"logoSuzuki.stl"},{n:"Pulsar",f:"logoPulsar.stl"},{n:"AKT",f:"logoAKT.stl"},{n:"Royal Enfield",f:"logoRoyal.stl"},{n:"Dominar",f:"logoDominar.stl"},{n:"Kawasaki",f:"logoKawasaki.stl"},{n:"Discover",f:"logoDiscover.stl"}];
+const logoSelect = document.getElementById('logo-select');
+logos.forEach(l=>{
+  const opt=document.createElement("option"); opt.value=l.f; opt.textContent=l.n;
+  logoSelect.appendChild(opt);
+});
+logoSelect.addEventListener("change",()=>{ cargarLogoSTL(logoSelect.value); });
+
+const customInput = document.getElementById('custom-text');
+customInput.addEventListener('input', (e)=>{ generarTexto3D(e.target.value); });
+
+document.querySelectorAll('input[name="tipoLogo"]').forEach(r => {
+  r.addEventListener('change', (e) => {
+    modoLogo = e.target.value;
+    document.getElementById('cont-select-logo').classList.toggle('hidden', modoLogo!=='catalogo');
+    document.getElementById('cont-input-text').classList.toggle('hidden', modoLogo!=='texto');
+    if(modoLogo==='catalogo') cargarLogoSTL(logoSelect.value); else generarTexto3D(customInput.value);
+  });
+});
+
+/* WHATSAPP + CAPTURA LEAD EN ERP (RESTAURADO) */
+function enviarLeadNoBloqueante(payload) {
+  const API_URL = "https://www.fpc.com.co/Kreoma/api/lead_create.php";
+  const API_KEY = "f7N#z2K9v$Lp8Qx@m5W&1jR*tS6uB4cY9gH3eD!aV0n";
+
+  try {
+    if (navigator.sendBeacon) {
+      const urlConKey = API_URL + "?k=" + encodeURIComponent(API_KEY);
+      const blob = new Blob([JSON.stringify(payload)], { type: "text/plain;charset=UTF-8" });
+      const ok = navigator.sendBeacon(urlConKey, blob);
+      if (ok) return;
+    }
+  } catch (e) {}
+
+  try {
+    fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-KREOMA-KEY": API_KEY
+      },
+      body: JSON.stringify(payload),
+      keepalive: true,
+      mode: "cors"
+    }).catch(()=>{});
+  } catch (e) {}
+}
+
+document.getElementById("enviarWhatsApp").addEventListener("click", () => {
+  const baseC = nombreColor(seleccion.base.c);
+  const supC  = nombreColor(seleccion.superior.c);
+  const insC  = nombreColor(seleccion.insert.c);
+  const logC  = nombreColor(seleccion.logo.c);
+
+  let infoLogo = "";
+  let logoModo = "";
+  let logoValor = "";
+
+  if (modoLogo === "catalogo") {
+    const nombreL = logoSelect.selectedOptions[0]?.textContent || "Ninguno";
+    infoLogo = `Logo catálogo: ${nombreL}`;
+    logoModo = "catalogo";
+    logoValor = nombreL;
+  } else {
+    const texto = (customInput.value || "").trim().toUpperCase() || "Sin texto";
+    infoLogo = `Nombre personalizado: "${texto}"`;
+    logoModo = "texto";
+    logoValor = texto;
+  }
+
+  const msg = `Hola Kreoma3D! 👋\nQuiero mi soporte personalizado:\n• Base: ${baseC}\n• Superior: ${supC}\n• Insertos: ${insC}\n• ${infoLogo} (Color: ${logC})`;
+
+  const waUrl = `https://wa.me/573332395481?text=${encodeURIComponent(msg)}`;
+  const waWin = window.open(waUrl, "_blank");
+
+  if (!waWin) { window.location.href = waUrl; }
+
+  const payload = {
+    origen: "visor_soporte_v1",
+    producto_key: "SOPORTE_3EN1",
+    base_color: baseC,
+    superior_color: supC,
+    insert_color: insC,
+    logo_color: logC,
+    logo_modo: logoModo,
+    logo_valor: logoValor,
+    mensaje_whatsapp: msg
+  };
+
+  setTimeout(() => enviarLeadNoBloqueante(payload), 0);
+});
+
+function animate(){ requestAnimationFrame(animate); controls.update(); renderer.render(scene,camera); }
+animate();
+window.addEventListener("resize",()=>{
+  renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+  camera.aspect=canvasContainer.clientWidth/canvasContainer.clientHeight;
+  camera.updateProjectionMatrix();
+});
+cargarEstructura(); crearPaleta();
+</script>
+</body>
+</html>
