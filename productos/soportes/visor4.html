@@ -3,16 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Personalizador 3D - Kreoma3D</title>
+  <title>Personalizador 3D - JP</title>
 
   <style>
     :root{
       --panelH: clamp(280px, 40vh, 350px);
       --topbarH: 54px;
-      --fontBig: clamp(16px, 4.8vw, 22px);
       --fontSemi: clamp(14px, 4vw, 18px);
       --colorSize: clamp(28px, 6vw, 36px);
-      --radius: 10px;
 
       --bg-dark: #10141c;
       --panel-bg: #161c27;
@@ -50,11 +48,27 @@
       padding:0 12px;
       background:#121824;
       border-bottom:1px solid var(--panel-border);
+      gap:10px;
     }
 
-    .topbar img{
+    .brand-link{
+      display:flex;
+      align-items:center;
+      text-decoration:none;
+      min-width:70px;
+    }
+
+    .brand-logo{
       height:34px;
-      display:block;
+      display:none;
+    }
+
+    .brand-text{
+      font-size:15px;
+      font-weight:800;
+      color:#fff;
+      letter-spacing:.5px;
+      white-space:nowrap;
     }
 
     .topbar h1{
@@ -74,6 +88,7 @@
       text-decoration:none;
       font-size:14px;
       font-weight:700;
+      white-space:nowrap;
     }
 
     #visor{
@@ -88,7 +103,7 @@
     #visor-bg{
       position:absolute;
       inset:0;
-      background:url("logo_kreoma.png") center center no-repeat;
+      background:center center no-repeat;
       background-size:min(48vmin, 240px);
       opacity:.035;
       pointer-events:none;
@@ -143,6 +158,91 @@
       opacity:0;
     }
 
+    /* STICKER EXPLOSION */
+    #price-sticker{
+      position:absolute;
+      top:12px;
+      right:125px;
+      width:110px;
+      height:110px;
+      z-index:7;
+      pointer-events:none;
+      user-select:none;
+      filter:drop-shadow(0 8px 18px rgba(0,0,0,.35));
+    }
+
+    #price-sticker.hidden{
+      display:none;
+    }
+
+    #price-sticker-shape{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(135deg, #ffe600 0%, #ffb800 45%, #ff7a00 100%);
+      clip-path:polygon(
+        50% 0%,
+        60% 12%,
+        75% 4%,
+        78% 20%,
+        95% 14%,
+        88% 32%,
+        100% 40%,
+        86% 50%,
+        100% 60%,
+        88% 68%,
+        95% 86%,
+        78% 80%,
+        75% 96%,
+        60% 88%,
+        50% 100%,
+        40% 88%,
+        25% 96%,
+        22% 80%,
+        5% 86%,
+        12% 68%,
+        0% 60%,
+        14% 50%,
+        0% 40%,
+        12% 32%,
+        5% 14%,
+        22% 20%,
+        25% 4%,
+        40% 12%
+      );
+      border:3px solid rgba(255,255,255,.9);
+    }
+
+    #price-sticker-content{
+      position:absolute;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:12px;
+      color:#2c1100;
+      font-weight:900;
+      line-height:1;
+    }
+
+    #price-sticker-label{
+      display:block;
+      font-size:12px;
+      letter-spacing:1px;
+      margin-bottom:4px;
+      color:#7a2100;
+      text-transform:uppercase;
+    }
+
+    #price-sticker-text{
+      display:block;
+      font-size:22px;
+      letter-spacing:-0.5px;
+      color:#5a1400;
+      text-shadow:0 1px 0 rgba(255,255,255,.35);
+    }
+
     #panel{
       position:fixed;
       left:0; right:0; bottom:0;
@@ -183,11 +283,6 @@
       background:#1e2837;
       color:#fff;
       border-color:#3a4b67;
-    }
-
-    #bloque-colores h3{
-      font-size:var(--fontSemi);
-      margin-bottom:8px;
     }
 
     #paleta{
@@ -353,6 +448,23 @@
       cursor:pointer;
     }
 
+    @media (max-width: 600px){
+      #price-sticker{
+        top:10px;
+        right:10px;
+        width:92px;
+        height:92px;
+      }
+
+      #price-sticker-label{
+        font-size:10px;
+      }
+
+      #price-sticker-text{
+        font-size:18px;
+      }
+    }
+
     @media (min-width: 900px){
       :root{ --panelH: 38vh; }
       #panel{ padding:18px 28px; }
@@ -363,13 +475,27 @@
 <body>
 
   <div class="topbar">
-    <a href="../../index.html"><img src="logo_kreoma.png" alt="Kreoma3D"></a>
-    <h1>Personalizador • Soporte 3 en 1</h1>
-    <nav><a href="../index.html">Inicio</a></nav>
+    <a class="brand-link" id="brand-link">
+      <img class="brand-logo" id="brand-logo" alt="Marca">
+      <span class="brand-text" id="brand-text">JP</span>
+    </a>
+
+    <h1 id="page-title">Personalizador • Soporte Para Casco</h1>
+
+    <nav><a id="inicio-link" href="../index.html">Inicio</a></nav>
   </div>
 
   <div id="visor">
     <div id="visor-bg"></div>
+
+    <div id="price-sticker">
+      <div id="price-sticker-shape"></div>
+      <div id="price-sticker-content">
+        <small id="price-sticker-label">Precio</small>
+        <span id="price-sticker-text">$40.000</span>
+      </div>
+    </div>
+
     <div id="loading">Cargando visor 3D...</div>
     <div id="drag-hint">Desliza para girar</div>
     <div id="canvas-container"></div>
@@ -434,6 +560,20 @@
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { FontLoader } from 'three/addons/loaders/FontLoader.js';
     import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+
+    const CONFIG = {
+      BRAND_NAME: "JP",
+      PAGE_TITLE: "Personalizador • Soporte Para Casco",
+      INICIO_URL: "",
+      VENDEDOR_WHATSAPP: "573105151914",
+      TOPBAR_LOGO_URL: "./logojp.png",
+      BACKGROUND_WATERMARK_URL: "./logojp.png",
+      WHATSAPP_SALUDO: "Hola 👋 JP",
+
+      PRICE_STICKER_ENABLED: true,
+      PRICE_STICKER_TEXT: "$40.000",
+      PRICE_STICKER_LABEL: "Precio"
+    };
 
     const canvasContainer = document.getElementById("canvas-container");
     const loadingEl = document.getElementById("loading");
@@ -510,14 +650,12 @@
     let fuenteCargada = null;
     let fontLoadingPromise = null;
     let renderRequested = false;
-    let logoAssetsLoaded = false;
     let logoLoadToken = 0;
-    let userInteracted = false;
 
     const piezas = {
       base: { file: "Helm-Wandhalter.stl", mesh: null },
       superior: { file: "Helm-Halter.stl", mesh: null },
-      inserts: ["Insert1.stl", "Insert2.stl", "Insert3.stl", "Insert4.stl", "Insert5.stl"],
+      inserts: ["Insert1.stl","Insert2.stl","Insert3.stl","Insert4.stl","Insert5.stl"],
       insertMeshes: [],
       logo: { mesh: null }
     };
@@ -554,8 +692,8 @@
       { n: "Gris", c: "#8d8d8d" },
       { n: "Naranja", c: "#ff8000" },
       { n: "Menta", c: "#9ce0db" },
-      { n: "Oro", c: "#ffff94", especial: true, etiquetaEspecial: "Color especial · acabado tipo oro" },
-      { n: "Madera", c: "#deb887", especial: true, etiquetaEspecial: "Color especial · tipo madera" }
+      { n: "Oro", c: "#ffff94", especial:true, etiquetaEspecial:"Color especial · acabado tipo oro" },
+      { n: "Madera", c: "#f5deb3", especial:true, etiquetaEspecial:"Color especial · tipo madera" }
     ];
 
     const logos = [
@@ -579,6 +717,46 @@
 
     const logoSelect = document.getElementById("logo-select");
     const customInput = document.getElementById("custom-text");
+
+    function aplicarBranding() {
+      document.title = `${CONFIG.PAGE_TITLE} - ${CONFIG.BRAND_NAME}`;
+      document.getElementById("page-title").textContent = CONFIG.PAGE_TITLE;
+      document.getElementById("brand-text").textContent = CONFIG.BRAND_NAME;
+
+      const brandLink = document.getElementById("brand-link");
+      const inicioLink = document.getElementById("inicio-link");
+      brandLink.href = CONFIG.INICIO_URL || "#";
+      inicioLink.href = CONFIG.INICIO_URL || "#";
+
+      const logo = document.getElementById("brand-logo");
+      if (CONFIG.TOPBAR_LOGO_URL) {
+        logo.src = CONFIG.TOPBAR_LOGO_URL;
+        logo.style.display = "block";
+        document.getElementById("brand-text").style.display = "none";
+      } else {
+        logo.style.display = "none";
+        document.getElementById("brand-text").style.display = "inline";
+      }
+
+      const visorBg = document.getElementById("visor-bg");
+      if (CONFIG.BACKGROUND_WATERMARK_URL) {
+        visorBg.style.backgroundImage = `url("${CONFIG.BACKGROUND_WATERMARK_URL}")`;
+      } else {
+        visorBg.style.backgroundImage = "none";
+      }
+
+      const sticker = document.getElementById("price-sticker");
+      const stickerText = document.getElementById("price-sticker-text");
+      const stickerLabel = document.getElementById("price-sticker-label");
+
+      if (CONFIG.PRICE_STICKER_ENABLED) {
+        sticker.classList.remove("hidden");
+        stickerText.textContent = CONFIG.PRICE_STICKER_TEXT;
+        stickerLabel.textContent = CONFIG.PRICE_STICKER_LABEL;
+      } else {
+        sticker.classList.add("hidden");
+      }
+    }
 
     function showLoading(text = "Cargando visor 3D..."){
       loadingEl.textContent = text;
@@ -609,21 +787,13 @@
       controls.addEventListener("change", requestRender);
 
       controls.addEventListener("start", () => {
-        userInteracted = true;
         controls.autoRotate = false;
         ocultarDragHint();
         requestRender();
       });
 
-      renderer.domElement.addEventListener("pointerdown", () => {
-        userInteracted = true;
-        ocultarDragHint();
-      }, { passive: true });
-
-      renderer.domElement.addEventListener("touchstart", () => {
-        userInteracted = true;
-        ocultarDragHint();
-      }, { passive: true });
+      renderer.domElement.addEventListener("pointerdown", ocultarDragHint, { passive: true });
+      renderer.domElement.addEventListener("touchstart", ocultarDragHint, { passive: true });
 
       document.addEventListener("visibilitychange", () => {
         if (!document.hidden) requestRender();
@@ -701,7 +871,9 @@
         requestRender();
 
         hideLoading();
+
         cargarLogoSTL("logoYamaha.stl");
+
         const loadInserts = async () => {
           for (const f of piezas.inserts) {
             try {
@@ -762,13 +934,14 @@
 
     async function cargarLogoSTL(archivo){
       limpiarLogoAnterior();
-      if (!archivo) return;
+      if(!archivo) return;
 
       const currentToken = ++logoLoadToken;
       showLoading("Cargando logo...");
 
       try {
         const m = await loadSTL(archivo, createMaterial(seleccion.logo.c));
+
         if (currentToken !== logoLoadToken) {
           if (m.geometry) m.geometry.dispose();
           if (m.material) m.material.dispose();
@@ -927,22 +1100,13 @@
       const logoBlock = document.getElementById("logo-block");
 
       tabs.forEach(tab => {
-        tab.addEventListener("click", async () => {
+        tab.addEventListener("click", () => {
           tabs.forEach(t => t.classList.remove("activo"));
           tab.classList.add("activo");
 
           grupoActivo = tab.dataset.grupo;
           const isLogoTab = grupoActivo === "logo";
           logoBlock.style.display = isLogoTab ? "flex" : "none";
-
-          if (isLogoTab && !logoAssetsLoaded) {
-            logoAssetsLoaded = true;
-            if (modoLogo === "catalogo") {
-              await cargarLogoSTL(logoSelect.value);
-            } else {
-              await generarTexto3D(customInput.value);
-            }
-          }
 
           resaltarSeleccion();
           actualizarInfoColor();
@@ -962,7 +1126,7 @@
       logoSelect.value = "logoYamaha.stl";
 
       logoSelect.addEventListener("change", () => {
-        if (grupoActivo === "logo" && modoLogo === "catalogo") {
+        if (modoLogo === "catalogo") {
           cargarLogoSTL(logoSelect.value);
         }
       });
@@ -971,7 +1135,7 @@
       customInput.addEventListener("input", (e) => {
         clearTimeout(textDebounce);
         textDebounce = setTimeout(() => {
-          if (grupoActivo === "logo" && modoLogo === "texto") {
+          if (modoLogo === "texto") {
             generarTexto3D(e.target.value);
           }
         }, 220);
@@ -989,8 +1153,6 @@
 
           document.getElementById("cont-select-logo").classList.toggle("hidden", modoLogo !== "catalogo");
           document.getElementById("cont-input-text").classList.toggle("hidden", modoLogo !== "texto");
-
-          if (grupoActivo !== "logo") return;
 
           if (modoLogo === "catalogo") {
             await cargarLogoSTL(logoSelect.value);
@@ -1022,14 +1184,14 @@
         }
 
         const msg =
-`Hola Kreoma3D 👋
+`${CONFIG.WHATSAPP_SALUDO}
 Quiero mi soporte personalizado:
 • Base: ${baseC}
 • Superior: ${supC}
 • Insertos: ${insC}
 • ${infoLogo} (Color: ${logC})`;
 
-        const waUrl = `https://wa.me/573332395481?text=${encodeURIComponent(msg)}`;
+        const waUrl = `https://wa.me/${CONFIG.VENDEDOR_WHATSAPP}?text=${encodeURIComponent(msg)}`;
         const waWin = window.open(waUrl, "_blank");
 
         if (!waWin) {
@@ -1050,6 +1212,7 @@ Quiero mi soporte personalizado:
 
     window.addEventListener("resize", onResize);
 
+    aplicarBranding();
     setupRenderEvents();
     crearPaleta();
     initTabs();
@@ -1059,5 +1222,4 @@ Quiero mi soporte personalizado:
     requestRender();
   </script>
 </body>
-
 </html>
