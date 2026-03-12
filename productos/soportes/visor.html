@@ -143,6 +143,87 @@
       opacity:0;
     }
 
+    /* STICKER EXPLOSION PROMO */
+    #price-sticker{
+      position:absolute;
+      top:12px;
+      right:112px;
+      width:110px;
+      height:110px;
+      z-index:7;
+      pointer-events:none;
+      user-select:none;
+      filter:drop-shadow(0 8px 18px rgba(0,0,0,.35));
+    }
+
+    #price-sticker-shape{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(135deg, #ffe600 0%, #ffb800 45%, #ff7a00 100%);
+      clip-path:polygon(
+        50% 0%,
+        60% 12%,
+        75% 4%,
+        78% 20%,
+        95% 14%,
+        88% 32%,
+        100% 40%,
+        86% 50%,
+        100% 60%,
+        88% 68%,
+        95% 86%,
+        78% 80%,
+        75% 96%,
+        60% 88%,
+        50% 100%,
+        40% 88%,
+        25% 96%,
+        22% 80%,
+        5% 86%,
+        12% 68%,
+        0% 60%,
+        14% 50%,
+        0% 40%,
+        12% 32%,
+        5% 14%,
+        22% 20%,
+        25% 4%,
+        40% 12%
+      );
+      border:3px solid rgba(255,255,255,.9);
+    }
+
+    #price-sticker-content{
+      position:absolute;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:12px;
+      color:#2c1100;
+      font-weight:900;
+      line-height:1;
+    }
+
+    #price-sticker-label{
+      display:block;
+      font-size:12px;
+      letter-spacing:1px;
+      margin-bottom:4px;
+      color:#7a2100;
+      text-transform:uppercase;
+    }
+
+    #price-sticker-text{
+      display:block;
+      font-size:22px;
+      letter-spacing:-0.5px;
+      color:#5a1400;
+      text-shadow:0 1px 0 rgba(255,255,255,.35);
+    }
+
     #panel{
       position:fixed;
       left:0; right:0; bottom:0;
@@ -353,6 +434,23 @@
       cursor:pointer;
     }
 
+    @media (max-width: 600px){
+      #price-sticker{
+        top:10px;
+        right:10px;
+        width:92px;
+        height:92px;
+      }
+
+      #price-sticker-label{
+        font-size:10px;
+      }
+
+      #price-sticker-text{
+        font-size:18px;
+      }
+    }
+
     @media (min-width: 900px){
       :root{ --panelH: 38vh; }
       #panel{ padding:18px 28px; }
@@ -370,6 +468,16 @@
 
   <div id="visor">
     <div id="visor-bg"></div>
+
+    <div id="price-sticker">
+      <div id="price-sticker-shape"></div>
+      <div id="price-sticker-content">
+        <small id="price-sticker-label">Precio</small>
+        <small id="price-sticker-label">1 x $38.000</small>
+        <small id="price-sticker-label">Promo: 2 x $70.000</small>
+      </div>
+    </div>
+
     <div id="loading">Cargando visor 3D...</div>
     <div id="drag-hint">Desliza para girar</div>
     <div id="canvas-container"></div>
