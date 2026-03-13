@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Personalizador 3D - ANGIE</title>
+
+  <style>
+    :root{
+      --panelH: clamp(280px, 40vh, 350px);
+      --topbarH: 54px;
+      --fontSemi: clamp(14px, 4vw, 18px);
+      --colorSize: clamp(28px, 6vw, 36px);
+
+      --bg-dark: #10141c;
+      --panel-bg: #161c27;
+      --panel-border: #273247;
+      --accent: #ff7a00;
+      --accent2: #00bcd4;
+      --text-main: #e7edf5;
+      --text-soft: #b6c0cf;
+      --btn-wa: #25D366;
+    }
+
+    *{ margin:0; padding:0; box-sizing:border-box; }
+
+    html, body{
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      background:#0f131b;
+      color:var(--text-main);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body{
+      position:relative;
+    }
+
+    .topbar{
+      position:fixed;
+      top:0; left:0; right:0;
+      height:var(--topbarH);
+      z-index:20;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 12px;
+      background:#121824;
+      border-bottom:1px solid var(--panel-border);
+      gap:10px;
+    }
+
+    .brand-link{
+      display:flex;
+      align-items:center;
+      text-decoration:none;
+      min-width:70px;
+    }
+
+    .brand-logo{
+      height:34px;
+      display:none;
+    }
+
+    .brand-text{
+      font-size:15px;
+      font-weight:800;
+      color:#fff;
+      letter-spacing:.5px;
+      white-space:nowrap;
+    }
+
+    .topbar h1{
+      flex:1;
+      margin:0 10px;
+      font-size:clamp(12px,4vw,16px);
+      font-weight:700;
+      text-align:center;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      color:#fff;
+    }
+
+    .topbar nav a{
+      color:var(--text-soft);
+      text-decoration:none;
+      font-size:14px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+
+    #visor{
+      position:fixed;
+      top:var(--topbarH);
+      left:0; right:0;
+      bottom:var(--panelH);
+      overflow:hidden;
+      background:linear-gradient(180deg, #1a2230 0%, #0f131b 100%);
+    }
+
+    #visor-bg{
+      position:absolute;
+      inset:0;
+      background:center center no-repeat;
+      background-size:min(48vmin, 240px);
+      opacity:.035;
+      pointer-events:none;
+    }
+
+    #canvas-container{
+      position:absolute;
+      inset:0;
+      touch-action:none;
+    }
+
+    #loading{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      z-index:5;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(0,0,0,.45);
+      border:1px solid rgba(255,255,255,.12);
+      color:#fff;
+      font-size:13px;
+      font-weight:700;
+      letter-spacing:.4px;
+      pointer-events:none;
+    }
+
+    #loading.hidden{
+      display:none;
+    }
+
+    #drag-hint{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      z-index:6;
+      pointer-events:none;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(0,0,0,.38);
+      border:1px solid rgba(255,255,255,.12);
+      color:#fff;
+      font-size:12px;
+      font-weight:700;
+      text-align:center;
+      transition:opacity .25s ease;
+    }
+
+    #drag-hint.oculto{
+      opacity:0;
+    }
+
+    /* STICKER EXPLOSION */
+    #price-sticker{
+      position:absolute;
+      top:12px;
+      right:125px;
+      width:110px;
+      height:110px;
+      z-index:7;
+      pointer-events:none;
+      user-select:none;
+      filter:drop-shadow(0 8px 18px rgba(0,0,0,.35));
+    }
+
+    #price-sticker.hidden{
+      display:none;
+    }
+
+    #price-sticker-shape{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(135deg, #ffe600 0%, #ffb800 45%, #ff7a00 100%);
+      clip-path:polygon(
+        50% 0%,
+        60% 12%,
+        75% 4%,
+        78% 20%,
+        95% 14%,
+        88% 32%,
+        100% 40%,
+        86% 50%,
+        100% 60%,
+        88% 68%,
+        95% 86%,
+        78% 80%,
+        75% 96%,
+        60% 88%,
+        50% 100%,
+        40% 88%,
+        25% 96%,
+        22% 80%,
+        5% 86%,
+        12% 68%,
+        0% 60%,
+        14% 50%,
+        0% 40%,
+        12% 32%,
+        5% 14%,
+        22% 20%,
+        25% 4%,
+        40% 12%
+      );
+      border:3px solid rgba(255,255,255,.9);
+    }
+
+    #price-sticker-content{
+      position:absolute;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:12px;
+      color:#2c1100;
+      font-weight:900;
+      line-height:1;
+    }
+
+    #price-sticker-label{
+      display:block;
+      font-size:12px;
+      letter-spacing:1px;
+      margin-bottom:4px;
+      color:#7a2100;
+      text-transform:uppercase;
+    }
+
+    #price-sticker-text{
+      display:block;
+      font-size:22px;
+      letter-spacing:-0.5px;
+      color:#5a1400;
+      text-shadow:0 1px 0 rgba(255,255,255,.35);
+    }
+
+    #panel{
+      position:fixed;
+      left:0; right:0; bottom:0;
+      height:var(--panelH);
+      z-index:10;
+      background:var(--panel-bg);
+      border-top:1px solid var(--panel-border);
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      overflow-y:auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #tabs{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+    }
+
+    .tab{
+      flex:1 1 calc(25% - 6px);
+      min-width:70px;
+      border:1px solid var(--panel-border);
+      background:#111722;
+      color:var(--text-soft);
+      border-radius:8px;
+      padding:10px 6px;
+      text-align:center;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+      user-select:none;
+    }
+
+    .tab.activo{
+      background:#1e2837;
+      color:#fff;
+      border-color:#3a4b67;
+    }
+
+    #paleta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:center;
+    }
+
+    .color{
+      width:var(--colorSize);
+      height:var(--colorSize);
+      border-radius:50%;
+      border:2px solid rgba(255,255,255,.18);
+      cursor:pointer;
+      background:#fff;
+      appearance:none;
+      -webkit-appearance:none;
+      position:relative;
+    }
+
+    .color.sel{
+      border-color:#fff;
+      outline:2px solid var(--accent2);
+      outline-offset:2px;
+    }
+
+    .color.especial::before{
+      content:"★";
+      position:absolute;
+      top:-6px;
+      right:-4px;
+      width:14px;
+      height:14px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:9px;
+      font-weight:700;
+      background:var(--accent);
+      color:#fff;
+    }
+
+    #color-info{
+      margin-top:10px;
+      min-height:22px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    #color-info-main{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 12px;
+      border-radius:999px;
+      background:#111722;
+      border:1px solid var(--panel-border);
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+      color:#fff;
+    }
+
+    #color-dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.35);
+      flex:0 0 10px;
+    }
+
+    #color-special{
+      display:none;
+      padding:7px 10px;
+      border-radius:999px;
+      background:rgba(255,122,0,.12);
+      border:1px solid rgba(255,122,0,.25);
+      color:#ffbe86;
+      font-size:10px;
+      font-weight:700;
+      text-transform:uppercase;
+    }
+
+    #color-special.show{
+      display:inline-flex;
+    }
+
+    #special-colors-note{
+      margin-top:8px;
+      text-align:center;
+      font-size:11px;
+      font-weight:700;
+      color:#d8dee8;
+    }
+
+    #special-colors-note .tag{
+      display:inline-block;
+      margin:0 4px;
+      padding:4px 8px;
+      border-radius:999px;
+      background:#111722;
+      border:1px solid var(--panel-border);
+    }
+
+    #logo-block{
+      display:none;
+      flex-direction:column;
+      gap:8px;
+      padding:10px;
+      border-radius:8px;
+      background:#111722;
+      border:1px solid var(--panel-border);
+    }
+
+    .logo-type-switch{
+      display:flex;
+      gap:16px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    .logo-type-switch label{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size:15px;
+      font-weight:700;
+      color:#fff;
+    }
+
+    select, input[type="text"]{
+      width:100%;
+      padding:12px;
+      border-radius:8px;
+      border:1px solid var(--panel-border);
+      background:#0d121a;
+      color:#fff;
+      font-size:16px;
+      font-weight:700;
+      outline:none;
+      text-transform:uppercase;
+    }
+
+    .hidden{
+      display:none !important;
+    }
+
+    #enviarWhatsApp{
+      margin-top:auto;
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:10px;
+      background:var(--btn-wa);
+      color:#fff;
+      font-size:16px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    @media (max-width: 600px){
+      #price-sticker{
+        top:10px;
+        right:10px;
+        width:92px;
+        height:92px;
+      }
+
+      #price-sticker-label{
+        font-size:10px;
+      }
+
+      #price-sticker-text{
+        font-size:18px;
+      }
+    }
+
+    @media (min-width: 900px){
+      :root{ --panelH: 38vh; }
+      #panel{ padding:18px 28px; }
+      .topbar{ padding:0 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a class="brand-link" id="brand-link">
+      <img class="brand-logo" id="brand-logo" alt="Marca">
+      <span class="brand-text" id="brand-text">ANGIE</span>
+    </a>
+
+    <h1 id="page-title">Personalizador • Soporte Para Casco</h1>
+
+    <nav><a id="inicio-link" href="../index.html">Inicio</a></nav>
+  </div>
+
+  <div id="visor">
+    <div id="visor-bg"></div>
+
+    <div id="price-sticker">
+      <div id="price-sticker-shape"></div>
+      <div id="price-sticker-content">
+        <small id="price-sticker-label"></small>
+        <span id="price-sticker-text"></span>
+      </div>
+    </div>
+
+    <div id="loading">Cargando visor 3D...</div>
+    <div id="drag-hint">Desliza para girar</div>
+    <div id="canvas-container"></div>
+  </div>
+
+  <div id="panel">
+    <div id="tabs">
+      <div class="tab activo" data-grupo="base">Base</div>
+      <div class="tab" data-grupo="superior">Superior</div>
+      <div class="tab" data-grupo="insert">Insertos</div>
+      <div class="tab" data-grupo="logo">Nombre/Logo</div>
+    </div>
+
+    <div id="bloque-colores">
+      <div id="paleta"></div>
+
+      <div id="color-info" aria-live="polite">
+        <div id="color-info-main">
+          <i id="color-dot"></i>
+          <span id="color-info-text">BASE: NEGRO</span>
+        </div>
+        <div id="color-special">Color especial</div>
+      </div>
+
+      <div id="special-colors-note">
+        Colores especiales:
+        <span class="tag">Oro</span>
+        <span class="tag">Madera</span>
+      </div>
+    </div>
+
+    <div id="logo-block">
+      <div class="logo-type-switch">
+        <label><input type="radio" name="tipoLogo" value="catalogo" checked> Logo</label>
+        <label><input type="radio" name="tipoLogo" value="texto"> Nombre</label>
+      </div>
+
+      <div id="cont-select-logo">
+        <select id="logo-select"></select>
+      </div>
+
+      <div id="cont-input-text" class="hidden">
+        <input type="text" id="custom-text" placeholder="ESCRIBE AQUÍ TU NOMBRE" maxlength="12">
+      </div>
+    </div>
+
+    <button id="enviarWhatsApp" type="button">PEDIR POR WHATSAPP</button>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+    import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+
+    const CONFIG = {
+      BRAND_NAME: "ANGIE",
+      PAGE_TITLE: "Personalizador • Soporte Para Casco",
+      INICIO_URL: "",
+      VENDEDOR_WHATSAPP: "573174183184",
+      TOPBAR_LOGO_URL: "",
+      BACKGROUND_WATERMARK_URL: "",
+      WHATSAPP_SALUDO: "Hola 👋 ANGIE",
+
+      PRICE_STICKER_ENABLED: false,
+      PRICE_STICKER_TEXT: "",
+      PRICE_STICKER_LABEL: ""
+    };
+
+    const canvasContainer = document.getElementById("canvas-container");
+    const loadingEl = document.getElementById("loading");
+    const dragHint = document.getElementById("drag-hint");
+
+    const isMobile = window.matchMedia("(max-width: 900px)").matches;
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+    const isSlowNetwork = !!(
+      connection &&
+      (connection.saveData || /(^2g$|^slow-2g$)/i.test(connection.effectiveType || ""))
+    );
+
+    const QUALITY = {
+      antialias: false,
+      pixelRatio: isSlowNetwork ? 1 : Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 1.5),
+      autoRotate: !isMobile && !isSlowNetwork,
+      damping: !isSlowNetwork,
+      textCurveSegments: isSlowNetwork ? 2 : 3,
+      textBevel: false
+    };
+
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(
+      50,
+      canvasContainer.clientWidth / canvasContainer.clientHeight,
+      0.1,
+      2000
+    );
+    camera.position.set(-130, 0, 130);
+
+    const renderer = new THREE.WebGLRenderer({
+      antialias: QUALITY.antialias,
+      alpha: true,
+      powerPreference: "low-power",
+      preserveDrawingBuffer: false
+    });
+
+    renderer.setPixelRatio(QUALITY.pixelRatio);
+    renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    canvasContainer.appendChild(renderer.domElement);
+
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x666666, 1.15));
+
+    const dir = new THREE.DirectionalLight(0xffffff, 0.75);
+    dir.position.set(1, 1, 1);
+    scene.add(dir);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.28));
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = QUALITY.damping;
+    controls.dampingFactor = 0.08;
+    controls.enablePan = false;
+    controls.autoRotate = QUALITY.autoRotate;
+    controls.autoRotateSpeed = 0.45;
+
+    const world = new THREE.Group();
+    world.position.y = -140;
+    world.position.x = 175;
+    scene.add(world);
+
+    const STL_POS = { x: 11, y: -15, z: -5 };
+    const STL_ROT = { x: Math.PI, y: 0, z: Math.PI };
+    const TXT_POS = { x: -156, y: 103, z: -17 };
+    const TXT_ROT = { x: 1.5, y: 5.3, z: 3.1 };
+
+    const loader = new STLLoader();
+    const fontLoader = new FontLoader();
+    const FONT_URL = 'https://unpkg.com/three@0.158.0/examples/fonts/helvetiker_bold.typeface.json';
+
+    let fuenteCargada = null;
+    let fontLoadingPromise = null;
+    let renderRequested = false;
+    let logoLoadToken = 0;
+
+    const piezas = {
+      base: { file: "Helm-Wandhalter.stl", mesh: null },
+      superior: { file: "Helm-Halter.stl", mesh: null },
+      inserts: ["Insert1.stl","Insert2.stl","Insert3.stl","Insert4.stl","Insert5.stl"],
+      insertMeshes: [],
+      logo: { mesh: null }
+    };
+
+    let grupoActivo = "base";
+    let modoLogo = "catalogo";
+
+    const seleccion = {
+      base: { c: "#000000" },
+      superior: { c: "#ff8000" },
+      insert: { c: "#ff8000" },
+      logo: { c: "#ff8000" }
+    };
+
+    const nombresGrupo = {
+      base: "Base",
+      superior: "Superior",
+      insert: "Insertos",
+      logo: "Logo"
+    };
+
+    const colores = [
+      { n: "Amarillo", c: "#fff700" },
+      { n: "Blanco", c: "#ffffff" },
+      { n: "Verde Limón", c: "#68fd3f" },
+      { n: "Negro", c: "#000000" },
+      { n: "Azul", c: "#0000ff" },
+      { n: "Verde", c: "#2e7d32" },
+      { n: "Rosado", c: "#ff8783" },
+      { n: "Morado", c: "#7f00b2" },
+      { n: "Azul Cielo", c: "#80caff" },
+      { n: "Café", c: "#8b4513" },
+      { n: "Rojo", c: "#ff0000" },
+      { n: "Gris", c: "#8d8d8d" },
+      { n: "Naranja", c: "#ff8000" },
+      { n: "Menta", c: "#9ce0db" },
+      { n: "Oro", c: "#ffff94", especial:true, etiquetaEspecial:"Color especial · acabado tipo oro" },
+      { n: "Madera", c: "#f5deb3", especial:true, etiquetaEspecial:"Color especial · tipo madera" }
+    ];
+
+    const logos = [
+      { n: "Yamaha", f: "logoYamaha.stl" },
+      { n: "Sin logo", f: "" },
+      { n: "Nmax", f: "logoNmax.stl" },
+      { n: "V-Strom", f: "logoVstrom.stl" },
+      { n: "Ktm", f: "logoKtm.stl" },
+      { n: "FOX", f: "logoFox.stl" },
+      { n: "Monster", f: "logoMonster.stl" },
+      { n: "Nike", f: "logoNike.stl" },
+      { n: "Honda", f: "logoHonda.stl" },
+      { n: "Suzuki", f: "logoSuzuki.stl" },
+      { n: "Pulsar", f: "logoPulsar.stl" },
+      { n: "AKT", f: "logoAKT.stl" },
+      { n: "Royal Enfield", f: "logoRoyal.stl" },
+      { n: "Dominar", f: "logoDominar.stl" },
+      { n: "Kawasaki", f: "logoKawasaki.stl" },
+      { n: "Discover", f: "logoDiscover.stl" }
+    ];
+
+    const logoSelect = document.getElementById("logo-select");
+    const customInput = document.getElementById("custom-text");
+
+    function aplicarBranding() {
+      document.title = `${CONFIG.PAGE_TITLE} - ${CONFIG.BRAND_NAME}`;
+      document.getElementById("page-title").textContent = CONFIG.PAGE_TITLE;
+      document.getElementById("brand-text").textContent = CONFIG.BRAND_NAME;
+
+      const brandLink = document.getElementById("brand-link");
+      const inicioLink = document.getElementById("inicio-link");
+      brandLink.href = CONFIG.INICIO_URL || "#";
+      inicioLink.href = CONFIG.INICIO_URL || "#";
+
+      const logo = document.getElementById("brand-logo");
+      if (CONFIG.TOPBAR_LOGO_URL) {
+        logo.src = CONFIG.TOPBAR_LOGO_URL;
+        logo.style.display = "block";
+        document.getElementById("brand-text").style.display = "none";
+      } else {
+        logo.style.display = "none";
+        document.getElementById("brand-text").style.display = "inline";
+      }
+
+      const visorBg = document.getElementById("visor-bg");
+      if (CONFIG.BACKGROUND_WATERMARK_URL) {
+        visorBg.style.backgroundImage = `url("${CONFIG.BACKGROUND_WATERMARK_URL}")`;
+      } else {
+        visorBg.style.backgroundImage = "none";
+      }
+
+      const sticker = document.getElementById("price-sticker");
+      const stickerText = document.getElementById("price-sticker-text");
+      const stickerLabel = document.getElementById("price-sticker-label");
+
+      if (CONFIG.PRICE_STICKER_ENABLED) {
+        sticker.classList.remove("hidden");
+        stickerText.textContent = CONFIG.PRICE_STICKER_TEXT;
+        stickerLabel.textContent = CONFIG.PRICE_STICKER_LABEL;
+      } else {
+        sticker.classList.add("hidden");
+      }
+    }
+
+    function showLoading(text = "Cargando visor 3D..."){
+      loadingEl.textContent = text;
+      loadingEl.classList.remove("hidden");
+    }
+
+    function hideLoading(){
+      loadingEl.classList.add("hidden");
+    }
+
+    function requestRender(){
+      if (renderRequested) return;
+      renderRequested = true;
+      requestAnimationFrame(renderFrame);
+    }
+
+    function renderFrame(){
+      renderRequested = false;
+      controls.update();
+      renderer.render(scene, camera);
+
+      if (controls.autoRotate && !document.hidden) {
+        requestRender();
+      }
+    }
+
+    function setupRenderEvents(){
+      controls.addEventListener("change", requestRender);
+
+      controls.addEventListener("start", () => {
+        controls.autoRotate = false;
+        ocultarDragHint();
+        requestRender();
+      });
+
+      renderer.domElement.addEventListener("pointerdown", ocultarDragHint, { passive: true });
+      renderer.domElement.addEventListener("touchstart", ocultarDragHint, { passive: true });
+
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) requestRender();
+      });
+    }
+
+    function ocultarDragHint(){
+      dragHint.classList.add("oculto");
+    }
+
+    setTimeout(ocultarDragHint, 3500);
+
+    function createMaterial(hex){
+      const esOro = hex.toLowerCase() === "#ffff94";
+      const esMadera = hex.toLowerCase() === "#deb887";
+
+      return new THREE.MeshStandardMaterial({
+        color: hex,
+        metalness: esOro ? 0.35 : 0.02,
+        roughness: esOro ? 0.28 : (esMadera ? 0.95 : 0.82)
+      });
+    }
+
+    function updateMaterial(mesh, hex){
+      if (!mesh) return;
+
+      const esOro = hex.toLowerCase() === "#ffff94";
+      const esMadera = hex.toLowerCase() === "#deb887";
+
+      const applyToMaterial = (mat) => {
+        mat.color.set(hex);
+        mat.metalness = esOro ? 0.35 : 0.02;
+        mat.roughness = esOro ? 0.28 : (esMadera ? 0.95 : 0.82);
+        mat.needsUpdate = true;
+      };
+
+      if (mesh.isGroup) {
+        mesh.children.forEach(child => {
+          if (child.material) applyToMaterial(child.material);
+        });
+      } else if (mesh.material) {
+        applyToMaterial(mesh.material);
+      }
+    }
+
+    function loadSTL(file, material){
+      return new Promise((resolve, reject) => {
+        loader.load(
+          file,
+          (geometry) => {
+            geometry.computeVertexNormals();
+            const mesh = new THREE.Mesh(geometry, material);
+            resolve(mesh);
+          },
+          undefined,
+          reject
+        );
+      });
+    }
+
+    async function cargarEstructura(){
+      try {
+        showLoading("Cargando pieza 3D...");
+
+        const baseMesh = await loadSTL(piezas.base.file, createMaterial(seleccion.base.c));
+        baseMesh.rotation.set(Math.PI, 0, Math.PI);
+        world.add(baseMesh);
+        piezas.base.mesh = baseMesh;
+        requestRender();
+
+        const superiorMesh = await loadSTL(piezas.superior.file, createMaterial(seleccion.superior.c));
+        superiorMesh.rotation.set(Math.PI, 0, Math.PI);
+        world.add(superiorMesh);
+        piezas.superior.mesh = superiorMesh;
+        requestRender();
+
+        hideLoading();
+
+        cargarLogoSTL("logoYamaha.stl");
+
+        const loadInserts = async () => {
+          for (const f of piezas.inserts) {
+            try {
+              const insertMesh = await loadSTL(f, createMaterial(seleccion.insert.c));
+              insertMesh.rotation.set(Math.PI, 0, Math.PI);
+              world.add(insertMesh);
+              piezas.insertMeshes.push(insertMesh);
+              requestRender();
+            } catch (e) {
+              console.warn("No se pudo cargar insert:", f, e);
+            }
+          }
+        };
+
+        if ("requestIdleCallback" in window) {
+          requestIdleCallback(() => loadInserts(), { timeout: 1200 });
+        } else {
+          setTimeout(loadInserts, 300);
+        }
+
+      } catch (error) {
+        console.error(error);
+        showLoading("No se pudo cargar el visor");
+      }
+    }
+
+    function limpiarLogoAnterior(){
+      if (!piezas.logo.mesh) return;
+
+      if (piezas.logo.mesh.isGroup) {
+        piezas.logo.mesh.children.forEach(child => {
+          if (child.geometry) child.geometry.dispose();
+          if (child.material) child.material.dispose();
+        });
+      } else {
+        if (piezas.logo.mesh.geometry) piezas.logo.mesh.geometry.dispose();
+        if (piezas.logo.mesh.material) piezas.logo.mesh.material.dispose();
+      }
+
+      world.remove(piezas.logo.mesh);
+      piezas.logo.mesh = null;
+      requestRender();
+    }
+
+    async function ensureFontLoaded(){
+      if (fuenteCargada) return fuenteCargada;
+      if (fontLoadingPromise) return fontLoadingPromise;
+
+      fontLoadingPromise = new Promise((resolve, reject) => {
+        fontLoader.load(FONT_URL, (font) => {
+          fuenteCargada = font;
+          resolve(font);
+        }, undefined, reject);
+      });
+
+      return fontLoadingPromise;
+    }
+
+    async function cargarLogoSTL(archivo){
+      limpiarLogoAnterior();
+      if(!archivo) return;
+
+      const currentToken = ++logoLoadToken;
+      showLoading("Cargando logo...");
+
+      try {
+        const m = await loadSTL(archivo, createMaterial(seleccion.logo.c));
+
+        if (currentToken !== logoLoadToken) {
+          if (m.geometry) m.geometry.dispose();
+          if (m.material) m.material.dispose();
+          return;
+        }
+
+        m.position.set(STL_POS.x, STL_POS.y, STL_POS.z);
+        m.rotation.set(STL_ROT.x, STL_ROT.y, STL_ROT.z);
+        world.add(m);
+        piezas.logo.mesh = m;
+        hideLoading();
+        requestRender();
+      } catch (e) {
+        console.warn("No se pudo cargar logo:", archivo, e);
+        hideLoading();
+      }
+    }
+
+    async function generarTexto3D(textoString){
+      limpiarLogoAnterior();
+
+      const texto = (textoString || "").trim().toUpperCase();
+      if (!texto) return;
+
+      showLoading("Generando texto...");
+
+      try {
+        await ensureFontLoaded();
+
+        const grupoTexto = new THREE.Group();
+        const material = createMaterial(seleccion.logo.c);
+        let offsetActual = 0;
+
+        texto.split("").forEach((letra) => {
+          if (letra === " ") {
+            offsetActual += 8;
+            return;
+          }
+
+          const geo = new TextGeometry(letra, {
+            font: fuenteCargada,
+            size: 18,
+            height: 1.6,
+            curveSegments: QUALITY.textCurveSegments,
+            bevelEnabled: QUALITY.textBevel
+          });
+
+          geo.computeBoundingBox();
+          const ancho = geo.boundingBox.max.x - geo.boundingBox.min.x;
+          geo.translate(offsetActual, 0, 0);
+
+          grupoTexto.add(new THREE.Mesh(geo, material));
+          offsetActual += ancho + 1.5;
+        });
+
+        const centroX = -offsetActual / 2;
+        grupoTexto.children.forEach(child => child.geometry.translate(centroX, -9, 0));
+
+        grupoTexto.position.set(TXT_POS.x, TXT_POS.y, TXT_POS.z);
+        grupoTexto.rotation.set(TXT_ROT.x, TXT_ROT.y, TXT_ROT.z);
+
+        world.add(grupoTexto);
+        piezas.logo.mesh = grupoTexto;
+        hideLoading();
+        requestRender();
+
+      } catch (e) {
+        console.warn("No se pudo generar texto 3D", e);
+        hideLoading();
+      }
+    }
+
+    function nombreColor(hex) {
+      const c = colores.find(x => x.c.toLowerCase() === hex.toLowerCase());
+      return c ? c.n : "Personalizado";
+    }
+
+    function dataColor(hex){
+      return colores.find(x => x.c.toLowerCase() === hex.toLowerCase()) || null;
+    }
+
+    function actualizarInfoColor(hex = seleccion[grupoActivo].c, grupo = grupoActivo){
+      const infoText = document.getElementById("color-info-text");
+      const dot = document.getElementById("color-dot");
+      const special = document.getElementById("color-special");
+      const colorData = dataColor(hex);
+      const nombre = colorData ? colorData.n : "Personalizado";
+
+      infoText.textContent = `${(nombresGrupo[grupo] || grupo).toUpperCase()}: ${nombre.toUpperCase()}`;
+      dot.style.background = hex;
+
+      if(colorData && colorData.especial){
+        special.textContent = colorData.etiquetaEspecial || "Color especial";
+        special.classList.add("show");
+      } else {
+        special.classList.remove("show");
+      }
+    }
+
+    function aplicarColor(grupo, hex){
+      seleccion[grupo].c = hex;
+
+      if (grupo === "base") updateMaterial(piezas.base.mesh, hex);
+      if (grupo === "superior") updateMaterial(piezas.superior.mesh, hex);
+      if (grupo === "insert") piezas.insertMeshes.forEach(mesh => updateMaterial(mesh, hex));
+      if (grupo === "logo") updateMaterial(piezas.logo.mesh, hex);
+
+      requestRender();
+    }
+
+    function resaltarSeleccion(){
+      const hexSel = seleccion[grupoActivo].c.toLowerCase();
+
+      document.querySelectorAll(".color").forEach(el => {
+        const same = el.dataset.hex.toLowerCase() === hexSel;
+        el.classList.toggle("sel", same);
+      });
+    }
+
+    function crearPaleta(){
+      const paleta = document.getElementById("paleta");
+      paleta.innerHTML = "";
+
+      colores.forEach(col => {
+        const el = document.createElement("button");
+        el.type = "button";
+        el.className = "color";
+        el.dataset.hex = col.c;
+        el.dataset.name = col.n;
+        el.style.background = col.c;
+        el.title = col.especial ? `${col.n} • Color especial` : col.n;
+        el.setAttribute("aria-label", col.especial ? `${col.n}, color especial` : `Color ${col.n}`);
+
+        if (col.especial) el.classList.add("especial");
+
+        el.addEventListener("click", () => {
+          aplicarColor(grupoActivo, col.c);
+          resaltarSeleccion();
+          actualizarInfoColor();
+        });
+
+        el.addEventListener("mouseenter", () => actualizarInfoColor(col.c, grupoActivo));
+        el.addEventListener("mouseleave", () => actualizarInfoColor());
+        el.addEventListener("focus", () => actualizarInfoColor(col.c, grupoActivo));
+        el.addEventListener("blur", () => actualizarInfoColor());
+
+        paleta.appendChild(el);
+      });
+
+      resaltarSeleccion();
+      actualizarInfoColor();
+    }
+
+    function initTabs(){
+      const tabs = document.querySelectorAll(".tab");
+      const logoBlock = document.getElementById("logo-block");
+
+      tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          tabs.forEach(t => t.classList.remove("activo"));
+          tab.classList.add("activo");
+
+          grupoActivo = tab.dataset.grupo;
+          const isLogoTab = grupoActivo === "logo";
+          logoBlock.style.display = isLogoTab ? "flex" : "none";
+
+          resaltarSeleccion();
+          actualizarInfoColor();
+          requestRender();
+        });
+      });
+    }
+
+    function initLogoUI(){
+      logos.forEach(l => {
+        const opt = document.createElement("option");
+        opt.value = l.f;
+        opt.textContent = l.n;
+        logoSelect.appendChild(opt);
+      });
+
+      logoSelect.value = "logoYamaha.stl";
+
+      logoSelect.addEventListener("change", () => {
+        if (modoLogo === "catalogo") {
+          cargarLogoSTL(logoSelect.value);
+        }
+      });
+
+      let textDebounce;
+      customInput.addEventListener("input", (e) => {
+        clearTimeout(textDebounce);
+        textDebounce = setTimeout(() => {
+          if (modoLogo === "texto") {
+            generarTexto3D(e.target.value);
+          }
+        }, 220);
+      });
+
+      customInput.addEventListener("focus", () => {
+        setTimeout(() => {
+          document.getElementById("panel").scrollTop = document.getElementById("panel").scrollHeight;
+        }, 220);
+      });
+
+      document.querySelectorAll('input[name="tipoLogo"]').forEach(radio => {
+        radio.addEventListener("change", async (e) => {
+          modoLogo = e.target.value;
+
+          document.getElementById("cont-select-logo").classList.toggle("hidden", modoLogo !== "catalogo");
+          document.getElementById("cont-input-text").classList.toggle("hidden", modoLogo !== "texto");
+
+          if (modoLogo === "catalogo") {
+            await cargarLogoSTL(logoSelect.value);
+          } else {
+            await generarTexto3D(customInput.value);
+            setTimeout(() => {
+              document.getElementById("panel").scrollTop = document.getElementById("panel").scrollHeight;
+            }, 120);
+          }
+        });
+      });
+    }
+
+    function initWhatsApp(){
+      document.getElementById("enviarWhatsApp").addEventListener("click", () => {
+        const baseC = nombreColor(seleccion.base.c);
+        const supC = nombreColor(seleccion.superior.c);
+        const insC = nombreColor(seleccion.insert.c);
+        const logC = nombreColor(seleccion.logo.c);
+
+        let infoLogo = "";
+
+        if (modoLogo === "catalogo") {
+          const nombreL = logoSelect.selectedOptions[0]?.textContent || "Sin logo";
+          infoLogo = `Logo catálogo: ${nombreL}`;
+        } else {
+          const texto = (customInput.value || "").trim().toUpperCase() || "Sin texto";
+          infoLogo = `Nombre personalizado: "${texto}"`;
+        }
+
+        const msg =
+`${CONFIG.WHATSAPP_SALUDO}
+Quiero mi soporte personalizado:
+• Base: ${baseC}
+• Superior: ${supC}
+• Insertos: ${insC}
+• ${infoLogo} (Color: ${logC})`;
+
+        const waUrl = `https://wa.me/${CONFIG.VENDEDOR_WHATSAPP}?text=${encodeURIComponent(msg)}`;
+        const waWin = window.open(waUrl, "_blank");
+
+        if (!waWin) {
+          window.location.href = waUrl;
+        }
+      });
+    }
+
+    function onResize(){
+      const w = canvasContainer.clientWidth;
+      const h = canvasContainer.clientHeight;
+
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      requestRender();
+    }
+
+    window.addEventListener("resize", onResize);
+
+    aplicarBranding();
+    setupRenderEvents();
+    crearPaleta();
+    initTabs();
+    initLogoUI();
+    initWhatsApp();
+    cargarEstructura();
+    requestRender();
+  </script>
+</body>
+</html>
